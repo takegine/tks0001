@@ -1,7 +1,7 @@
 if ThreeKingdoms == nil then ThreeKingdoms = class({}) end
 
 function ThreeKingdoms:InitTKingdom()
-    -[[
+    --[[
 	print( "Template addon is loaded." )
 	GameRules:SetPreGameTime(SET_PREGAME_TIME)
     GameRules:SetStartingGold(SET_STARTING_GOLD)
