@@ -1,0 +1,16 @@
+#PopMain{horizontal-align:right;  vertical-align:bottom;}
+
+#PopExample{
+  
+    margin-right: 57px;
+    margin-bottom: 60px;
+    width: 128px;
+    height: 40px;
+    background-color: darkorchid;
+  }
+
+.PopExampleTest{
+    color: rgb(255, 251, 251);
+   horizontal-align:center;   vertical-align:center;
+   font-size: 36px;
+}

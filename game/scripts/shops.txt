@@ -1,0 +1,10 @@
+
+"dota_shops"
+{
+	"secretshop"
+	{
+    	"item"		"item_shop_population"
+
+		
+	}
+}

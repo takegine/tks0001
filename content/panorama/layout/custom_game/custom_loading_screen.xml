@@ -1,0 +1,26 @@
+
+<!--root>
+
+	<styles>
+		<include src="file://{resources}/styles/custom_game/custom_loading_screen.css"/>
+	</styles>
+
+	<Panel class="bg">
+
+		<Label class="bb" text="#addon_game_name"/>
+	</Panel>
+
+</root-->
+
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/dotastyles.vcss_c" />
+		<include src="file://panorama/styles/custom_game/custom_loading_screen.css" />
+	</styles>
+	<scripts>
+		<include src="s2r://panorama/scripts/sequence_actions.vjs_c" />
+		<!-- <include src="s2r://panorama/scripts/custom_game/common.vjs_c" /> -->
+		<!--include src="file://panorama/scripts/custom_game/custom_loading_screen.js" /-->
+	</scripts>
+	<Panel class="bg"/>
+</root>

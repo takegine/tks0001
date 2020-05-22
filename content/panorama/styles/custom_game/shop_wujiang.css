@@ -1,0 +1,148 @@
+.ElementShopPanel{width: 100%;height: 100%;overflow: clip;}
+
+.btnleft{/*按钮集齐静态*/
+   width : 70px;
+   height: 70px;
+   color:#00454D;
+   text-align:center;
+   font-size:     30px;
+   font-weight: bold;
+   background-color: #fff;
+}
+
+.btnleft:hover{/*按钮集齐鼠标悬浮*/
+   color:#e66465;
+   box-shadow: 1px 2px 10px rgba(255,76,106,0.75);
+}
+
+#FindWJ1,#FindWJ2,{/*按钮位置   border: 1px solid #eeeeee;*/
+  margin-left:20px;
+  margin-top:700px;
+  width:  170px;
+  height: 250px;
+}
+
+#ElementShop{  margin-left:10px;  margin-top:40px; }
+#showtab{margin-left:10px;  margin-top:130px;font-size: 22px; }
+#find1{  margin-left:100px;   }
+#find2{  margin-left:100px;   margin-top:90px; }
+#find3{  margin-left:100px;   margin-top:180px;}
+
+.readytext {horizontal-align: center;vertical-align: center;
+   text-transform: uppercase;
+   font-family:Radiance,FZLanTingHei-B-GBK,TH Sarabun New,YDYGO 540,Gulim,MingLiU;
+}
+
+ #DianJiangTai
+{/****列表面板*****/
+  horizontal-align: center;
+  background-color: #9fe278;
+  
+  margin-top: 73%;
+  font-size:  20px;
+}
+.menuofitem{
+   background-color: rgb(0, 0, 0);
+   
+  horizontal-align: center;
+   flow-children:down;   
+   z-index:  0;
+}
+.Panle_MarginStyle{
+   
+  horizontal-align: center;
+  margin-top: 71%;
+}
+.getherotext{vertical-align: center;horizontal-align: right;
+   font-size: 20px;margin:5px;
+   font-family: Radiance,FZLanTingHei-R-GBK,TH Sarabun New,YDYGO 540,Gulim,MingLiU;
+}
+
+
+ .ElementShopText
+ {/****按钮的闪烁动画*****/
+    animation-name: OpacityPulse;
+    animation-duration: .82s;
+    animation-iteration-count: infinite;
+ }
+ @keyframes 'OpacityPulse'
+ {
+     0%     {         text-shadow: 0px 0px 0px #CC22CC;     }
+     50%    {         text-shadow: 0px 0px 15px #CC22CC,0px 0px 20px #CC22CC,0px 0px 25px #CC22CC;     }
+     100%   {         text-shadow: 0px 0px 0px #CC22CC;     }
+ }
+
+ .find1AnimO
+ {/****显示的动画*****/
+    animation-name: OpenAnim1;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+ }
+ @keyframes 'OpenAnim1'
+ {/****显示的动画*****/
+     0%     {   transform: translate3d( -90px, 20px, 0px );    }
+     100%   {   transform: translate3d(   0px,  0px, 0px );    }
+ }
+
+ .find1AnimC
+ {/****显示的动画*****/
+    animation-name: CloseAnim1;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+ }
+ @keyframes 'CloseAnim1'
+ {/****显示的动画*****/
+     0%     { transform: translate3d(   0px,  0px, 0px );    }
+     30%    { transform: translate3d( -15px,  5px, 0px );    }
+     100%   { transform: translate3d( -90px, 20px, 0px );    }
+ }
+
+
+ .find2AnimO
+ {/****显示的动画*****/
+    animation-name: OpenAnim2;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+ }
+ @keyframes 'OpenAnim2'
+ {/****显示的动画*****/
+     0%     {   transform: translate3d( -90px,-20px, 0px );    }
+     100%   {   transform: translate3d(   0px,  0px, 0px );    }
+ }
+
+ .find2AnimC
+ {/****显示的动画*****/
+    animation-name: CloseAnim2;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+ }
+ @keyframes 'CloseAnim2'
+ {/****显示的动画*****/
+     0%     { transform: translate3d(   0px,  0px, 0px );    }
+     30%    { transform: translate3d( -15px, -5px, 0px );    }
+     100%   { transform: translate3d( -90px,-20px, 0px );    }
+ }
+
+
+
+
+ 
+.bg{
+   background-image: url("file://{resources}/images/custom_game/uiPanel00.png");
+   background-repeat: repeat;
+   background-size: 100%;
+   width: 100%;height: 100%;
+ }
+ 
+ .btnhero{/*按钮集齐静态*/
+   margin-left:8px;margin-right:8px;
+   margin-top: 2px;margin-bottom: 2px;
+   background-color: rgb(26, 37, 51);
+   color:#ffffff;
+   width:120px;
+ }
+
+ .btnhero:hover{/*按钮集齐鼠标悬浮*/
+   background-color: rgb(61, 71, 85);
+   /*box-shadow: 1px 2px 10px rgba(255, 255, 255, 0.75);*/
+}

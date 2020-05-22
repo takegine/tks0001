@@ -1,0 +1,15 @@
+<root>
+    <scripts>
+      <include src="s2r://panorama/scripts/custom_game/custom_ui_manifest.js" />
+
+    </scripts>
+
+    <Panel>
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/uiscreen.xml"           />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/QiQusetSystem.xml"      />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/shop_wujiang.xml"       />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/panel_population.xml"   />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/game_stat_countdown.xml"/>
+    </Panel>
+
+</root>

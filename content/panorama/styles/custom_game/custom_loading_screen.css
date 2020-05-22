@@ -1,0 +1,331 @@
+/*通过关键字bg，设定格式*/
+.bg{
+	/*导入图片*/
+	background-image: url("file://{resources}/images/loading_screen.jpg");
+	/*不重复*/
+	background-repeat: repeat;
+	/*填充100%*/
+	background-size: 100%;
+	/*背景底色：米白色*/
+	background-color: antiquewhite;
+
+
+}
+
+
+#Loading
+{
+	width: 100%;
+	height: 100%;
+	background-color: #11161c;
+}
+
+#LoadingImage
+{
+	/* pre-transform-rotate2d: 45deg; */
+	/* saturation: 0.4; */
+	/* transform: translate3d( -100px, -100px, 0px );
+	transform: rotateZ( -32deg ) rotateX( 30deg ) translate3d( 125px, 520px, 230px );
+	transition-duration: 2.0s, 1.2s, 1.2s, 4.0s, 2.0s; */
+
+	vertical-align: center;
+	horizontal-align: center;
+	/* margin-left: -50px; */
+	margin-top: -420px;
+	width: 120px;
+	height: 120px;
+	background-image: url("s2r://panorama/images/custom_game/loading/logo_png.vtex");
+	background-size: 100%;
+	background-position: 50%;
+	background-repeat: no-repeat;
+}
+#LoadingTitle
+{
+	vertical-align: center;
+	horizontal-align: center;
+	/* margin-left: -50px; */
+	margin-top: -290px;
+	width: 780px;
+	height: 584.85px;
+	background-image: url("s2r://panorama/images/custom_game/loading/title_2_png.vtex");
+	background-size: 100%;
+	background-position: 50%;
+	background-repeat: no-repeat;
+}
+
+#TipContainer
+{
+	margin-top: 100px;
+	/* margin-left: 120px; */
+	horizontal-align : center;
+	vertical-align: center;
+	width: 500px;
+	height: 60px;
+	border-radius: 8px;
+	padding: 8px;
+	/* background-color: gradient( linear, 0% 50%, 100% 50%, color-stop(0.0, #66666600 ), color-stop(0.15, #616161dd), color-stop(0.85, #616161dd), color-stop(1.0, #66666600 ) ); */
+	background-color: gradient( linear, 0% 0%, 0% 100%, from( #272d2eee ), to( #131617ee ) );
+	
+	/* border: 8px ; */
+	/* border-left: 0px; */
+	/* border-right: 0px; */
+	box-shadow: #868686a8 -2px -2px 4px 4px;
+	/* flow-children: right; */
+	z-index: 1;
+}
+#TipText
+{
+	horizontal-align:center;
+	/* min-width: 200px; */
+	margin-right: 8px;
+	margin-left: 8px;
+	max-width: 500px;
+	height: 100%;
+	padding: 2px;
+}
+#TipText > Label
+{
+	/* horizontal-align:center; */
+	vertical-align: center;
+	color: #ffffff;
+	text-overflow: shrink;
+}
+#PrevTip
+{
+	horizontal-align:left;
+	background-image: url("s2r://panorama/images/control_icons/arrow_solid_left_png.vtex");
+}
+#NextTip
+{
+	horizontal-align:right;
+	background-image: url("s2r://panorama/images/control_icons/arrow_solid_right_png.vtex");
+}
+.TipButton
+{
+	vertical-align: center;
+	width: 18px;
+	height: 18px;
+	background-size: 80% 80%;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	wash-color:white;
+}
+#AdInfo
+{
+	margin-top: 520px;
+	horizontal-align:center;
+	vertical-align: center;
+	width: 400px;
+	height: 300px;
+	/* background-color: grey; */
+	flow-children:down;
+}
+#AdInfo > Label
+{
+	width: 100%;
+	text-align: center;
+	color: #faf5e3;
+	font-size: 18px;
+	text-overflow: shrink;
+}
+#LogoInfo
+{
+	margin-top: 760px;
+	horizontal-align:center;
+	vertical-align: center;
+	flow-children:down;
+}
+#LogoInfo > #LogoImg
+{
+	horizontal-align:center;
+}
+#LogoInfo > #LogoText
+{
+	text-align: center;
+	color: #97926e;
+	font-size: 20px;
+	/* text-shadow: 0px 0px 1px 1.2 #ebe7ca; */
+}
+/* #GroupInfo
+{
+	width: 100%;
+	text-align: center;
+	color: #faf5e3;
+	font-size: 28px;
+	text-overflow: shrink;
+}
+#MailInfo
+{
+	width: 100%;
+	text-align: center;
+	color: #fff4ca;
+	font-size: 28px;
+	text-overflow: shrink;
+} */
+#CourierChoose
+{
+	width: 300px;
+	min-height: 32px;
+	vertical-align: center;
+	flow-children:down;
+	background-color:gradient( linear, 100% 0%, 100% 100%, from( #272b30 ), color-stop( 0.6, #181a1e ), to( #181a1e ) );
+	visibility: collapse;
+}
+.CourierRow
+{
+	width: 100%;
+	height: 64px;
+	flow-children: right;
+}
+#CourierTitle
+{
+	width: 100%;
+	height: 32px;
+}
+#CourierTitle > Label
+{
+	vertical-align: center;
+	horizontal-align: center;
+	font-size: 24px;
+	color: #ffffff;
+	
+}
+#CourierIcon
+{
+	margin-left: 20px;
+	height: 100%;
+	width: 64px;
+	padding: 12px;
+}
+#CourierIconImage
+{
+	height: 100%;
+	width: 100%;
+	background-image: url("s2r://panorama/images/hud/icon_courier_event_psd.vtex");
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+#CourierName
+{
+	width: 152px;
+	height: 100%;
+	padding: 5px;
+}
+#CourierName > Label
+{
+	vertical-align: center;
+	horizontal-align: center;
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: bold;
+	text-overflow: shrink;
+	
+}
+#CheckIcon
+{
+	height: 100%;
+	width: 64px;
+	wash-color: #00ff73;
+	
+	background-image: url("file://{images}/control_icons/check_png.vtex");
+	background-size: 50%;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	visibility: collapse;
+}
+.OnChoose #CheckIcon
+{
+	visibility: visible;
+}
+#AdPanel
+{
+	align: left bottom;
+	margin-left: 20px;
+	margin-bottom: 250px;
+
+	width: 650px;
+
+	flow-children: up;
+}
+.AspectRatio4x3 #AdPanel
+{
+	width: 450px;
+}
+.AspectRatio16x10 #AdPanel
+{
+	width: 550px;
+}
+#Blackbox
+{
+	height: 157px;
+	visibility: collapse;
+}
+#Douyu
+{
+	opacity: 0.5;
+	visibility: collapse;
+}
+#WeChatSubscription
+{
+	visibility: collapse;
+	flow-children: down;
+}
+.Language_schinese #WeChatSubscription
+{
+	visibility: visible;
+}
+#WeChatSubscription Label
+{
+	width: 100%;
+	font-size: 20px;
+}
+#WeChatSubscription Image
+{
+	align: left bottom;
+	height: 157px;
+}
+
+.QQGroup{
+	margin-top: 8px;
+	visibility: collapse;
+	flow-children:right;
+}
+.Language_schinese .QQGroup{
+	visibility: visible;
+}
+
+.QQGroup Label{
+	vertical-align: center;
+	color:#ffffff;
+	margin-left: 4px;
+	text-decoration: underline;
+}
+
+.GreenButton {
+	width: 200px;
+	height: 40px;
+	background-image: url("s2r://panorama/images/backgrounds/background_play_button_2x_png.vtex");
+	background-color: gradient(linear, 0% 0%, 0% 100%, from(#87d695), to(#5aa15e));
+	background-size: 100% 100%;
+	box-shadow: fill rgba(0, 0, 0, 0.4) -4px -4px 8px 8px;
+	border-top: 1px solid rgba(255, 255, 255, 0.267);
+	border-right: 1px solid rgba(0, 0, 0, 0.533);
+	border-left: 1px solid rgba(255, 255, 255, 0.267);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.533);
+	padding: 8px;
+	vertical-align: center;
+}
+.GreenButton:hover {
+	brightness: 2;
+}
+.GreenButton:active {
+	brightness: 1.5;
+}
+.GreenButton Label {
+	horizontal-align: center;
+	vertical-align: center;
+	color: #ffffff;
+	font-size: 20px;
+	text-align: center;
+	text-shadow: 2px 2px 0px 2 rgba(0, 0, 0, 0.4);
+}

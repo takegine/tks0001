@@ -1,0 +1,75 @@
+<root>
+    <styles>
+        
+        <include src="s2r://panorama/styles/custom_game/shop_wujiang.css" />
+    </styles>
+    <scripts>
+        <include src="s2r://panorama/scripts/custom_game/shop_wujiang.js" />
+    </scripts>
+    <snippets>
+
+		<snippet name="QuestLine">
+            <Button class=""
+                    onactivate='' 
+                    oncontextmenu=''
+                    style='flow-children:down;margin-left:5px;width:80px;margin-right:5px;'> 
+                
+                <DOTAItemImage itemname='' style='' />
+                <Label  class="" text="" 
+                        style="white-space:nowrap;width:50px;"/>
+            </Button>
+		</snippet>
+
+        <snippet name="RightClick">
+            <Panel class="menuofitem" onmouseout=''>
+                
+                <Button class="btnhero"  onactivate=''  > 
+                    <Label  class="getherotext" text="#itemlevelup"  />
+                </Button>
+                <Button class="btnhero"  onactivate=''  > 
+                    <Label  class="getherotext" text="#itemonsell"  />
+                </Button>
+            </Panel>
+            
+		</snippet>
+	</snippets>
+    <Panel hittest="false" class="ElementShopPanel">
+        <!--一层板，移开鼠标时隐藏-->
+        <Panel hittest="false" id='FindWJ1'>
+            
+            <Button id="find1" onactivate='Yes(11)' class="btnleft " onmouseover='DOTAShowTextTooltip(#UIButton6_1_1)' onmouseout='DOTAHideTextTooltip()'> 
+                <Label class="readytext" text="#UIButton6_1"/>
+            </Button>
+            <Button id="find2" onactivate='Yes(12)' class="btnleft " onmouseover='DOTAShowTextTooltip(#UIButton6_2_1)' onmouseout='DOTAHideTextTooltip()'> 
+                <Label class="readytext" text="#UIButton6_2"/>
+            </Button>
+
+            <!--三层板，一直显示-->
+            <Button class="btnleft" id="showtab" onactivate='showtab()'> <!--按钮-->
+                <Label class="readytext" text="#DianJiangTai01"/>
+            </Button>
+            <Button class="btnleft" id="ElementShop" onactivate='openPanel(1)'> <!--按钮-->
+                <Label id="soujiangtext" class="readytext ElementShopText" text="#UIButton6"/>
+            </Button>
+        </Panel>
+
+        
+            
+            <Panel hittest="false" id='DianJiangTai' style="  width:900px;flow-children:right;"/>
+        
+            <!--BLabel class="readytext" text=""/>
+            <utton id="hero0" class="btnhero" > 
+                
+                    <DOTAItemImage itemname='' style='height:40px;' onactivate='Yes(0)'/>
+                    <Label style='height:30px;' text="2222" />
+                
+            </Button>
+            <Label id='NoPoint' class='bg'/>
+        </Panel-->
+
+        <Button hittest="false" id='FindWJ2' onmouseout='close(1)'><!--二层板，覆盖鼠标时显示-->
+            <Label class='bg'/>
+        </Button>
+
+    </Panel>
+</root>

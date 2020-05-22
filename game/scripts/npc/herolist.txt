@@ -1,0 +1,2 @@
+"whitelist" {   	"npc_dota_hero_phoenix"		"-1" }
+

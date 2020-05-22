@@ -1,0 +1,26 @@
+<root>
+    <script>
+        function game_countdown(table_name, key, data ){
+            var ID = Players.GetLocalPlayer();
+            //$.Msg( ID, ": ", "Table:", table_name, " changed: '", key, "' = ", data );
+            if (key == "game_countdown"){
+                $("#QuestMain").visible=data.countDown;
+                $("#QuestMain").GetChild(1).text=data.timeNow
+                $("#QuestMain").GetChild(0).text="/"+data.timeMax
+            }
+                $.Msg(key," ",data.timeNow)
+            }
+        CustomNetTables.SubscribeNetTableListener( "game_stat", game_countdown );
+    </script>
+    
+	<Panel hittest="false" style="width:100%;height: 100%; ">
+
+		<Panel hittest="false" id="QuestMain" style="width:200px;height: 200px;horizontal-align:center; flow-children:left;">
+
+			<Label text="" style=" vertical-align:bottom;font-size:30px; "/> 
+            <Label text="" style=" vertical-align:bottom;font-size:90px; "/> 
+            
+		</Panel>
+
+	</Panel>
+</root>

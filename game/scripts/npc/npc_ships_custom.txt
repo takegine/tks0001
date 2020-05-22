@@ -1,0 +1,19 @@
+//羁绊：需求单位
+
+"DOTAShips"
+{
+	"skill_ship_taoyuan" {
+        "01" "npc_hero_liubei"
+        "02" "npc_hero_guanyu"
+        //"03" "npc_hero_zhangfei"
+    }
+    "skill_hero_jijiang" {
+        "01" "npc_hero_liubei"
+    }
+    "skill_ship_tigerfather"{
+        "01" "npc_hero_guanyu"
+        "02" "npc_hero_guanyinping"
+    }
+}
+
+

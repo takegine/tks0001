@@ -1,0 +1,10 @@
+"AddonInfo"
+{
+    "addontitle"        "三国"
+    "addon_game_name"        "Three Kingdoms"
+    "maps"        "map2"
+    "map2"
+    {
+        "MaxPlayers"        "2"
+    }
+}
