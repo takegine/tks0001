@@ -23,7 +23,7 @@ function OnBack( data )
 	end
 	
 	--找到点将台,创建物品
-	local x = 5
+	local x = caster.Ticket and 6 or 5
     for i = 1 , x do
     	local itemPos    = Entities:FindByName( nil, "dianjiangtai_"..iTeam.."_"..i)
     	local isemptytab = Entities:FindAllByClassnameWithin("dota_item_drop", itemPos:GetAbsOrigin(),50)

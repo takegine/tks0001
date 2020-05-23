@@ -22,7 +22,6 @@
 
         <snippet name="RightClick">
             <Panel class="menuofitem" onmouseout=''>
-                
                 <Button class="btnhero"  onactivate=''  > 
                     <Label  class="getherotext" text="#itemlevelup"  />
                 </Button>
@@ -30,9 +29,10 @@
                     <Label  class="getherotext" text="#itemonsell"  />
                 </Button>
             </Panel>
-            
 		</snippet>
+
 	</snippets>
+    
     <Panel hittest="false" class="ElementShopPanel">
         <!--一层板，移开鼠标时隐藏-->
         <Panel hittest="false" id='FindWJ1'>

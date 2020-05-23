@@ -235,6 +235,7 @@ function GameForUnit:OnEntityKilled( keys )
 end
 
 function GameForUnit:ItemAddedToInventoryFilter( filterTable )  --控制物品被放入物品栏时的行为
+    --[[
     if filterTable["item_entindex_const"] == nil                  --获得的物品
     or filterTable["inventory_parent_entindex_const"] == nil then --库存拥有者
         return true
@@ -245,12 +246,12 @@ function GameForUnit:ItemAddedToInventoryFilter( filterTable )  --控制物品�
     local hItem = EntIndexToHScript( filterTable["item_entindex_const"] )
     local hInvPar = EntIndexToHScript( filterTable["inventory_parent_entindex_const"] )--InventoryParent
     
-    if  hItem:GetPurchaser() ~= hInvPar then--不是自己的元素装备不能拾起，下一帧掉落
+    if  hItem:GetPurchaser() ~= hInvPar then--不是自己的元素装备不能拾起，下一帧掉落]]
     --[[   Timers(0.01,function()
             hInvPar:DropItemAtPositionImmediate( hItem, hInvPar:GetAbsOrigin() )
         end)]]
        --return false
-       
+     --[[  
     print('ItemAddedToInventoryFilter',2)
     end
 
@@ -261,7 +262,7 @@ function GameForUnit:ItemAddedToInventoryFilter( filterTable )  --控制物品�
         print('ItemAddedToInventoryFilter',3)
         GetNewHero:buy_wujiang( {id=hInvPar:GetPlayerOwnerID(),way=hItem:GetAbilityName(),back=true }) 
 
-    end
+    end]]
     return true
 end
 
@@ -278,6 +279,8 @@ function GameForUnit:OnNPCSpawned(keys )
             for R=1,10 do GetNewHero:UptoDJT(npc:GetPlayerOwnerID(),SET_FIRST_HERO) end
             for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end 
 
+            npc.Ticket=PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
+
             CustomUI:DynamicHud_Create(npc:GetPlayerID(),"psd","file://{resources}/layout/custom_game/uiscreen.xml",nil)
             CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerID()),{popMax=LOCAL_POPLATION,popNow=0} ) 
             if GetMapName=="map0" then CustomGameEventManager:Send_ServerToTeam(npc:GetTeam(), "CameraRotateHorizontal", {angle=npc:GetPlayerID()*360/8}) end
@@ -290,7 +293,7 @@ function GameForUnit:OnNPCSpawned(keys )
                 npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
                 npc.popuse = tonumber(_G.npcBaseType[npc:GetUnitName()][3]) or 1
 
-            elseif tkHeroList[npc:GetUnitName()] then
+            elseif npc:IsHero() then
                 local NameX = npc:GetUnitName()
                 local attack_type = tkHeroList[NameX]["TksAttackType"] or "none"
                 local defend_type = tkHeroList[NameX]["TksDefendType"] or "none"
@@ -304,7 +307,20 @@ function GameForUnit:OnNPCSpawned(keys )
                 table.insert( _G.npcBaseType[NameX], defend_type )
                 table.insert( _G.npcBaseType[NameX], npc.popuse  )
                 
-                table.foreach(_G.npcBaseType[NameX],function(k,v) print(k,v) end)
+            elseif tkUnitList[npc:GetUnitName()] then
+                local NameX = npc:GetUnitName()
+                local attack_type = tkUnitList[NameX]["TksAttackType"] or "none"
+                local defend_type = tkUnitList[NameX]["TksDefendType"] or "none"
+                
+                npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
+                npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
+                npc.popuse = tonumber(tkUnitList[NameX]["TksPopUse"]) or 1
+                                
+                _G.npcBaseType[NameX]={}
+                table.insert( _G.npcBaseType[NameX], attack_type )
+                table.insert( _G.npcBaseType[NameX], defend_type )
+                table.insert( _G.npcBaseType[NameX], npc.popuse  )
+                
             end
         end
     end
