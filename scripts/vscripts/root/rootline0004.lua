@@ -290,14 +290,14 @@ function GameForUnit:OnNPCSpawned(keys )
                 npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
                 npc.popuse = tonumber(_G.npcBaseType[npc:GetUnitName()][3]) or 1
 
-            elseif tkHeroList[npc:GetUnitName()] then
+            elseif tkUnitList[npc:GetUnitName()] then
                 local NameX = npc:GetUnitName()
-                local attack_type = tkHeroList[NameX]["TksAttackType"] or "none"
-                local defend_type = tkHeroList[NameX]["TksDefendType"] or "none"
+                local attack_type = tkUnitList[NameX]["TksAttackType"] or "none"
+                local defend_type = tkUnitList[NameX]["TksDefendType"] or "none"
                 
                 npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
                 npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
-                npc.popuse = tonumber(tkHeroList[NameX]["TksDefendType"]) or 1
+                npc.popuse = tonumber(tkUnitList[NameX]["TksPopUse"]) or 1
                                 
                 _G.npcBaseType[NameX]={}
                 table.insert( _G.npcBaseType[NameX], attack_type )

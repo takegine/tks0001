@@ -297,13 +297,14 @@ function GameForUnit:OnNPCSpawned(keys )
                 
                 npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
                 npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
-                npc.popuse = tonumber(tkHeroList[NameX]["TksDefendType"]) or 1
+                npc.popuse = tonumber(tkHeroList[NameX]["TksPopUse"]) or 1
                                 
                 _G.npcBaseType[NameX]={}
                 table.insert( _G.npcBaseType[NameX], attack_type )
                 table.insert( _G.npcBaseType[NameX], defend_type )
                 table.insert( _G.npcBaseType[NameX], npc.popuse  )
                 
+                table.foreach(_G.npcBaseType[NameX],function(k,v) print(k,v) end)
             end
         end
     end

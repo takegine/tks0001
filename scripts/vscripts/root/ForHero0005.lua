@@ -6,6 +6,16 @@ function GetNewHero:listen()
 	CustomGameEventManager:RegisterListener("item_lvl_up",Dynamic_Wrap(self, 'itemLevelUp'))
 	CustomGameEventManager:RegisterListener("item_on_sell",Dynamic_Wrap(self, 'itemOnSell'))
 	--CustomGameEventManager:RegisterListener("first_wujiang",Dynamic_Wrap(self, 'first_wujiang'))
+
+	for hero, info in pairs(tkUnitList) do                  
+		if  info ~= 1 then
+			if  info.UnitLabel == "qunxiong"   then table.insert( _G.tkHeroName['qunxiong'], hero )  
+			elseif  info.UnitLabel == "shuguo" then table.insert( _G.tkHeroName['shuguo'], hero )  
+			elseif  info.UnitLabel == "wuguo"  then table.insert( _G.tkHeroName['wuguo'], hero )  
+			elseif  info.UnitLabel == "weiguo" then table.insert( _G.tkHeroName['weiguo'], hero )  
+			end
+		end
+	end
 end
 
 function GetNewHero:findding_Wj( data )

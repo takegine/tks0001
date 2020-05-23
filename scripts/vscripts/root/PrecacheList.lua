@@ -1,4 +1,3 @@
-
 SET_UP_AUTO_LAUNCH_DELAY = 20 
 SET_FORCE_HERO     ="npc_dota_hero_phoenix"
 SET_FIRST_HERO     ="npc_dota_creature_gnoll_assassin"
@@ -81,15 +80,9 @@ if  YOUR_IN_TEST then
 end
 
 
-if LOCAL_VERSION == '0004' or LOCAL_VERSION == '0003' then
-    theloadluafilehead = 'abandoned/'
-else
-    theloadluafilehead = 'root/'
-end
-
 require('root/ToolsFromX')
 require("root/ValueTable")
 require("root/bare_bones")
 --require("questsystem")  
-require(theloadluafilehead.."GetNewHero")
-require(theloadluafilehead.."rootline"..LOCAL_VERSION)
+require("root/ForHero"..LOCAL_VERSION)
+require("root/rootline"..LOCAL_VERSION)
