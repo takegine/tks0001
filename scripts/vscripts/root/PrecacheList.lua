@@ -19,12 +19,6 @@ DAMAGE_TYPES = {
     [7] = "DAMAGE_TYPE_ALL",
     [8] = "DAMAGE_TYPE_HP_REMOVAL"
 }
-require('ToolsFromX')
-require("GetNewHero")
-require("ValueTable")
-require("bare_bones")
---require("questsystem")  
-require("rootline"..LOCAL_VERSION)
 
 function Precache( context )
 	--[[
@@ -87,3 +81,15 @@ if  YOUR_IN_TEST then
 end
 
 
+if LOCAL_VERSION == '0004' or LOCAL_VERSION == '0003' then
+    theloadluafilehead = 'abandoned/'
+else
+    theloadluafilehead = 'root/'
+end
+
+require('root/ToolsFromX')
+require("root/ValueTable")
+require("root/bare_bones")
+--require("questsystem")  
+require(theloadluafilehead.."GetNewHero")
+require(theloadluafilehead.."rootline"..LOCAL_VERSION)

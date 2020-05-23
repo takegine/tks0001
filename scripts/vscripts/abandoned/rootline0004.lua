@@ -85,10 +85,11 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{1} )
             
             --全体防守加状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(GameForUnit:FindAllByKey("creature"),function(_,caster) 
+            table.foreach(GameForUnit:FindAllByKey("creature"),function(_,v) 
+                if v:IsMoving() then v:Stop() end
                 local abiName = "skill_player_countdown"
-                caster:AddAbility(abiName)
-                caster:FindAbilityByName(abiName):SetLevel(1)
+                v:AddAbility(abiName)
+                v:FindAbilityByName(abiName):SetLevel(1)
             end)
 
         elseif return_time == 4 then--mark
@@ -116,7 +117,6 @@ function GameForUnit:OnGameInPlan( ... )
         elseif return_time == 2 then--forward
             table.foreach(GameForUnit:FindAllByKey("creature"),function(k,unit) 
                 print(k,unit:GetUnitName())
-                    unit:Stop()
                 if  unit.enemy then
                     unit:FaceTowards(unit:GetAbsOrigin()+Vector(0,-1,0))
                 else

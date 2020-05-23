@@ -1,10 +1,4 @@
--- print("[BAREBONES] barebones.lua")
-
--- Generated from template
-if GameMode == nil then
-    --	print ( '[BAREBONES] creating barebones game mode' )
-    GameMode = class({})
-end
+if GameMode == nil then GameMode = class({}) end
 
 -- This function initializes the game mode and is called before anyone loads into the game
 -- It can be used to pre-initialize any values/tables that will be needed later
@@ -74,8 +68,7 @@ function GameMode:OnConnectFull(keys)
         mode:SetFogOfWarDisabled( true )
         mode:SetCameraDistanceOverride( 1000)--设置镜头
         mode:SetCustomGameForceHero(SET_FORCE_HERO)
-
-        if not YOUR_IN_TEST then mode:SetHUDVisible(6,false) end  --设置HUD元素，1元素可见
+        mode:SetHUDVisible(18,false)
     end
 end
 
