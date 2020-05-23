@@ -1,0 +1,23 @@
+<root>
+    <styles>
+        
+        <include src="s2r://panorama/styles/custom_game/test_create_list.css" />
+    </styles>
+    <scripts>
+        <include src="s2r://panorama/scripts/custom_game/test_create_list.js" />
+    </scripts>
+    
+    <Panel hittest="false" class="ElementShopPanel">
+
+        <Button class="btnleft" id="ElementShop" onactivate='Yes()'> <!--按钮-->
+            <Label id="readytext" class="ElementShopText" text="#UIButton1"/>
+        </Button>
+
+        <Panel hittest="false" id="ShopInfo" class="ShopInfoAnim"/><!--弹出窗口-->
+
+        <Panel  style="margin-left:20px;margin-top:150px; height:80%; ">
+        <Panel id="AllHeroes" style="background-color: rgb(70, 101, 160);flow-children:down;   "/>
+            
+        </Panel>
+    </Panel>
+</root>

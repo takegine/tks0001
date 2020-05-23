@@ -7,10 +7,10 @@ TIME_BETWEEN_ROUND = 30
 TIME_BATTER_MAX    = 60   
 SET_STARTING_GOLD  = 4000  
 LOCAL_POPLATION    = 10  
-YOUR_IN_TEST       = false
+YOUR_IN_TEST       = true
 LOCAL_VERSION      = '0004'
 
-require("rootline"..LOCAL_VERSION)
+
 DAMAGE_TYPES = {
     [0] = "DAMAGE_TYPE_NONE",
     [1] = "DAMAGE_TYPE_PHYSICAL",
@@ -19,11 +19,12 @@ DAMAGE_TYPES = {
     [7] = "DAMAGE_TYPE_ALL",
     [8] = "DAMAGE_TYPE_HP_REMOVAL"
 }
-
+require('ToolsFromX')
 require("GetNewHero")
 require("ValueTable")
-require("barebones")
+require("bare_bones")
 --require("questsystem")  
+require("rootline"..LOCAL_VERSION)
 
 function Precache( context )
 	--[[
@@ -53,32 +54,6 @@ function Precache( context )
     end
 end
 
-function Timer(delay,callback)
-    if callback == nil then
-        callback = delay
-        delay = 0
-    end
-
-    local timerName = DoUniqueString("timer")
-
-    GameRules.__vTimerNamerTable__ = GameRules.__vTimerNamerTable__ or {}
-    GameRules.__vTimerNamerTable__[timerName] = true
-
-    GameRules:GetGameModeEntity():SetContextThink(timerName,function()
-    if GameRules.__vTimerNamerTable__[timerName] then
-        return callback()
-    else
-        return nil
-    end
-    end,delay)
-    return timerName
-end
-function RemoveTimer(timerName)
-        GameRules.__vTimerNamerTable__[timerName] = nil
-end
-
-
-
 function BroadcastMsg( sMsg )
 	-- Display a message about the button action that took place
 	local buttonEventMessage = sMsg
@@ -93,17 +68,6 @@ end
 
 --math.randomseed(tostring(os.time()):reverse():sub(1, 7)) --设置时间种子
 
-Convars:RegisterCommand( "zaobing", function() 
-    --for k,v in pairs(DAMAGE_TYPES) do print(k,v) end
-	CreateUnitByNameAsync( SET_FIRST_HERO, PlayerResource:GetSelectedHeroEntity( 0 ):GetAbsOrigin(), true, nil, nil, 3, 
-		function( hEnemy )
-			hEnemy:SetControllableByPlayer( 0, false )
-			hEnemy:Hold()
-			hEnemy:SetIdleAcquire( false )
-			hEnemy:SetAcquisitionRange( 0 )
-		end )    
-    end," 1", 0 )
-
 function LinkLuaS()
     local typetab = {"none","tree","fire","electrical","water","land","god"}
     local modload = "buff/BaseType.lua"
@@ -115,10 +79,11 @@ function LinkLuaS()
 end
 
 LinkLuaS()
-GetNewHero:listen()
 
 if  YOUR_IN_TEST then
     SET_UP_AUTO_LAUNCH_DELAY = 0--队伍选择时间
     TIME_BETWEEN_ROUND = 10  --轮间距40
     LOCAL_POPLATION    = 99 
 end
+
+

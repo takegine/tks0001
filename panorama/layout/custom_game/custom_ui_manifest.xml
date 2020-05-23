@@ -10,6 +10,8 @@
         <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/shop_wujiang.xml"       />
         <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/panel_population.xml"   />
         <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/game_stat_countdown.xml"/>
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/test_create_list.xml"   />
+        
     </Panel>
 
 </root>

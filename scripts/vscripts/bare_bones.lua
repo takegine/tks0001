@@ -38,6 +38,8 @@ function GameMode:InitGameMode()
     GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_7, k )
     GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_8, k )
 
+    GetNewHero:listen()
+
     self.game = GameForUnit()
     GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
     GameRules:GetGameModeEntity():SetDamageFilter(Dynamic_Wrap(self.game, "DamageFilter"), self.game)
@@ -70,8 +72,10 @@ function GameMode:OnConnectFull(keys)
         mode:SetTopBarTeamValuesVisible( true )
         mode:SetStashPurchasingDisabled( true )
         mode:SetFogOfWarDisabled( true )
-        --mode:SetCameraDistanceOverride( 1500 )--设置镜头
+        mode:SetCameraDistanceOverride( 1000)--设置镜头
         mode:SetCustomGameForceHero(SET_FORCE_HERO)
+
+        if not YOUR_IN_TEST then mode:SetHUDVisible(6,false) end  --设置HUD元素，1元素可见
     end
 end
 
@@ -91,10 +95,18 @@ function GameMode:OnThink()
 end
 
 function GameMode:createnewherotest( data ) 
+
     local hero   = PlayerResource:GetSelectedHeroEntity(data.PlayerID)
     local teamid = 3
     if data.good then teamid = PlayerResource:GetCustomTeamAssignment(data.PlayerID) end 
-    CreateUnitByNameAsync( data.way, Entities:FindByName(nil,"creep_birth_"..(teamid-3)):GetAbsOrigin(), true, nil, nil, teamid,  function( v ) v:SetControllableByPlayer( data.PlayerID, false ) v:Hold() v:SetIdleAcquire( false ) v:SetAcquisitionRange( 0 ) end )  
+    CreateUnitByNameAsync( data.way, Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_"..(teamid-3)):GetAbsOrigin(), true, nil, nil, teamid,
+        function( v ) 
+            v:SetControllableByPlayer( data.PlayerID, false ) 
+            v:Hold() 
+            v:SetIdleAcquire( false ) 
+            v:SetAcquisitionRange( 0 ) 
+            v.enemy=true
+        end )  
 end
 
 function GameMode:refreshlist()

@@ -22,9 +22,9 @@
 		// Abilities
 		// ----------------------------------------------------------------
 		// Ability 1
-		"Ability1"	"my_phantom_assassin_coup_de_grace_datadriven"
+		"Ability1"	""
 		// Ability 2
-		"Ability2"	"skill_hero_shouwang"
+		"Ability2"	""
 		// Ability 3
 		"Ability3"	""
 		// Ability 4
