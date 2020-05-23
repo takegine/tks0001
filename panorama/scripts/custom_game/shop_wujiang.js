@@ -1,30 +1,39 @@
 var maxhero = 10
 
-function Yes(i){
-    var iWays
-    if(i>maxhero){if($('#DianJiangTai').GetChild(maxhero-1)){GameUI.SendCustomHUDError( "#fulloftable", "ui_find_match_change_options" );return}
-        else if(i == 11 ){ iWays = "country"  }
-        else if(i == 12 ){ iWays = "hero" }
-            }
-    else{   iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(0).itemname 
+function gofind(i){
+    if($('#DianJiangTai').GetChild(maxhero-1)){
+        GameUI.SendCustomHUDError( "#fulloftable", "ui_find_match_change_options" );
+        return
+        }
+    else if(Players.GetGold(Players.GetLocalPlayer() )<100 ){
+        GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
+        return
+        }
+    else { GameEvents.SendCustomGameEventToServer( "find_wujiang", {id: Players.GetLocalPlayer(),way: i,} );  }
+            
+}
+function goget(i) {
+    var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(0).itemname 
             //iWays = $.GetContextPanel().GetParent().id()
-            var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
-            var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
-                if(iWays == "item_empty_block"){
-                    iWays="0000"}
-            else if(stat=="1"){
-                    GameUI.SendCustomHUDError( "#OnGameRoundChange", "Tutorial.Notice.Speech" )
-                    iWays="0000"}
-            else if(stat=="2"){
-                    GameUI.SendCustomHUDError( "#OnGameInProgress", "Tutorial.Notice.Speech" )
-                    iWays="0000"}
-            else if(!(tPop['popNow']<tPop['popMax'])){
-                    GameUI.SendCustomHUDError( "#outofyourpop", "Loot_Drop_Stinger_Short" )
-                    iWays="0000"}
-    }
-    $.Msg('input='+i+iWays);
-    if(iWays!="0000"){GameEvents.SendCustomGameEventToServer( "find_wujiang", {id: Players.GetLocalPlayer(),way: iWays,No:i} );}/**把选项传回服务器**/
-
+    var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
+    var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
+        if(iWays == "item_empty_block"){
+            return }
+    else if(stat=="1"){
+            GameUI.SendCustomHUDError( "#OnGameRoundChange", "Tutorial.Notice.Speech" )
+            return }
+    else if(stat=="2"){
+            GameUI.SendCustomHUDError( "#OnGameInProgress", "Tutorial.Notice.Speech" )
+            return }
+    else if(!(tPop['popNow']<tPop['popMax'])){
+            GameUI.SendCustomHUDError( "#outofyourpop", "Loot_Drop_Stinger_Short" )
+            return }
+    else if(Players.GetGold(Players.GetLocalPlayer() )<100 ){
+            GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
+            return }
+    else {  $.Msg('input='+i+iWays);
+            GameEvents.SendCustomGameEventToServer( "get_wujiang", {id: Players.GetLocalPlayer(),way: iWays,No:i} );
+            }
 }
 function showtab() {
     if  (   $("#DianJiangTai").visible){ $("#DianJiangTai").visible = false;}

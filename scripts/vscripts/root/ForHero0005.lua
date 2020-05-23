@@ -48,10 +48,10 @@ function GetNewHero:find_wujiang( PlayID )
 
     if RollPercentage(chance) then 
         --local itemID="150"..RandomInt(1,3)
-        local itemID=RandomInt(1,#_G.ItemHeroName)
-        local itemName=_G.ItemHeroName[itemID]
+        local randomID=RandomInt(1,#tkHeroList)
+        local itemName=tkHeroList[randomID]
 
-        print("find_wujiang",itemID,itemName,string.gsub(itemName,"item","npc"))
+        print("find_wujiang",randomID,itemName,string.gsub(itemName,"item","npc"))
 
         CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(PlayID), "wujiang_shopUp", {event=itemName} )
     else
