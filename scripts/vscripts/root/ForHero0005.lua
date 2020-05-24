@@ -1,7 +1,8 @@
 if GetNewHero == nil then GetNewHero = class({}) end
 
 function GetNewHero:listen()
-    CustomGameEventManager:RegisterListener("find_wujiang",Dynamic_Wrap(self, 'findding_Wj'))
+    CustomGameEventManager:RegisterListener("find_wujiang",Dynamic_Wrap(self, 'find_wujiang'))
+    CustomGameEventManager:RegisterListener("get_wujiang",Dynamic_Wrap(self, 'LetHeroTrue'))
     CustomGameEventManager:RegisterListener("player_get_country",Dynamic_Wrap(self, 'playerGetCountry'))
     CustomGameEventManager:RegisterListener("item_lvl_up",Dynamic_Wrap(self, 'itemLevelUp'))
     CustomGameEventManager:RegisterListener("item_on_sell",Dynamic_Wrap(self, 'itemOnSell'))
@@ -42,40 +43,29 @@ function GetNewHero:findding_Wj( data )
     end
 end
 
-function GetNewHero:find_wujiang( PlayID )
-    local hero   = PlayerResource:GetSelectedHeroEntity(PlayID) 
-    local chance = 70 
+function GetNewHero:find_wujiang( data )
+    local hero     = PlayerResource:GetSelectedHeroEntity(data.id) 
+    local chance   = 70  
+    local findcost = 100 --减钱
+
+    if   hero:GetGold() < findcost then self:UptoDJT(data.id,"poorguy") return
+    else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
+    end
+
+    if data.way == "country" then local rolltable =_G.tkHeroName[hero.country] end
+    if data.way == "hero" then local rolltable =_G.tkHeroList end
 
     if RollPercentage(chance) then 
         --local itemID="150"..RandomInt(1,3)
-        local randomID=RandomInt(1,#tkHeroList)
-        local itemName=tkHeroList[randomID]
+        local randomID=RandomInt(1,#rolltable)
+        local itemName=rolltable[randomID]
 
-        print("find_wujiang",randomID,itemName,string.gsub(itemName,"item","npc"))
+        print("find_wujiang",randomID,itemName )
 
-        CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(PlayID), "wujiang_shopUp", {event=itemName} )
+        self:UptoDJT(data.id,itemName)
     else
-        CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(PlayID), "wujiang_shopUp", {event="noget"} )
-        hero:SetGold( 50+PlayerResource:GetUnreliableGold(PlayID), false)
-    end  
-end
-
-function GetNewHero:find_country( PlayID )
-    print("xxxxx")
-    local hero   = PlayerResource:GetSelectedHeroEntity(PlayID) 
-    local chance = 70 
-    if RollPercentage(chance) then 
-        --local itemID="150"..RandomInt(1,3)
-
-        local unitID   = RandomInt(1,#_G.tkHeroName[hero.country])
-        local unitName = _G.tkHeroName[hero.country][unitID]
-        local itemName = string.gsub(unitName,"npc","item")
-        
-        self:UptoDJT(PlayID,itemName)
-        print("find_country",itemID,itemName,string.gsub(itemName,"item","npc"))
-    else
-        self:UptoDJT(PlayID,"noget")
-        hero:SetGold( PlayerResource:GetUnreliableGold(PlayID) + RandomInt(45,75) , false) 
+        self:UptoDJT(data.id,"noget")
+        hero:SetGold( PlayerResource:GetGold(data.id)+findcost/2, false)
     end  
 end
 
@@ -83,23 +73,22 @@ function GetNewHero:LetHeroTrue( data )
     --DeepPrintTable(data.way)
     local hero = PlayerResource:GetSelectedHeroEntity(data.id)
     local itemName = data.way 
-        
+    local findcost = 100 --减钱
+
+    if   hero:GetGold() < findcost then self:UptoDJT(data.id,"poorguy") return
+    else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
+    end
+
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
-    local vBir = CreateUnitByName(string.gsub(itemName,"item","npc"),vPos,true,hero,hero,hero:GetTeamNumber())
-    
+    local vBir = CreateUnitByName(itemName,vPos,true,hero,hero,hero:GetTeamNumber())
+          vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())
-    vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
 
     if data.back then return end
     
-    local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id))
-    if vBir.popuse then
-         tPop['popNow'] = tPop['popNow'] + vBir.popuse
-    else tPop['popNow'] = tPop['popNow'] + 1
-    end
-    
+
     if data.No then self:UptoDJT(data.id,data.No) end
-    CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
+    
 
 end 
             

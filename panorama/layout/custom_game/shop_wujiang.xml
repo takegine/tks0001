@@ -37,10 +37,10 @@
         <!--一层板，移开鼠标时隐藏-->
         <Panel hittest="false" id='FindWJ1'>
             
-            <Button id="find1" onactivate='Yes(11)' class="btnleft " onmouseover='DOTAShowTextTooltip(#UIButton6_1_1)' onmouseout='DOTAHideTextTooltip()'> 
+            <Button id="find1" onactivate='gofind("country")' class="btnleft " onmouseover='DOTAShowTextTooltip(#UIButton6_1_1)' onmouseout='DOTAHideTextTooltip()'> 
                 <Label class="readytext" text="#UIButton6_1"/>
             </Button>
-            <Button id="find2" onactivate='Yes(12)' class="btnleft " onmouseover='DOTAShowTextTooltip(#UIButton6_2_1)' onmouseout='DOTAHideTextTooltip()'> 
+            <Button id="find2" onactivate='gofind("hero")' class="btnleft " onmouseover='DOTAShowTextTooltip(#UIButton6_2_1)' onmouseout='DOTAHideTextTooltip()'> 
                 <Label class="readytext" text="#UIButton6_2"/>
             </Button>
 

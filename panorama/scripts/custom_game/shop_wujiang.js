@@ -9,7 +9,9 @@ function gofind(i){
         GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
         return
         }
-    else { GameEvents.SendCustomGameEventToServer( "find_wujiang", {id: Players.GetLocalPlayer(),way: i,} );  }
+    else{ 
+        GameEvents.SendCustomGameEventToServer( "find_wujiang", {id: Players.GetLocalPlayer(),way: i} );  
+        } 
             
 }
 function goget(i) {

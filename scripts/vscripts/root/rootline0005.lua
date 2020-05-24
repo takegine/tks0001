@@ -322,6 +322,10 @@ function GameForUnit:OnNPCSpawned(keys )
                 table.insert( _G.npcBaseType[NameX], npc.popuse  )
                 
             end
+
+            local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID())) 
+            tPop['popNow'] = tPop['popNow'] + npc.popuse  
+            CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
         end
     end
 end
