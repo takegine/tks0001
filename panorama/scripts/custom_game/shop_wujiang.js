@@ -17,8 +17,7 @@ function goget(i) {
             //iWays = $.GetContextPanel().GetParent().id()
     var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
     var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
-        if(iWays == "item_empty_block"){
-            return }
+        if(!iWays ){ return }
     else if(stat=="1"){
             GameUI.SendCustomHUDError( "#OnGameRoundChange", "Tutorial.Notice.Speech" )
             return }
@@ -118,53 +117,45 @@ function CreateitemButton(num,itemName) {
         NewButton.BLoadLayoutSnippet("QuestLine");
         NewButton.GetChild(0).itemname = itemName
         NewButton.GetChild(1).text = $.Localize("DOTA_Tooltip_ability_"+itemName)
-        NewButton.SetPanelEvent('onactivate',function() {    Yes(num); }  ) ;
+        NewButton.SetPanelEvent('onactivate',function() {    goget(num); }  ) ;
         NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;
     //NewButton.GetChild(0).id = String(itemName)
-    //NewButton.AddClass("Panle_MarginStyle")
-/*
-    NewButton.onactivate = Yes(num)       //在这里就触发了,按钮不触发
-    NewButton.onactivate = Yes+(num)      //按钮不能触发回调
-    NewButton.onactivate = 'Yes('+num+')' //按钮不能触发回调
-    NewButton.onactivate = function() { Yes(num); } ; //按钮不能触发回调
-    NewButton.onclick    = function() { Yes(num); } ; //按钮不能触发回调
-*/
+    //NewButton.AddClass("Panle_MarginStyle") 
     
 }
+
 function RemoveitemButton(num) {
     var RemoveButton=$('#DianJiangTai').FindChild("hero"+num)
-    RemoveButton.deleted = true;
-    RemoveButton.DeleteAsync(0);
+        RemoveButton.deleted = true;
+        RemoveButton.DeleteAsync(0);
 }
+
 function CreateitemPanel(num,itemName) {
-    if ($('#DianJiangTai').GetParent().FindChild("itemMenu")){RemoveitemPanel()}
-    var localnum
+    if ( $('#DianJiangTai').GetParent().FindChild("itemMenu")){ RemoveitemPanel() }
+    //var localnum
     var NewPanel = $.CreatePanel('Panel',$('#DianJiangTai').GetParent(),"itemMenu");
-        NewPanel.BLoadLayoutSnippet("RightClick");
-        
-        //NewPanel.AddClass("Panle_MarginStyle")
+        NewPanel.BLoadLayoutSnippet("RightClick"); 
         NewPanel.GetParent().hittest=true;
-        NewPanel.GetParent().SetPanelEvent('onactivate',function() { RemoveitemPanel(); }  ) ;
-        //NewPanel.GetParent().SetPanelEvent('onactivate',function() { 
-          //  RemoveitemPanel();}  ) ;
-        //NewPanel.GetChild(0).SetDialogVariable('item_panel_name', itemName)
+        NewPanel.GetParent().SetPanelEvent('onactivate',function() { RemoveitemPanel(); }  ) ; 
+      //NewPanel.GetChild(0).SetDialogVariable('item_panel_name', itemName)
         NewPanel.GetChild(0).SetPanelEvent('onactivate',function() { 
             GameUI.SendCustomHUDError( "#noreadyforlvlup", "Loot_Drop_Stinger_Short" );
-            //GameEvents.SendCustomGameEventToServer( "item_lvl_up", {num: num,item:itemName} ); 
+          //GameEvents.SendCustomGameEventToServer( "item_lvl_up", {num: num,item:itemName} ); 
             RemoveitemPanel();}  ) ;
         NewPanel.GetChild(1).SetPanelEvent('onactivate',function() { 
             GameEvents.SendCustomGameEventToServer( "item_on_sell", {num: num,item:itemName} ); 
             RemoveitemPanel();}  ) ;
+
     for (var i=0;i<maxhero+1;i++){
         if ( $('#DianJiangTai').FindChild("hero"+num) == $('#DianJiangTai').GetChild(i)) {
-            localnum=i
+            var localnum=i
             break;} 
         }
         $.Msg("xxx",localnum);
         NewPanel.SetPositionInPixels( 89.5*localnum-510 , 750, 0);
-        //312 _ 485 _ 58 _ 0 _ 49 _ 0.614814817905426 _ 312 _ 0 _ 553 _ 0.614814817905426
-    var posa=$('#DianJiangTai').GetPositionWithinWindow()
-    var posb=$('#DianJiangTai').GetParent().GetPositionWithinWindow()
+    //312 _ 485 _ 58 _ 0 _ 49 _ 0.614814817905426 _ 312 _ 0 _ 553 _ 0.614814817905426
+    //var posa=$('#DianJiangTai').GetPositionWithinWindow()
+    //var posb=$('#DianJiangTai').GetParent().GetPositionWithinWindow()
     //$.Msg(posa.x," _ ",posa.y," _ ",
     //$('#DianJiangTai').GetChild(0).actualxoffset," _ ",
     //$('#DianJiangTai').GetChild(0).scrolloffset_x," _ ",
