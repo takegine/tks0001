@@ -51,7 +51,7 @@ function GameForUnit:OnGameInPlan( ... )
             caster:RemoveModifierByName("modifier_"..abiName)
         end]]
 
-        if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then
+        if  PlayerResource:GetSelectedHeroEntity(i-1) then
             local startPos   =Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()
             local endPos     =Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
             local pathlength =(startPos-endPos)/16
@@ -59,6 +59,9 @@ function GameForUnit:OnGameInPlan( ... )
                 local newPos = startPos - pathlength *j
                 local zhalan = CreateUnitByName("build_zhalan",newPos,false,nil,nil,i +5)
             end
+
+            local refreshupcount = _G.GAME_ROUND==1 and 10 or 5
+            for R=1,refreshupcount do GetNewHero:UptoDJT(i-1,SET_FIRST_HERO) end
         end
     end
         -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
@@ -268,66 +271,69 @@ end
 
 function GameForUnit:OnNPCSpawned(keys )
     local  npc = EntIndexToHScript(keys.entindex)
-    if npc:GetName()== "npc_dota_fort" or npc.enemy then return end
-
+    if npc:GetName()== "npc_dota_fort" 
+    or npc:GetName()== "npc_dota_building" 
+    or npc.bFirstSpawned
+    or not npc:GetPlayerOwner() then 
+        return 
+    end
 
     print("[BAREBONES] NPC Spawned",npc:GetUnitName())
 
-    if  npc.bFirstSpawned == nil then npc.bFirstSpawned = true
+    npc.bFirstSpawned = true
 
-        if npc:IsRealHero() then
-            for R=1,10 do GetNewHero:UptoDJT(npc:GetPlayerOwnerID(),SET_FIRST_HERO) end
-            for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end 
+    if npc:IsRealHero() then
+        for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end 
 
-            npc.Ticket=PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
+        npc.Ticket=PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
 
-            CustomUI:DynamicHud_Create(npc:GetPlayerID(),"psd","file://{resources}/layout/custom_game/uiscreen.xml",nil)
-            CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerID()),{popMax=LOCAL_POPLATION,popNow=0} ) 
-            if GetMapName=="map0" then CustomGameEventManager:Send_ServerToTeam(npc:GetTeam(), "CameraRotateHorizontal", {angle=npc:GetPlayerID()*360/8}) end
-        else
-            if _G.npcBaseType[npc:GetUnitName()] then
-                local attack_type = _G.npcBaseType[npc:GetUnitName()][1] or "none"
-                local defend_type = _G.npcBaseType[npc:GetUnitName()][2] or "none"
-                
-                npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
-                npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
-                npc.popuse = tonumber(_G.npcBaseType[npc:GetUnitName()][3]) or 1
+        CustomUI:DynamicHud_Create(npc:GetPlayerID(),"psd","file://{resources}/layout/custom_game/uiscreen.xml",nil)
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerID()),{popMax=LOCAL_POPLATION,popNow=0} ) 
+        if GetMapName=="map0" then CustomGameEventManager:Send_ServerToTeam(npc:GetTeam(), "CameraRotateHorizontal", {angle=npc:GetPlayerID()*360/8}) end
+    else
+        local NameX = npc:GetUnitName()
+        if _G.npcBaseType[NameX] then
+            local attack_type = _G.npcBaseType[NameX][1] or "none"
+            local defend_type = _G.npcBaseType[NameX][2] or "none"
+            
+            npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
+            npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
+            npc.popuse = tonumber(_G.npcBaseType[NameX][3]) or 1
 
-            elseif npc:IsHero() then
-                local NameX = npc:GetUnitName()
-                local attack_type = tkHeroList[NameX]["TksAttackType"] or "none"
-                local defend_type = tkHeroList[NameX]["TksDefendType"] or "none"
-                
-                npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
-                npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
-                npc.popuse = tonumber(tkHeroList[NameX]["TksPopUse"]) or 1
-                                
-                _G.npcBaseType[NameX]={}
-                table.insert( _G.npcBaseType[NameX], attack_type )
-                table.insert( _G.npcBaseType[NameX], defend_type )
-                table.insert( _G.npcBaseType[NameX], npc.popuse  )
-                
-            elseif tkUnitList[npc:GetUnitName()] then
-                local NameX = npc:GetUnitName()
-                local attack_type = tkUnitList[NameX]["TksAttackType"] or "none"
-                local defend_type = tkUnitList[NameX]["TksDefendType"] or "none"
-                
-                npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
-                npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
-                npc.popuse = tonumber(tkUnitList[NameX]["TksPopUse"]) or 1
-                                
-                _G.npcBaseType[NameX]={}
-                table.insert( _G.npcBaseType[NameX], attack_type )
-                table.insert( _G.npcBaseType[NameX], defend_type )
-                table.insert( _G.npcBaseType[NameX], npc.popuse  )
-                
-            end
-
-            local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID())) 
-            tPop['popNow'] = tPop['popNow'] + npc.popuse  
-            CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
+        elseif npc:IsHero() then
+            local attack_type = tkHeroList[NameX]["TksAttackType"] or "none"
+            local defend_type = tkHeroList[NameX]["TksDefendType"] or "none"
+            
+            npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
+            npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
+            npc.popuse = tonumber(tkHeroList[NameX]["TksPopUse"]) or 1
+                            
+            _G.npcBaseType[NameX]={}
+            table.insert( _G.npcBaseType[NameX], attack_type )
+            table.insert( _G.npcBaseType[NameX], defend_type )
+            table.insert( _G.npcBaseType[NameX], npc.popuse  )
+            
+        elseif tkUnitList[NameX] then
+            local attack_type = tkUnitList[NameX]["TksAttackType"] or "none"
+            local defend_type = tkUnitList[NameX]["TksDefendType"] or "none"
+            
+            npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
+            npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
+            npc.popuse = tonumber(tkUnitList[NameX]["TksPopUse"]) or 1
+                            
+            _G.npcBaseType[NameX]={}
+            table.insert( _G.npcBaseType[NameX], attack_type )
+            table.insert( _G.npcBaseType[NameX], defend_type )
+            table.insert( _G.npcBaseType[NameX], npc.popuse  )
+            
+        else print(NameX,"error create without kind") return
         end
+        
+        local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID())) 
+        tPop['popNow'] = tPop['popNow'] + npc.popuse  
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID()),tPop) 
     end
+
 end
 
 function GameForUnit:DamageFilter(filterTable)

@@ -42,7 +42,7 @@ function GameMode:InitGameMode()
     ListenToGameEvent("game_rules_state_change",Dynamic_Wrap(self.game,"OnGameRulesStateChange"), self.game)
     ListenToGameEvent("entity_killed",          Dynamic_Wrap(self.game,"OnEntityKilled"), self.game)
     ListenToGameEvent("npc_spawned",            Dynamic_Wrap(self.game, "OnNPCSpawned"), self.game)
-    ListenToGameEvent("player_connect_full",    Dynamic_Wrap(GameMode, "OnConnectFull"), self)
+    ListenToGameEvent("player_connect_full",    Dynamic_Wrap(self, "OnConnectFull"), self)
 
     CustomGameEventManager:RegisterListener("createnewherotest", Dynamic_Wrap(self,"createnewherotest") )
     CustomGameEventManager:RegisterListener("refreshlist",       Dynamic_Wrap(self, 'refreshlist'))

@@ -13,11 +13,12 @@
 		<snippet name="QuestLine">
             <Button class="btnhero"
                     onactivate='' 
-                    style='flow-children:down;margin-left:5px;width:80px;margin-right:5px;'> 
+                    style='flow-children:down;margin-left:5px;width:80px;height:80px;margin-right:5px;'> 
                 
-                <DOTAItemImage itemname='' style='' />
-                <Label  class="getherotext" text="" 
-                        style="white-space:nowrap;width:50px;"/>
+                <Image style=' width:80px;height:80px;background-image:url("file://{resources}/images/custom_game/unithead.jpg"); background-size: 100%;'
+                       src='file://{resources}/images/custom_game/uiPanel00.png' scaling='stretch' />
+                <Label class="getherotext" text="" 
+                       style="white-space:nowrap;height:80px;"/>
             </Button>
 		</snippet>
 	</snippets>
@@ -35,3 +36,6 @@
         </Panel>
     </Panel>
 </root>
+
+
+<!--Image style=' background-image:url("file://{resources}/images/custom_game/unithead.jpg");' src='' scaling='stretch' /-->

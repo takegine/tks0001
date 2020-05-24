@@ -9,17 +9,18 @@ function gofind(i){
         GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
         return
         }
-    else{ 
+    else{ $.Msg("input="+i)
         GameEvents.SendCustomGameEventToServer( "find_wujiang", {id: Players.GetLocalPlayer(),way: i} );  
         } 
             
 }
 function goget(i) {
-    var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(0).itemname 
+    $.Msg("goget")
+    var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(1).text
             //iWays = $.GetContextPanel().GetParent().id()
     var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
     var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
-        if(!iWays ){ return }
+         if(!iWays ){ return }
     else if(stat=="1"){
             GameUI.SendCustomHUDError( "#OnGameRoundChange", "Tutorial.Notice.Speech" )
             return }
@@ -117,10 +118,12 @@ function shopUp(data){
 function CreateitemButton(num,itemName) {
     var NewButton = $.CreatePanel('Button', $('#DianJiangTai'),"hero"+num);
         NewButton.BLoadLayoutSnippet("QuestLine");
-        NewButton.GetChild(0).itemname = itemName
-        NewButton.GetChild(1).text = $.Localize("DOTA_Tooltip_ability_"+itemName)
+        //NewButton.GetChild(0).scr = 'file://{resources}/images/custom_game/unithead/wujiang_'+itemName.slice(9)+'.jpg'
+        NewButton.GetChild(1).id   = itemName
+        NewButton.GetChild(1).text = $.Localize(itemName)//"DOTA_Tooltip_ability_"+
         NewButton.SetPanelEvent('onactivate',function() {    goget(num); }  ) ;
         NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;
+        $.Msg(itemName.slice(9))
     //NewButton.GetChild(0).id = String(itemName)
     //NewButton.AddClass("Panle_MarginStyle") 
     

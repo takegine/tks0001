@@ -31,8 +31,8 @@ function wujiang_first(params) {
 	var itemName =params.event
 	var NewPanel = $.CreatePanel('Button', $('#FirstHero'),"hero"+num);
 		NewPanel.BLoadLayoutSnippet("QuestLine");
-		NewPanel.GetChild(0).itemname = itemName
-		NewPanel.GetChild(1).text = $.Localize("DOTA_Tooltip_ability_"+itemName)
+        //NewPanel.GetChild(0).scr = 'file://{resources}/images/custom_game/unithead/wujiang_'+itemName.slice(9)+'.jpg'
+		NewPanel.GetChild(1).text = $.Localize(itemName)
 		NewPanel.SetPanelEvent('onactivate',function() {OpenInfo(num) }  ) ;
 }
 
