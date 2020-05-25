@@ -25,3 +25,7 @@ if #_G.ItemHeroName == 0  then
       end
   end
 end
+
+Custom_XP_Required ={
+    100000
+}
