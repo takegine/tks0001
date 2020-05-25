@@ -31,7 +31,6 @@
 		// Range of vision at night time.
 		"VisionNighttimeRange"	"1800"
 		"StatusHealthRegen"	"0"
-		"UnitLabel"	"builder"
 		"AutoAttacksByDefault"	"0"
 		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_FLY"
 		"MovementSpeed"	"550"
@@ -92,6 +91,7 @@
 		"StatusManaRegen"	"200"
 		"UnitLabel"	"shuguo"
 	}
+
 	"npc_hero_wudalang"
 	{
 		"Ability1"	""
@@ -166,5 +166,4 @@
 		"TksdefendType"	"none"
 		"Level"	"1"
 	}
-
 }

@@ -1,4 +1,5 @@
 var maxhero = 10
+var dianjiangList ={}
 
 function gofind(i){
     if($('#DianJiangTai').GetChild(maxhero-1)){
@@ -16,7 +17,7 @@ function gofind(i){
 }
 function goget(i) {
     $.Msg("goget")
-    var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(1).text
+    var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(1).GetChild(0).id
             //iWays = $.GetContextPanel().GetParent().id()
     var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
     var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
@@ -82,34 +83,20 @@ function close(i){
 function shopUp(data){
     if(data.event == "noget"){GameUI.SendCustomHUDError( "#noget", "ui_find_match_change_options" )}
     else if(data.event == "poorguy"){ GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" )    }
-    else if(typeof(data.event) == "number"){
-            //$("#gethero3").visible = false;
-            //$('#hero0').GetChild(0).itemname = "item_empty_block";
-            //$('#hero0').GetChild(1).text = "item_empty_block";
-            RemoveitemButton(data.event)
-            //CreatePanel(data.event,"item_empty_block")
+    else if(typeof(data.event) == "number"){ 
+            RemoveitemButton(data.event) 
             }    
-    else{
-        
+    else{ 
         for (var i=1;i<maxhero+1;i++){
             if ( !$('#DianJiangTai').FindChild("hero"+i)) {
-                CreateitemButton(i,data.event)
-                //$.Msg($('#DianJiangTai').GetChild(i).GetChild(1).text)
-                break;} 
-            
-            }
-        /*
-        else if ( $('#DianJiangTai').GetChild(i).GetChild(0).itemname =="item_empty_block") {
-                RemovePanel(i)
-                CreatePanel(i,data.event)
-                break;}
-        for (var i=1;i<maxhero+1;i++){
-           if ( $('#DianJiangTai').FindChild("hero"+i) ){
-                
-            $.Msg($('#DianJiangTai').GetChild(i).GetChild(0).itemname)
-            }            
-        }*/
-        $.Msg("shopUp",data,data.event);
+                CreateitemButton(i,data.event) ;
+                if(!dianjiangList[Players.GetLocalPlayer()])
+                     {  dianjiangList[Players.GetLocalPlayer()]    = { }        }
+                else {  dianjiangList[Players.GetLocalPlayer()][i] = data.event }
+                break;
+            }  
+        } 
+        $.Msg("shopUp"," ",data," ",data.event);
         $("#DianJiangTai").visible = true;
         //$("#gethero3").visible = true;
     }
@@ -119,11 +106,14 @@ function CreateitemButton(num,itemName) {
     var NewButton = $.CreatePanel('Button', $('#DianJiangTai'),"hero"+num);
         NewButton.BLoadLayoutSnippet("QuestLine");
         //NewButton.GetChild(0).scr = 'file://{resources}/images/custom_game/unithead/wujiang_'+itemName.slice(9)+'.jpg'
-        NewButton.GetChild(1).id   = itemName
+        NewButton.GetChild(0).SetUnit(itemName,"nil" ,true);
+       // NewButton.GetChild(1).unit = 'npc_dota_hero_axe'
+        //NewButton.GetChild(1).id(itemName)
         NewButton.GetChild(1).text = $.Localize(itemName)//"DOTA_Tooltip_ability_"+
         NewButton.SetPanelEvent('onactivate',function() {    goget(num); }  ) ;
         NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;
-        $.Msg(itemName.slice(9))
+        $.CreatePanel('Panel', NewButton.GetChild(1),itemName);
+        $.Msg(itemName.slice(9)," ",NewButton.id," ",NewButton.GetChild(1).GetChild(0).id)
     //NewButton.GetChild(0).id = String(itemName)
     //NewButton.AddClass("Panle_MarginStyle") 
     

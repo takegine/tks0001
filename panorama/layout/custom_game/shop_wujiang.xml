@@ -13,9 +13,10 @@
                     onactivate='' 
                     oncontextmenu=''
                     style='flow-children:down;margin-left:5px;width:80px;height:80px;margin-right:5px;'> 
-                
+                <DOTAScenePanel unit=""  light="global_light" antialias="true" renderdeferred="false" particleonly="false" style="width:64px; height:64px; opacity-mask:url(s2r://panorama/images/masks/chat_opacity_mask_png.vtex);"/>
+                <!--DOTAScenePanel id="hero_draw_card_'+i+'" class="hero_draw_card" unit="'+CHESS_2_HERO[MY_DRAW_CHESS_LIST[i]]+'"  light="global_light" antialias="true" renderdeferred="false" particleonly="false"/>
                 <Image style=' width:64px;height:64px;background-image:url("file://{resources}/images/custom_game/unithead/wujiang_shenguanyu.jpg");background-size: 100%; ' 
-                       src='file://{resources}/images/custom_game/uiPanel00.png' scaling='stretch' />
+                       src='file://{resources}/images/custom_game/uiPanel00.png' scaling='stretch' /-->
                 <Label class="" text="" 
                        style="white-space:nowrap;width:50px;"/>
             </Button>
@@ -74,3 +75,6 @@
 
     </Panel>
 </root>
+
+
+

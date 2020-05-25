@@ -8,13 +8,15 @@ function GetNewHero:listen()
     CustomGameEventManager:RegisterListener("item_on_sell",Dynamic_Wrap(self, 'itemOnSell'))
     
     
-    table.foreach(tkUnitList,function(hero, info)              
+    
+    table.foreach(tkHeroList,function(hero, info)              
         if  info ~= 1 then
-            if  info.UnitLabel == "qunxiong"   then table.insert( _G.tkHeroName['qunxiong'], hero )  
-            elseif  info.UnitLabel == "shuguo" then table.insert( _G.tkHeroName['shuguo'], hero )  
-            elseif  info.UnitLabel == "wuguo"  then table.insert( _G.tkHeroName['wuguo'], hero )  
-            elseif  info.UnitLabel == "weiguo" then table.insert( _G.tkHeroName['weiguo'], hero )  
+            if  info.UnitLabel == "qunxiong"   then table.insert( _G.tkHeroName['qunxiong'], info.override_hero )  
+            elseif  info.UnitLabel == "shuguo" then table.insert( _G.tkHeroName['shuguo'], info.override_hero )  
+            elseif  info.UnitLabel == "wuguo"  then table.insert( _G.tkHeroName['wuguo'], info.override_hero )  
+            elseif  info.UnitLabel == "weiguo" then table.insert( _G.tkHeroName['weiguo'], info.override_hero )  
             end
+            if  info.UnitLabel then table.insert( _G.tkHeroName['all'], info.override_hero )  end
         end
     end)
 end
@@ -53,7 +55,7 @@ function GetNewHero:find_wujiang( data )
     
     local rolltable ={}
     if data.way == "country" then rolltable =_G.tkHeroName[hero.country] end
-    if data.way == "hero" then rolltable = tkUnitList end
+    if data.way == "hero" then rolltable = _G.tkHeroName['all'] end
 
     if RollPercentage(chance) then 
         --local itemID="150"..RandomInt(1,3)
@@ -74,14 +76,15 @@ function GetNewHero:LetHeroTrue( data )
     local hero = PlayerResource:GetSelectedHeroEntity(data.id)
     local unitName = data.way 
     local findcost = 100 --减钱
-
+    print(unitName)
     if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"poorguy") return
     else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
     end
 
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
-    local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
-          vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
+    --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
+    --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
+    CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),function(v) v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) end)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
 
     if data.No then GetNewHero:UptoDJT(data.id,data.No) end

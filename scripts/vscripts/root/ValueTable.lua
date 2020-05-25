@@ -8,7 +8,7 @@ _G.GAME_ROUND   = 0--初始化轮数
    tkShipList   = LoadKeyValues('scripts/npc/npc_ships_custom.txt')
    DamageKV     = LoadKeyValues("scripts/damage_table.kv")
 _G.ItemHeroName = {}-- k,v = i,item_hero_xxxx
-_G.tkHeroName   = {['weiguo']={},['shuguo']={},['wuguo']={},['qunxiong']={}}
+_G.tkHeroName   = {['weiguo']={},['shuguo']={},['wuguo']={},['qunxiong']={},['all']={}}
 _G.ShipNeedom   = {}
 _G.npcBaseType  = {}
 
