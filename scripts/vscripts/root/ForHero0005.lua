@@ -84,7 +84,7 @@ function GetNewHero:LetHeroTrue( data )
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
     --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
     --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
-    CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),function(v) v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) end)
+    CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),function(v) v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) v:SetUnitCanRespawn(true) end)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
 
     if data.No then GetNewHero:UptoDJT(data.id,data.No) end

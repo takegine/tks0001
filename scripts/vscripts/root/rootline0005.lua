@@ -28,7 +28,7 @@ function GameForUnit:OnGameRoundChange()
             else--pvp
                 local Ts   = RandomInt(1,#_G.buildpostab) 
                 local PosB = Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
-                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v['unit'],PosB-v['origin'],i,Ts) end)
+                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,PosB-v.origin,i,Ts) end)
             end
         end
     end
@@ -67,15 +67,15 @@ function GameForUnit:OnGameInPlan( ... )
         -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
     table.foreach(_G.buildpostab,function(i,p) 
     table.foreach(p,function(_,v) 
-        if  v['unit'] and not v['unit']:IsNull() then
-            v['unit']:Kill(nil,v['unit'])
+        if  v.unit and not v.unit:IsNull() then
+            v.unit:Kill(nil,v.unit)
             Timer(0.1,function()
-                v['unit']:RespawnUnit()
-                v['unit']:SetOrigin(v['origin']+Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()) 
-                v['unit']:SetHealth(v['unit']:GetMaxHealth()) 
-                v['unit']:SetMana(v['unit']:GetMaxMana()) 
+                v.unit:RespawnUnit()
+                v.unit:SetOrigin(v.origin+Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()) 
+                v.unit:SetHealth(v.unit:GetMaxHealth()) 
+                v.unit:SetMana(v.unit:GetMaxMana()) 
             end)
-            for q=0,10 do if v['unit']:GetAbilityByIndex(q) then v['unit']:GetAbilityByIndex(q):EndCooldown()end end
+            for q=0,10 do if v.unit:GetAbilityByIndex(q) then v.unit:GetAbilityByIndex(q):EndCooldown()end end
         end
     end)
     end)
@@ -88,7 +88,7 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{1} )
             
             --全体防守加状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(GameForUnit:FindAllByKey("creature"),function(_,v) 
+            table.foreach(self:FindAllByKey("all"),function(_,v) 
                 if v:IsMoving() then v:Stop() end
                 local abiName = "skill_player_countdown"
                 v:AddAbility(abiName)
@@ -108,9 +108,8 @@ function GameForUnit:OnGameInPlan( ... )
                     
                     _G.buildpostab[i]={}
                     table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
-                        if  v:GetName() == "npc_dota_creature" then 
-                            v:SetUnitCanRespawn(true)
-                            _G.buildpostab[i][k]={['unit']=v,['origin']=v:GetOrigin()-PosA}
+                        if  v:GetName() ~= SET_FORCE_HERO then 
+                            _G.buildpostab[i][k]={unit=v,origin=v:GetOrigin()-PosA}
                         end
                     end)
                 end
@@ -118,7 +117,7 @@ function GameForUnit:OnGameInPlan( ... )
 
         elseif return_time == 3 then GameForUnit:OnGameRoundChange()
         elseif return_time == 2 then--forward
-            table.foreach(GameForUnit:FindAllByKey("creature"),function(k,unit) 
+            table.foreach(self:FindAllByKey("all"),function(k,unit) 
                 print(k,unit:GetUnitName())
                 if  unit.enemy then
                     unit:FaceTowards(unit:GetAbsOrigin()+Vector(0,-1,0))
@@ -138,7 +137,7 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{2} )
             
             --全体删状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(GameForUnit:FindAllByKey("creature"),function(_,caster) 
+            table.foreach(self:FindAllByKey("all"),function(_,caster) 
                 local abiName = "skill_player_countdown"
                 caster:RemoveAbility(abiName)
                 caster:RemoveModifierByName("modifier_"..abiName)
@@ -213,7 +212,7 @@ function GameForUnit:OnGameInPlan( ... )
             print("batter countdown time:"..return_time)
             return 1 
         else
-            table.foreach(GameForUnit:FindAllByKey("enemy"),function(_,unit) unit:Kill(nil,unit) end)
+            table.foreach(self:FindAllByKey("enemy"),function(_,unit) unit:Kill(nil,unit) end)
             CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=false,timeMax=0,timeNow=0} )
         end
     end)
@@ -282,7 +281,7 @@ function GameForUnit:OnNPCSpawned(keys )
 
     npc.bFirstSpawned = true
 
-    if npc:IsRealHero() then
+    if npc:GetName()==SET_FORCE_HERO then
         for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end 
 
         npc.Ticket=PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
@@ -301,6 +300,9 @@ function GameForUnit:OnNPCSpawned(keys )
             npc.popuse = tonumber(_G.npcBaseType[NameX][3]) or 1
 
         elseif npc:IsHero() then
+            for k,v in pairs(tkHeroList)do
+                if NameX==v.override_hero then NameX=k break end
+            end
             local attack_type = tkHeroList[NameX]["TksAttackType"] or "none"
             local defend_type = tkHeroList[NameX]["TksDefendType"] or "none"
             
@@ -417,7 +419,7 @@ function ShuaGuai( CreateName,origin,iTeam,iReTeam)
     CreateUnitByNameAsync(vName,vPos,false,nil,nil,iReTeam,  function( v ) 
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         v:SetInitialGoalEntity( ShuaGuai_entity )
-        v:SetRequiresReachingEndPath(true)
+        --v:SetRequiresReachingEndPath(true)
         v:AddAbility(abiName)
         v:FindAbilityByName(abiName):SetLevel(1)
         v.enemy=true end)  
@@ -431,10 +433,46 @@ function GameForUnit:FindAllByKey(key)
     end
 
     if key=="enemy" then 
-        table.foreach(Entities:FindAllByName("npc_dota_creature"),function(k,v)
+        table.foreach(Entities:FindAllByName("npc_dota_creature"),function(_,v)
             if  v.enemy and v:IsAlive() then table.insert(rheroes,v) end
         end)
+        table.foreach(HeroList:GetAllHeroes(),function(_,v)
+            if   v.enemy and v:IsAlive()  then table.insert(rheroes,v) end
+        end)
         
+        return rheroes
+    end
+
+    if key=="all" then
+        rheroes=Entities:FindAllByName("npc_dota_creature")
+        table.foreach(HeroList:GetAllHeroes(),function(_,v)
+            if  v:GetName()~=SET_FORCE_HERO  then table.insert(rheroes,v) end
+        end)
+
+        
+        return rheroes
+    end
+
+    if key=="allx" then---有个同队的没有name的实体无法排除
+        
+        table.foreach(Entities:FindAllInSphere(Vector(0,0,0), 99999),function(k,v)
+            print(k,v)
+            --if v:GetUnitName() then print(v:GetUnitName())
+            --else
+            if v:GetName() then print(v:GetName())
+            end
+
+            --v:getclass(instanceObj)
+            --if v:IsPlayer() then print(v,"true") end
+            if  v:GetTeam()~=4  and v:GetTeam()~=0 
+            and v:GetName()~=SET_FORCE_HERO 
+            and v:GetName()~="npc_dota_building"
+            and v:GetName()~="npc_dota_fort" then
+                table.insert(rheroes,v)
+                print(k,v,v:GetTeam(),v:GetName(),v:GetClassname())
+            end
+        end)
+        table.foreach(rheroes,function(c,s) print(c,s,s:GetTeam(),s:GetName()) end) --function(_,x) table.foreach(x,  end)
         return rheroes
     end
         --[[

@@ -3,7 +3,6 @@
 
 "DOTAHeroes"
 {
-	"Version"		"1"
 
 	// ================
 	// 信使
@@ -90,6 +89,9 @@
 		"StatusHealth"	"2200"
 		"StatusManaRegen"	"200"
 		"UnitLabel"	"shuguo"
+		"TksPopUse"	"2"
+		"TksAttackType"	"fire"
+		"TksdefendType"	"none"
 	}
 
 	"npc_hero_wudalang"
@@ -122,6 +124,10 @@
 		"StatusMana"	"100"
 		"StatusManaRegen"	"0.5"
 		"StatusStartingMana"	"2"
+		"UnitLabel"	"shuguo"
+		"TksPopUse"	"2"
+		"TksAttackType"	"fire"
+		"TksdefendType"	"none"
 	}
 
 	"npc_hero_zhangzilong"
