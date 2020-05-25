@@ -61,11 +61,15 @@ function GameMode:OnConnectFull(keys)
     if  mode == nil then
         -- Set GameMode parameters
         mode = GameRules:GetGameModeEntity()
-    
+        mode:SetCustomHeroMaxLevel(MAX_LEVEL)
+        mode:SetBuybackEnabled(false)
+        mode:SetUseCustomHeroLevels(true)
+        mode:SetCustomXPRequiredToReachNextLevel(handle a)
         --mode:SetLoseGoldOnDeath(false)--死亡后自己不扣钱
         mode:SetTopBarTeamValuesVisible( true )
         mode:SetStashPurchasingDisabled( true )
-        mode:SetFogOfWarDisabled( true )
+        mode:SetStickyItemDisabled(true)
+        mode:SetFogOfWarDisabled( FOG_OF_WAR )
         mode:SetCameraDistanceOverride( 1000)--设置镜头
         mode:SetCustomGameForceHero(SET_FORCE_HERO)
         mode:SetHUDVisible(18,false)
