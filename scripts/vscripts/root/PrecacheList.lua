@@ -1,11 +1,13 @@
 SET_UP_AUTO_LAUNCH_DELAY = 20 
 SET_FORCE_HERO     ="npc_dota_hero_phoenix"
 SET_FIRST_HERO     ="npc_dota_creature_gnoll_assassin"
-SET_PREGAME_TIME   = 5  
+MAX_LEVEL          = 10
+SET_PREGAME_TIME   = 0.0  
 TIME_BETWEEN_ROUND = 30
 TIME_BATTER_MAX    = 60   
 SET_STARTING_GOLD  = 4000  
 LOCAL_POPLATION    = 10  
+FOG_OF_WAR_DISABLE = true
 YOUR_IN_TEST       = true
 LOCAL_VERSION      = '0005'
 
