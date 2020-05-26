@@ -3,6 +3,7 @@
 
 "DOTAHeroes"
 {
+	"Version"		"1"
 
 	// ================
 	// 信使
@@ -154,7 +155,7 @@
 		"AttackCapabilities"	"DOTA_UNIT_CAP_MELEE_ATTACK"
 		"AttackDamageMin"	"50"
 		"AttackDamageMax"	"70"
-		"AttackRate"	"230"
+		"AttackRate"	"0.6"
 		"AttackAcquisitionRange"	"900"
 		"AttackRange"	"150"
 		"MovementCapabilities"	"DOTA_UNIT_CAP_MOVE_GROUND"
@@ -171,5 +172,6 @@
 		"TksAttackType"	"fire"
 		"TksdefendType"	"none"
 		"Level"	"1"
+		"AttackAnimationPoint"	"1"
 	}
 }
