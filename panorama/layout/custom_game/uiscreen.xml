@@ -13,10 +13,9 @@
 		<snippet name="QuestLine">
             <Button class="btnhero"
                     onactivate='' 
-                    style='flow-children:down;margin-left:5px;width:80px;height:80px;margin-right:5px;'> 
+                    style='flow-children:down;margin-left:5px;margin-right:5px;'> 
                 
-                <Image style=' width:80px;height:80px;background-image:url("file://{resources}/images/custom_game/unithead.jpg"); background-size: 100%;'
-                       src='file://{resources}/images/custom_game/uiPanel00.png' scaling='stretch' />
+                <DOTAScenePanel unit=""  light="global_light" antialias="true" renderdeferred="fasle" particleonly="false" style="width:150px; height:150px; opacity-mask:url(s2r://panorama/images/masks/chat_opacity_mask_png.vtex);"/>
                 <Label class="getherotext" text="" 
                        style="white-space:nowrap;height:80px;"/>
             </Button>
