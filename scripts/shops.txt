@@ -1,23 +1,29 @@
 
 "dota_shops"
 {
-	"consumables"
+	//"consumables" { }//消耗品
+	"secretshop"  
 	{
-    	"item"		"item_shop_population"
-	
-	}
-	//"secretshop"  { }
-	//"attributes" {	}
+		"item"		"item_shop_population" 
+	}//神秘商店
+
+	"attributes" 
+	{
+		"item"		"item_weapon_qinggangjian"	
+	}//属性
+
 	"weapons_armor"
-    {	"item"		"item_armor_baiyuhuan"}
-	"misc" 
-	{"item"		"item_weapon_qinggangjian"}
-	//"basics" {}
+    {
+		"item"		"item_armor_baiyuhuan"
+	}
+	//"misc"  {}//其他
+	//-----------------------------------------------------
+	//"basics" {}//配件
 	//"support" {}
 	//"magics" {}
 	//"defense" { }
 	//"weapons" { }
-	//"artifacts" {}
+	//"artifacts" {}//宝物
 	//"sideshop1" {}
 	//"sideshop2" {}
 
