@@ -91,8 +91,8 @@ function GetNewHero:LetHeroTrue( data )
         v:SetUnitCanRespawn(true) 
         local lv=v:GetLevel()
         if unitlvl then 
-            while( v:GetLevel() < unitlvl )
-                do v:HeroLevelUp(false)
+            while( v:GetLevel() < unitlvl ) do
+                   v:HeroLevelUp(false)
             end
             for i=0,15 do 
                 if  v:GetAbilityByIndex(i) then 
