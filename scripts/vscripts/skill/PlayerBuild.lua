@@ -45,6 +45,7 @@ function OnBack( data )
         end
         if  posempty==true then
             target.bench = true
+            target:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
             target:AddAbility(abiName)
             target:FindAbilityByName(abiName):SetLevel(1)
             target:SetOrigin(itemPos)

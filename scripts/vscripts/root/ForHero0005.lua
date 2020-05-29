@@ -87,6 +87,7 @@ function GetNewHero:LetHeroTrue( data )
     --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
     CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),
     function(v) 
+        v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
         v:SetUnitCanRespawn(true) 
         local lv=v:GetLevel()
