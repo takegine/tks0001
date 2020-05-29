@@ -236,35 +236,26 @@ function GameForUnit:OnEntityKilled( keys )
     end
 end
 
-function GameForUnit:ItemAddedToInventoryFilter( filterTable )  --控制物品被放入物品栏时的行为
-    --[[
-    if filterTable["item_entindex_const"] == nil                  --获得的物品
-    or filterTable["inventory_parent_entindex_const"] == nil then --库存拥有者
-        return true
-    end
-
-
-    print('ItemAddedToInventoryFilter',1)
-    local hItem = EntIndexToHScript( filterTable["item_entindex_const"] )
-    local hInvPar = EntIndexToHScript( filterTable["inventory_parent_entindex_const"] )--InventoryParent
+function GameForUnit:ItemAddedToInventoryFilter( filterTable )
+    local hItem   = EntIndexToHScript( filterTable.item_entindex_const )--获得的物品
+    local hItemPar= EntIndexToHScript( filterTable.item_parent_entindex_const )
+    local hInvPar = EntIndexToHScript( filterTable.inventory_parent_entindex_const )--InventoryParent--库存拥有者
+    local slot    = filterTable.suggested_slot
     
-    if  hItem:GetPurchaser() ~= hInvPar then--不是自己的元素装备不能拾起，下一帧掉落]]
-    --[[   Timers(0.01,function()
-            hInvPar:DropItemAtPositionImmediate( hItem, hInvPar:GetAbsOrigin() )
-        end)]]
-       --return false
-     --[[  
-    print('ItemAddedToInventoryFilter',2)
+    if hItem == nil or hInvPar == nil then return true end
+
+    if     string.find(hItem:GetAbilityName(),"weapon")    then filterTable.suggested_slot=0
+    elseif string.find(hItem:GetAbilityName(),"defend")    then filterTable.suggested_slot=1
+    elseif string.find(hItem:GetAbilityName(),"fittin")    then filterTable.suggested_slot=2
+    elseif string.find(hItem:GetAbilityName(),"horses")    then filterTable.suggested_slot=3
+    elseif string.find(hItem:GetAbilityName(),"armor")     then filterTable.suggested_slot=4
+    elseif string.find(hItem:GetAbilityName(),"queue")     then filterTable.suggested_slot=5
     end
 
-    if  hItem ~= nil and hInvPar ~= nil 
-    and string.find(hItem:GetAbilityName(),"hero")  
-    and hInvPar:IsRealHero() then
+    if hInvPar:GetItemInSlot(filterTable.suggested_slot) then
+        hInvPar:SellItem(hInvPar:GetItemInSlot(filterTable.suggested_slot))
+    end
 
-        print('ItemAddedToInventoryFilter',3)
-        GetNewHero:buy_wujiang( {id=hInvPar:GetPlayerOwnerID(),way=hItem:GetAbilityName(),back=true }) 
-
-    end]]
     return true
 end
 
