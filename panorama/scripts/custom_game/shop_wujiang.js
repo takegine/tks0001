@@ -1,5 +1,5 @@
 var maxhero = 10
-var dianjiangList ={}
+//var dianjiangList ={}
 
 function gofind(i){
     if($('#DianJiangTai').GetChild(maxhero-1)){
@@ -18,6 +18,7 @@ function gofind(i){
 function goget(i) {
     $.Msg("goget")
     var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(1).GetChild(0).id
+    var level = $('#DianJiangTai').FindChild("hero"+i).GetChild(2).text
             //iWays = $.GetContextPanel().GetParent().id()
     var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
     var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
@@ -35,7 +36,7 @@ function goget(i) {
             GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
             return }
     else {  $.Msg('input='+i+iWays);
-            GameEvents.SendCustomGameEventToServer( "get_wujiang", {id: Players.GetLocalPlayer(),way: iWays,No:i} );
+            GameEvents.SendCustomGameEventToServer( "get_wujiang", {id: Players.GetLocalPlayer(),way: iWays,No:i,lvl:level} );
             }
 }
 function showtab() {
@@ -89,10 +90,10 @@ function shopUp(data){
     else{ 
         for (var i=1;i<maxhero+1;i++){
             if ( !$('#DianJiangTai').FindChild("hero"+i)) {
-                CreateitemButton(i,data.event) ;
-                if(!dianjiangList[Players.GetLocalPlayer()])
-                     {  dianjiangList[Players.GetLocalPlayer()]    = { }        }
-                else {  dianjiangList[Players.GetLocalPlayer()][i] = data.event }
+                CreateitemButton(i,data.event,data.lvl) ;
+                //if(!dianjiangList[Players.GetLocalPlayer()])
+                //     {  dianjiangList[Players.GetLocalPlayer()]    = { }        }
+                //else {  dianjiangList[Players.GetLocalPlayer()][i] = data.event }
                 break;
             }  
         } 
@@ -102,7 +103,7 @@ function shopUp(data){
     }
 }
 
-function CreateitemButton(num,itemName) {
+function CreateitemButton(num,itemName,lvl) {
     var NewButton = $.CreatePanel('Button', $('#DianJiangTai'),"hero"+num);
         NewButton.BLoadLayoutSnippet("QuestLine");
         //NewButton.GetChild(0).scr = 'file://{resources}/images/custom_game/unithead/wujiang_'+itemName.slice(9)+'.jpg'
@@ -110,6 +111,7 @@ function CreateitemButton(num,itemName) {
        // NewButton.GetChild(1).unit = 'npc_dota_hero_axe'
         //NewButton.GetChild(1).id(itemName)
         NewButton.GetChild(1).text = $.Localize(itemName)//"DOTA_Tooltip_ability_"+
+        NewButton.GetChild(2).text = lvl
         NewButton.SetPanelEvent('onactivate',function() {    goget(num); }  ) ;
         NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;
         $.CreatePanel('Panel', NewButton.GetChild(1),itemName);
@@ -134,8 +136,9 @@ function CreateitemPanel(num,itemName) {
         NewPanel.GetParent().SetPanelEvent('onactivate',function() { RemoveitemPanel(); }  ) ; 
       //NewPanel.GetChild(0).SetDialogVariable('item_panel_name', itemName)
         NewPanel.GetChild(0).SetPanelEvent('onactivate',function() { 
-            GameUI.SendCustomHUDError( "#noreadyforlvlup", "Loot_Drop_Stinger_Short" );
-          //GameEvents.SendCustomGameEventToServer( "item_lvl_up", {num: num,item:itemName} ); 
+            var level = $('#DianJiangTai').FindChild("hero"+num).GetChild(2).text
+            //GameUI.SendCustomHUDError( "#noreadyforlvlup", "Loot_Drop_Stinger_Short" );
+            GameEvents.SendCustomGameEventToServer( "item_lvl_up", {num: num,lvl:level} ); 
             RemoveitemPanel();}  ) ;
         NewPanel.GetChild(1).SetPanelEvent('onactivate',function() { 
             GameEvents.SendCustomGameEventToServer( "item_on_sell", {num: num,item:itemName} ); 
@@ -189,7 +192,8 @@ function RemoveitemPanel() {
 GameEvents.Subscribe( "OnGameInProgress", OnGameInProgress)*/
 (function(){    
     GameEvents.Subscribe( "wujiang_shopUp", shopUp)
-    GameEvents.Subscribe( "item_selled",function(params) { RemoveitemButton(params.num) } )
+    GameEvents.Subscribe( "wujiang_lvlup" , function(params) { $('#DianJiangTai').FindChild("hero"+params.num).GetChild(2).text = params.lvl })
+    GameEvents.Subscribe( "wujiang_selled", function(params) { RemoveitemButton(params.num) } )
     //$('#hero3').GetChild(0).itemname="item_empty_block";
     $("#find1").visible = false;
     $("#find2").visible = false;

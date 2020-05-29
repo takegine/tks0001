@@ -19,6 +19,8 @@
                        src='file://{resources}/images/custom_game/uiPanel00.png' scaling='stretch' /-->
                 <Label class="" text="" 
                        style="white-space:nowrap;width:50px;"/>
+                <Label class="" text="" 
+                       style="white-space:nowrap;width:50px;"/>
             </Button>
 		</snippet>
 

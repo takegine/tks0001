@@ -7,7 +7,7 @@ function GetNewHero:listen()
     CustomGameEventManager:RegisterListener("item_lvl_up",Dynamic_Wrap(self, 'itemLevelUp'))
     CustomGameEventManager:RegisterListener("item_on_sell",Dynamic_Wrap(self, 'itemOnSell'))
     
-    
+    --self.UptoDJT=GetNewHero:UptoDJT()
     
     table.foreach(tkHeroList,function(hero, info)              
         if  info ~= 1 then
@@ -40,7 +40,7 @@ function GetNewHero:findding_Wj( data )
         elseif type(x) == "table" then for k,v in pairs(x)do print('input',k,v) end
         else GetNewHero:LetHeroTrue( data ) --if type(x)=="string" then--x ~= "undefined"
         end
-    else GetNewHero:UptoDJT(data.id,"poorguy")
+    else GetNewHero:UptoDJT(data.id,"shopUp","poorguy")
     end
 end
 
@@ -49,7 +49,7 @@ function GetNewHero:find_wujiang( data )
     local chance   = 70  
     local findcost = 100 --减钱
 
-    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"poorguy") return
+    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"shopUp","poorguy") return
     else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
     end
     
@@ -64,9 +64,9 @@ function GetNewHero:find_wujiang( data )
 
         print("find_wujiang",randomID,unitName )
 
-        GetNewHero:UptoDJT(data.id,unitName)
+        GetNewHero:UptoDJT(data.id,"shopUp",unitName)
     else
-        GetNewHero:UptoDJT(data.id,"noget")
+        GetNewHero:UptoDJT(data.id,"shopUp","noget")
         hero:SetGold( PlayerResource:GetGold(data.id)+findcost/2, false)
     end  
 end
@@ -75,24 +75,49 @@ function GetNewHero:LetHeroTrue( data )
     --DeepPrintTable(data.way)
     local hero = PlayerResource:GetSelectedHeroEntity(data.id)
     local unitName = data.way 
+    local unitlvl  = tonumber(data.lvl) 
     local findcost = 100 --减钱
-    print(unitName)
-    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"poorguy") return
+    --print(unitName)
+    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"shopUp","poorguy") return
     else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
     end
 
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
     --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
     --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
-    CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),function(v) v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) v:SetUnitCanRespawn(true) end)
+    CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),
+    function(v) 
+        v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
+        v:SetUnitCanRespawn(true) 
+        local lv=v:GetLevel()
+        if unitlvl then 
+            while( v:GetLevel() < unitlvl )
+                do v:HeroLevelUp(false)
+            end
+            for i=0,15 do 
+                if  v:GetAbilityByIndex(i) then 
+                    v:GetAbilityByIndex(i):SetLevel(v:GetLevel()) 
+                end 
+            end 
+        end
+    end)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
 
-    if data.No then GetNewHero:UptoDJT(data.id,data.No) end
+    if data.No then GetNewHero:UptoDJT(data.id,"shopUp",data.No) end
 end 
             
-function GetNewHero:UptoDJT(playID,event)
+function GetNewHero:UptoDJT(playID,key,parmas)
+    key = "wujiang_"..key
+    local sendtab={}
+    if type(parmas) == "table" then
+        sendtab = parmas
+    elseif string.find(parmas,"npc") then
+        sendtab = { event=parmas ,lvl=1}
+    else
+        sendtab = { event=parmas }
+    end
     --if string.find(event,"npc") then event=string.gsub(event,"npc","item") end
-    CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playID), "wujiang_shopUp", {event=event} )
+    CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playID), key, sendtab )
 end
 
 function GetNewHero:playerGetCountry( data )
@@ -121,8 +146,8 @@ function GetNewHero:playerGetCountry( data )
         for i=1,4 do
             local unitID   = RandomInt(1,#_G.tkHeroName[hero.country])
             local unitname = _G.tkHeroName[hero.country][unitID]
-            
-            CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(data.PlayerID), "wujiang_first", {num=i,event=unitname} )
+
+            GetNewHero:UptoDJT(data.PlayerID,"first",{num=i,event=unitname})
             print("first_wujiang",unitname)
         end
     
@@ -141,7 +166,7 @@ function GetNewHero:playerGetCountry( data )
     end
     
     if  unitName then
-        GetNewHero:LetHeroTrue( {id=data.PlayerID,way=unitName} ) 
+        GetNewHero:LetHeroTrue( {id=data.PlayerID,way=unitName,lvl=1} ) 
          print("GetNewHero:playerGetCountry",unitName)
     else print("you got error message in GetNewHero:playerGetCountry")
     end
@@ -149,9 +174,19 @@ function GetNewHero:playerGetCountry( data )
 end
 
 function GetNewHero:itemLevelUp(data)
-    local playID= data.PlayerID
-    local num	= data.num
-    local item	= data.item
+    local playID   = data.PlayerID
+    local hero     = PlayerResource:GetSelectedHeroEntity(playID)
+    local num	   = data.num
+    local unitlvl  = tonumber(data.lvl) 
+    local findcost = 100
+    
+    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(playID,"shopUp","poorguy") return
+    else hero:SetGold( PlayerResource:GetGold(playID)-findcost, false)
+    end
+
+    unitlvl = unitlvl + 1
+
+    GetNewHero:UptoDJT(playID,"lvlup",{num=num,lvl=unitlvl})
 end
 
 function GetNewHero:itemOnSell(data)
@@ -161,7 +196,7 @@ function GetNewHero:itemOnSell(data)
     local item	= data.item
     hero:SetGold(hero:GetGold()+math.random(45,75),false)
 
-    CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(playID), "item_selled", {num=num})
+    CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(playID), "wujiang_selled", {num=num})
 end
 -----------------------------------------------------playerBuild的参考----------------------
 
