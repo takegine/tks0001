@@ -84,7 +84,15 @@ function LevelUp( data )
 
     if  hero:GetGold() > findcost then
         hero:SetGold(hero:GetGold()-findcost,false)
-        target:CreatureLevelUp(1)
+        if   target:IsHero() then
+             target:HeroLevelUp(false)
+        else target:CreatureLevelUp(1)
+        end
+        for i=0,10 do 
+            if  target:GetAbilityByIndex(i) then 
+                target:GetAbilityByIndex(i):SetLevel(target:GetLevel()) 
+            end 
+        end 
     else
         print("poor guy")
     end

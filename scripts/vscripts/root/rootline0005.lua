@@ -24,11 +24,11 @@ function GameForUnit:OnGameRoundChange()
                 or _G.GAME_ROUND ==  2
                 or _G.GAME_ROUND ==  3  
                 then--PVE
-                for j=1,_G.GAME_ROUND*5 do ShuaGuai("npc_majia",nil,i,i) end
+                for j=1,_G.GAME_ROUND*5 do ShuaGuai("npc_majia",nil,1,i,i) end
             else--pvp
                 local Ts   = RandomInt(1,#_G.buildpostab) 
                 local PosB = Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
-                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,PosB-v.origin,i,Ts) end)
+                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,PosB-v.origin,v.lvl,i,Ts) end)
             end
         end
     end
@@ -109,7 +109,7 @@ function GameForUnit:OnGameInPlan( ... )
                     _G.buildpostab[i]={}
                     table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
                         if  v:GetName() ~= SET_FORCE_HERO and not v.bench then 
-                            _G.buildpostab[i][k]={unit=v,origin=v:GetOrigin()-PosA}
+                            _G.buildpostab[i][k]={unit=v,origin=v:GetOrigin()-PosA,lvl=v:GetLevel()}
                         end
                     end)
                 end
@@ -210,6 +210,10 @@ function GameForUnit:OnGameInPlan( ... )
             if not GameRules:IsGamePaused() then return_time=return_time+1 end
             CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BATTER_MAX,timeNow=return_time} )
             print("batter countdown time:"..return_time)
+            
+            table.foreach(GameForUnit:FindAllByKey("enemy"),function(_,v) 
+                if v:IsIdle() then  v:SetRequiresReachingEndPath(true) end
+            end)
             return 1 
         else
             table.foreach(self:FindAllByKey("enemy"),function(_,unit) unit:Kill(nil,unit) end)
@@ -393,7 +397,7 @@ function GameForUnit:DamageFilter(filterTable)
     return true
 end
 
-function ShuaGuai( CreateName,origin,iTeam,iReTeam)
+function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
     local ShuaGuai_entity = Entities:FindByName(nil,"creep_birth_"..iTeam.."_0")
     local abiName = "skill_player_countdown"
     local vPos
@@ -408,10 +412,20 @@ function ShuaGuai( CreateName,origin,iTeam,iReTeam)
         vName=CreateName:GetUnitName()
     end 
 
-    CreateUnitByNameAsync(vName,vPos,false,nil,nil,iReTeam,  function( v ) 
+    CreateUnitByNameAsync(vName,vPos,true,nil,nil,iReTeam,  function( v ) 
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         v:SetInitialGoalEntity( ShuaGuai_entity )
-        --v:SetRequiresReachingEndPath(true)
+        while( v:GetLevel() < level ) do
+               if   v:IsHero() then
+                    v:HeroLevelUp(false)
+               else v:CreatureLevelUp(1)
+               end
+        end
+        for i=0,10 do 
+            if  v:GetAbilityByIndex(i) then 
+                v:GetAbilityByIndex(i):SetLevel(v:GetLevel()) 
+            end 
+        end 
         v:AddAbility(abiName)
         v:FindAbilityByName(abiName):SetLevel(1)
         v.enemy=true end)  
