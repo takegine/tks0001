@@ -16,7 +16,7 @@
 		"Ability2"	""
 		"Ability3"	""
 		"Ability4"	""
-		"Ability5"	"skill_create_test"
+		"Ability5"	""
 		"Ability6"	"skill_player_onback"
 		"Ability7"	"skill_player_onsell"
 		"Ability8"	"skill_player_lvlup"
