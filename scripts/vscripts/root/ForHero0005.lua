@@ -120,10 +120,10 @@ function GetNewHero:playerGetCountry( data )
         --CustomUI:DynamicHud_Create(data.PlayerID,"psd","file://{resources}/layout/custom_game/uiscreen.xml",{country=hero.country})
         for i=1,4 do
             local unitID   = RandomInt(1,#_G.tkHeroName[hero.country])
-            local unitName = _G.tkHeroName[hero.country][unitID]
+            local unitname = _G.tkHeroName[hero.country][unitID]
             
-            CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(data.PlayerID), "wujiang_first", {num=i,event=unitName} )
-            print("first_wujiang",unitName)
+            CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(data.PlayerID), "wujiang_first", {num=i,event=unitname} )
+            print("first_wujiang",unitname)
         end
     
         --CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(data.PlayerID), "playergetcountry", {event=hero.country} )
@@ -135,8 +135,8 @@ function GetNewHero:playerGetCountry( data )
         return
     end
 
-    if  tRamdom then 
-        local unitName = tRamdom[RandomInt(1,4) ]
+    if  tRamdom then  
+        unitName = tRamdom[tostring(RandomInt(1,4)) ] 
         hero:SetGold( PlayerResource:GetGold(data.PlayerID) + 200 , false) 
     end
     

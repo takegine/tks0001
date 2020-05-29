@@ -35,7 +35,7 @@ function wujiang_first(params) {
         //NewPanel.GetChild(0).scr = 'file://{resources}/images/custom_game/unithead/wujiang_'+itemName.slice(9)+'.jpg'
 		NewPanel.GetChild(1).text = $.Localize(itemName)
 		NewPanel.SetPanelEvent('onactivate',function() {OpenInfo(num) }  ) ;
-        $.CreatePanel('Panel', NewButton.GetChild(1),itemName);
+        $.CreatePanel('Panel', NewPanel.GetChild(1),itemName);
 }
 
 /*function randomvote(num) {
