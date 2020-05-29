@@ -61,7 +61,7 @@ function GameForUnit:OnGameInPlan( ... )
             end
 
             local refreshupcount = _G.GAME_ROUND==1 and 10 or 5
-            for R=1,refreshupcount do GetNewHero:UptoDJT(i-1,SET_FIRST_HERO) end
+            for R=1,refreshupcount do GetNewHero:UptoDJT(i-1,"shopUp",SET_FIRST_HERO) end
         end
     end
         -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
