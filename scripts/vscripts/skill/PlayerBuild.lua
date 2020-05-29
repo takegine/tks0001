@@ -1,75 +1,91 @@
 function OnBack( data )
-	print("PlayerBuild:OnBack")
-	
-	local target   = data.target
-	local caster   = data.caster
+    print("PlayerBuild:OnBack")
+    
+    local target   = data.target
+    local caster   = data.caster
 
-	if target == caster then return end
-	if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
+    if target == caster then return end
+    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
 
-	local onback   = false
-	local heroName = target:GetUnitName()
-	local itemName = string.gsub(heroName,"npc","item")
-	local item = CreateItem(itemName, caster, caster)
+    local onback   = false
+    local iTeam    = target:GetTeamNumber()-5
+    local abiName  = "skill_player_bench"
+    local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID())) 
     --item:SetPurchaseTime(0)
     --item:SetPurchaser( caster )
 
-	--在记录表中删掉这个单位
-	local iTeam = target:GetTeamNumber()-5
-	if _G.buildpostab[iTeam] then
-	for k=1,#_G.buildpostab[iTeam] do
-		if _G.buildpostab[iTeam][k]['unit']  == heroName then _G.buildpostab[iTeam][k] = nil end
-	end
-	end
-	
-	--找到点将台,创建物品
-	local x = caster.Ticket and 6 or 5
-    for i = 1 , x do
-    	local itemPos    = Entities:FindByName( nil, "dianjiangtai_"..iTeam.."_"..i)
-    	local isemptytab = Entities:FindAllByClassnameWithin("dota_item_drop", itemPos:GetAbsOrigin(),50)
-    	if  #isemptytab == 0 then
-    		CreateItemOnPositionSync(itemPos:GetAbsOrigin(),item)
-    		onback = true
-    		break
-    	end
-	end
+    if  target:HasAbility(abiName) then
+        target.bench = nil
+        target:RemoveAbility(abiName)
+        target:RemoveModifierByName("modifier_"..abiName)
+        target:SetOrigin(Entities:FindByName(nil,"creep_birth_"..iTeam.."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0) )
+        tPop.popNow = tPop.popNow + target.popuse  
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID()),tPop) 
+        
+        return
+    end
 
-	if  onback == false then 
-		OnSell( data )
-	elseif target ~= caster then
-		target:Destroy()
-	end
+    --[[
+    --在记录表中删掉这个单位
+    if _G.buildpostab[iTeam] then
+        table.foreach(_G.buildpostab[iTeam],function(k,v) 
+            if v.unit==target:GetUnitName() and v.origin==target:GetOrigin() then v=nil end 
+        end)
+    end
+    ]]
+        
+    local x = caster.Ticket and 6 or 5
+    for i = 1 , x do
+        local posempty   = true
+        local itemPos    = Entities:FindByName( nil, "dianjiangtai_"..iTeam.."_"..i):GetAbsOrigin()
+        local isemptytab = Entities:FindAllInSphere(itemPos,50)
+        
+        for _,v in pairs(isemptytab) do
+            if v:IsAlive() then posempty=false break end
+        end
+        if  posempty==true then
+            target.bench = true
+            target:AddAbility(abiName)
+            target:FindAbilityByName(abiName):SetLevel(1)
+            target:SetOrigin(itemPos)
+            tPop.popNow = tPop.popNow - target.popuse  
+            CustomNetTables:SetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID()),tPop) 
+            return
+        end
+    end
+
+    OnSell( data )
 end
 
 function OnSell( data )
-	local target   = data.target
-	local caster   = data.caster
-	if target == caster then return end
-	if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
+    local target   = data.target
+    local caster   = data.caster
+    if target == caster then return end
+    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
 
-	local onsell   = false
-	local heroName = target:GetUnitName()
-	local itemName = string.gsub(heroName,"npc","item")
-	
+    local onsell   = false
+    local heroName = target:GetUnitName()
+    local itemName = string.gsub(heroName,"npc","item")
+    
 end
 
 function LevelUp( data )
-	local target   = data.target
-	local caster   = data.caster
-	if target == caster then print("is wrong") return end
-	if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
+    local target   = data.target
+    local caster   = data.caster
+    if target == caster then print("is wrong") return end
+    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
 
 
-	local plid     = caster:GetPlayerOwnerID()
-	local hero     = PlayerResource:GetSelectedHeroEntity(plid)
-	local findcost = 100 --减钱
+    local plid     = caster:GetPlayerOwnerID()
+    local hero     = PlayerResource:GetSelectedHeroEntity(plid)
+    local findcost = 100 --减钱
 
-	print(PlayerResource:NumTeamPlayers())
+    print(PlayerResource:NumTeamPlayers())
 
     if  hero:GetGold() > findcost then
-    	hero:SetGold(hero:GetGold()-findcost,false)
-	    target:CreatureLevelUp(1)
-	else
-		print("poor guy")
-	end
+        hero:SetGold(hero:GetGold()-findcost,false)
+        target:CreatureLevelUp(1)
+    else
+        print("poor guy")
+    end
 end

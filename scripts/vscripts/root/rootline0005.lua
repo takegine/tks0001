@@ -108,7 +108,7 @@ function GameForUnit:OnGameInPlan( ... )
                     
                     _G.buildpostab[i]={}
                     table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
-                        if  v:GetName() ~= SET_FORCE_HERO then 
+                        if  v:GetName() ~= SET_FORCE_HERO and not v.bench then 
                             _G.buildpostab[i][k]={unit=v,origin=v:GetOrigin()-PosA}
                         end
                     end)
@@ -322,7 +322,7 @@ function GameForUnit:OnNPCSpawned(keys )
         if not npc:GetPlayerOwner() then return end
 
         local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID())) 
-        tPop['popNow'] = tPop['popNow'] + npc.popuse  
+        tPop.popNow = tPop.popNow + npc.popuse  
         CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID()),tPop) 
     end
 
