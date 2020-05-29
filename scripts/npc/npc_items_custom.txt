@@ -5,182 +5,92 @@
 {
 	"Version"		"1"
 
-	"item_hero_liubei"
+	// 青釭剑
+	// 参考暗灭
+	"item_weapon_qinggangjian"
 	{
+		// General
+		// -------------------------------------------------------------------------------------------------------------
 		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_wujiang_shenliubei"
-		"ID"	"150100"
-		"ItemQuality"	"common"
-		"ItemCastOnPickup"	"1"
-		"Model"	"models/heroes/omniknight/omniknight.vmdl"
-		"ItemCost"	"100"
-		"ItemDroppable"	"0"
-		"ItemSellable"	"1"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemStockMax"	"0"
-		"ItemRecipe"	"0"
-		"ItemRequirements"	{}
-		"ItemDisassembleRule"	"DOTA_ITEM_DISASSEMBLE_NEVER"
-	}
-
-	"item_hero_guanyu"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_wujiang_shenguanyu"
-		"ID"	"150101"
-		"ItemQuality"	"common"
-		"ItemCastOnPickup"	"1"
-		"Model"	"models/heroes/axe/axe.vmdl"
-		"ItemCost"	"100"
-		"ItemDroppable"	"0"
-		"ItemSellable"	"1"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemStockMax"	"0"
-		"ItemRecipe"	"0"
-		"ItemRequirements"	{}
-		"ItemDisassembleRule"	"DOTA_ITEM_DISASSEMBLE_NEVER"
-	}
-
-	"item_hero_caocao"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_wujiang_shencaocao"
-		"ID"	"150200"
-		"ItemQuality"	"common"
-		"ItemCastOnPickup"	"1"
-		"Model"	"models/heroes/pugna/pugna.vmdl"
-		"ItemCost"	"100"
-		"ItemDroppable"	"0"
-		"ItemSellable"	"1"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemStockMax"	"0"
-		"ItemRecipe"	"0"
-		"ItemRequirements"	{}
-		"ItemDisassembleRule"	"DOTA_ITEM_DISASSEMBLE_NEVER"
-	}
-
-	"item_hero_sunquan"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_wujiang_shenzhaoyun"
-		"ID"	"150300"
-		"ItemQuality"	"common"
-		"ItemCastOnPickup"	"1"
-		"Model"	"models/heroes/drow/drow_base.vmdl"
-		"ItemCost"	"100"
-		"ItemDroppable"	"0"
-		"ItemSellable"	"1"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemStockMax"	"0"
-		"ItemRecipe"	"0"
-		"ItemRequirements"	{}
-		"ItemDisassembleRule"	"DOTA_ITEM_DISASSEMBLE_NEVER"
-	}
-
-	"item_hero_dongzhuo"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_wuping_baiyinshizi"
-		"ID"	"150400"
-		"ItemQuality"	"common"
-		"ItemCastOnPickup"	"1"
-		"Model"	"models/items/pudge/arcana/pudge_arcana_base.vmdl"
-		"ItemCost"	"100"
-		"ItemDroppable"	"0"
-		"ItemSellable"	"1"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemStockMax"	"0"
-		"ItemRecipe"	"0"
-		"ItemRequirements"	{}
-		"ItemDisassembleRule"	"DOTA_ITEM_DISASSEMBLE_NEVER"
-	}
-
-	// =================================================================================================================
-	// Recipe: Arcane Boots
-	// =================================================================================================================
-	"item_empty_block"
-	{
-		"BaseClass"	"item_recipe_arcane_boots"
-		"AbilityTextureName"	"item_emptyitembg"
-		"ID"	"150001"
+		"AbilityTextureName"	"item_desolator"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		// Valve's version of this item uses the ID "168".
+		"ID"	"1168"
+		"ItemQuality"	"artifact"
+		"Model"	"models/props_gameplay/red_box.vmdl"
+		"Effect"	"particles/generic_gameplay/dropped_item.vpcf"
 		// Item Info
 		// -------------------------------------------------------------------------------------------------------------
-		"ItemCost"	"0"
-		// Recipe
-		// -------------------------------------------------------------------------------------------------------------
-		"ItemRecipe"	"0"
-		"ItemRequirements"	{}
-	}
-
-	"item_dota_creature_gnoll_assassin"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_branches"
-		"ID"	"150103"
-		"ItemQuality"	"common"
-		"ItemRequirements"	{}
-	}
-
-	"item_shop_population"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_firecrackers"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
-		"ID"	"150500"
-		"ItemQuality"	"secret_shop"
-		"ItemCastOnPickup"	"0"
-		"ItemCost"	"150"
-		"ItemPurchasable"	"1"
-		"ItemKillable"	"0"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemRequirements"	{}
-		"OnSpellStart"
+		"ItemCost"	"4100"
+		"ItemDeclarations"	"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_IN_SPEECH | DECLARE_PURCHASES_TO_SPECTATORS"
+		"ItemShopTags"	"damage;unique"
+		"ItemAliases"	"desolator"
+		"precache"
 		{
-			"RunScript"
+			"particle"	"particles/items_fx/desolator_projectile.vpcf"
+			"soundfile"	"soundevents/game_sounds_items.vsndevts"
+		}
+		"Modifiers"
+		{
+			"modifier_item_desolator_datadriven"
 			{
-				"Target"	"CASTER"
-				"ScriptFile"	"skill/ShopBuild.lua"
-				"Function"	"PopulationUp"
+				"Passive"	"1"
+				"IsHidden"	"1"
+				"Attributes"	"MODIFIER_ATTRIBUTE_MULTIPLE"
+				// "Properties"
+				// {
+				// 	"MODIFIER_PROPERTY_BASEATTACK_BONUSDAMAGE"						"%bonus_damage"
+				// }
+				"Orb"
+				{
+					"Priority"	"DOTA_ORB_PRIORITY_ITEM"
+					"ProjectileName"	"particles/items_fx/desolator_projectile.vpcf"
+					"CastAttack"	"0"
+				}
+				"OnOrbFire"
+				{
+					"ApplyModifier"
+					{
+						"Target"	"TARGET"
+						"ModifierName"	"modifier_item_desolator_datadriven_corruption"
+					}
+					"FireSound"
+					{
+						"EffectName"	"Item_Desolator.Target"
+						"Target"	"TARGET"
+					}
+				}
+			}
+			"modifier_item_desolator_datadriven_corruption"
+			{
+				"Duration"	"%corruption_duration"
+				"Passive"	"0"
+				"IsHidden"	"0"
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS"	"%corruption_armor"
+				}
 			}
 		}
-	}
-
-	"item_hero_guanyinping"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_default"
-		"ID"	"1500"
-		"ItemQuality"	"common"
-		"ItemRequirements"	{}
-	}
-
-	"item_hero_zhaoyun"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_default"
-		"ID"	"1501"
-		"ItemQuality"	"common"
-		"ItemRequirements"	{}
-	}
-
-	"item_hero_pangtong"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_default"
-		"ID"	"1502"
-		"ItemQuality"	"common"
-		"ItemRequirements"	{}
+		// Special
+		// -------------------------------------------------------------------------------------------------------------
+		"AbilitySpecial"
+		{
+			// "01"
+			// {
+			// 	"var_type"				"FIELD_INTEGER"
+			// 	"bonus_damage"			"60"
+			// }
+			"01"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"corruption_armor"	"-7"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"corruption_duration"	"15.0"
+			}
+		}
 	}
 }
