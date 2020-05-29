@@ -272,12 +272,9 @@ function GameForUnit:OnNPCSpawned(keys )
     local  npc = EntIndexToHScript(keys.entindex)
     if npc:GetName()== "npc_dota_fort" 
     or npc:GetName()== "npc_dota_building" 
-    or npc.bFirstSpawned
-    or not npc:GetPlayerOwner() then 
+    or npc.bFirstSpawned then 
         return 
     end
-
-    print("[BAREBONES] NPC Spawned",npc:GetUnitName())
 
     npc.bFirstSpawned = true
 
@@ -331,11 +328,15 @@ function GameForUnit:OnNPCSpawned(keys )
         else print(NameX,"error create without kind") return
         end
         
+        if not npc:GetPlayerOwner() then return end
+
         local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID())) 
         tPop['popNow'] = tPop['popNow'] + npc.popuse  
         CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID()),tPop) 
     end
 
+    print("[BAREBONES] NPC Spawned",npc:GetUnitName())
+    
 end
 
 function GameForUnit:DamageFilter(filterTable)
