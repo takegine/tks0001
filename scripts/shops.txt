@@ -1,12 +1,25 @@
 
 "dota_shops"
 {
-	"secretshop"
+	"consumables"
 	{
     	"item"		"item_shop_population"
-
 	
-		"item"		"item_armor_baiyuhuan"
-		"item"		"item_weapon_qinggangjian"
 	}
+	//"secretshop"  { }
+	//"attributes" {	}
+	"weapons_armor"
+    {	"item"		"item_armor_baiyuhuan"}
+	"misc" 
+	{"item"		"item_weapon_qinggangjian"}
+	//"basics" {}
+	//"support" {}
+	//"magics" {}
+	//"defense" { }
+	//"weapons" { }
+	//"artifacts" {}
+	//"sideshop1" {}
+	//"sideshop2" {}
+
+    //"pregame" {}
 }
