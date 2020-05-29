@@ -3,12 +3,11 @@
 
 "DOTAAbilities"
 {
-	"Version"		"1"
 
 	"item_shop_population"
 	{
 		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_halloween_candy_corn"
+		"AbilityTextureName"	"item_neutral"
 		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
 		"ID"	"150500"
 		"ItemQuality"	"secret_shop"

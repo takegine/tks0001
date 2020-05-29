@@ -130,32 +130,6 @@
 		"ItemRequirements"	{}
 	}
 
-	"item_shop_population"
-	{
-		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_firecrackers"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
-		"ID"	"150500"
-		"ItemQuality"	"secret_shop"
-		"ItemCastOnPickup"	"0"
-		"ItemCost"	"150"
-		"ItemPurchasable"	"1"
-		"ItemKillable"	"0"
-		"ItemAlertable"	"0"
-		"ItemPermanent"	"0"
-		"ItemStackable"	"0"
-		"ItemRequirements"	{}
-		"OnSpellStart"
-		{
-			"RunScript"
-			{
-				"Target"	"CASTER"
-				"ScriptFile"	"skill/ShopBuild.lua"
-				"Function"	"PopulationUp"
-			}
-		}
-	}
-
 	"item_hero_guanyinping"
 	{
 		"BaseClass"	"item_datadriven"
