@@ -7,4 +7,9 @@
 
 		
 	}
+	"artifact"
+	{
+		"item"		"item_armor_baiyuhuan"
+		"item"		"item_weapon_qinggangjian"
+	}
 }
