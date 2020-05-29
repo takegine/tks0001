@@ -3,8 +3,6 @@
 
 "DOTAAbilities"
 {
-	"Version"		"1"
-
 	// 青釭剑
 	// 参考暗灭
 	"item_weapon_qinggangjian"
