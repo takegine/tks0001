@@ -40,7 +40,7 @@ end
 
 
 function spirits( target )
-	thisEntity:CastAbilityOnPosition(target, skill01, 0)
+	thisEntity:CastAbilityOnPosition(target, skill01, thisEntity:GetPlayerOwnerID())
 	return 0.5
 end
 -----------------------------------------下面没用到-------------------------------------------------------------
