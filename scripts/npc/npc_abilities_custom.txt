@@ -3,8 +3,6 @@
 
 "DOTAAbilities"
 {
-	"Version"		"1"
-
 	// 开始施法的时候，所有范围内的友军单位获得生命值回复
 	"skill_hero_rende"
 	{
@@ -1425,19 +1423,104 @@
 
 	"skill_hero_fangquan"
 	{
-		"BaseClass"	"ability_lua"
+		"BaseClass"	"ability_datadriven"
 		"AbilityTextureName"	"death_prophet_spirit_siphon"
 		"ScriptFile"	"skill/hero_fangquan"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_NO_TARGET"
 		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
 		"AbilityCooldown"	"36"
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"skill/hero_fangquan.lua"
+				"Function"	"on_created"
+			}
+		}
+		"Modifiers"
+		{
+			"modifier_skill_hero_fangquan_buff_Str"
+			{
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_STRENGTH_BONUS"	"1"
+				}
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"skill/hero_fangquan.lua"
+						"Function"	"on_destroy"
+					}
+				}
+			}
+			"modifier_skill_hero_fangquan_debuff_Str"
+			{
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_STRENGTH_BONUS"	"-1"
+				}
+			}
+			"modifier_skill_hero_fangquan_buff_Agi"
+			{
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_AGILITY_BONUS"	"1"
+				}
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"skill/hero_fangquan.lua"
+						"Function"	"on_destroy"
+					}
+				}
+			}
+			"modifier_skill_hero_fangquan_buff_Int"
+			{
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_INTELLECT_BONUS"	"1"
+				}
+				"OnDestroy"
+				{
+					"RunScript"
+					{
+						"ScriptFile"	"skill/hero_fangquan.lua"
+						"Function"	"on_destroy"
+					}
+				}
+			}
+			"modifier_skill_hero_fangquan_debuff_Agi"
+			{
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_AGILITY_BONUS"	"-1"
+				}
+			}
+			"modifier_skill_hero_fangquan_debuff_Int"
+			{
+				"Properties"
+				{
+					"MODIFIER_PROPERTY_STATS_INTELLECT_BONUS"	"-1"
+				}
+			}
+		}
 		"AbilitySpecial"
 		{
 			"01"
 			{
 				"var_type"	"FIELD_INTEGER"
 				"duration"	"12"
+			}
+			"02"
+			{
+				"var_type"	"FIELD_INTEGER"
+				"range"	"999"
+			}
+			"03"
+			{
+				"var_type"	"FIELD_FLOAT"
+				"change"	"0.3"
 			}
 		}
 	}
