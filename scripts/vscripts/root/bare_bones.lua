@@ -18,6 +18,7 @@ function GameMode:InitGameMode()
     local k = 0 
     if      GetMapName() == "map1" then i=1 j=0 k=0 
     elseif  GetMapName() == "map2" then i=1 j=1 k=0  
+    elseif  GetMapName() == "map3" then i=1 j=1 k=0  
     elseif  GetMapName() == "map8" then i=1 j=1 k=1  
     elseif  GetMapName() == "map0" then i=1 j=1 k=1  
     end
