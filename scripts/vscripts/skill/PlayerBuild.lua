@@ -5,7 +5,7 @@ function OnBack( data )
     local caster   = data.caster
 
     if target == caster then return end
-    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
+    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
 
     local onback   = false
     local iTeam    = target:GetTeamNumber()-5
@@ -62,7 +62,7 @@ function OnSell( data )
     local target   = data.target
     local caster   = data.caster
     if target == caster then return end
-    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
+    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
 
     local onsell   = false
     local heroName = target:GetUnitName()
@@ -74,7 +74,7 @@ function LevelUp( data )
     local target   = data.target
     local caster   = data.caster
     if target == caster then print("is wrong") return end
-    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return end
+    if not YOUR_IN_TEST and CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
 
 
     local plid     = caster:GetPlayerOwnerID()
