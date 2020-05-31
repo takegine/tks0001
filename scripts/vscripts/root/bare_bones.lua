@@ -37,8 +37,6 @@ function GameMode:InitGameMode()
 
     self.game = GameForUnit()
     GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
-    GameRules:GetGameModeEntity():SetDamageFilter(Dynamic_Wrap(self.game, "DamageFilter"), self.game)
-    GameRules:GetGameModeEntity():SetItemAddedToInventoryFilter( Dynamic_Wrap( self.game, "ItemAddedToInventoryFilter" ), self.game )
        
     ListenToGameEvent("game_rules_state_change",Dynamic_Wrap(self.game,"OnGameRulesStateChange"), self.game)
     ListenToGameEvent("entity_killed",          Dynamic_Wrap(self.game,"OnEntityKilled"), self.game)
@@ -54,27 +52,27 @@ function GameMode:InitGameMode()
 
 end
 
-mode = nil
 -- This function is called once when the player fully connects and becomes "Ready" during Loading
 function GameMode:OnConnectFull(keys)
     -- print("[BAREBONES] OnConnectFull")
-
-    if  mode == nil then
-        -- Set GameMode parameters
-        mode = GameRules:GetGameModeEntity()
-        mode:SetCustomHeroMaxLevel(MAX_LEVEL)
-        mode:SetBuybackEnabled(false)
-        --mode:SetUseCustomHeroLevels(true)
-        --mode:SetCustomXPRequiredToReachNextLevel(Custom_XP_Required)
-        --mode:SetLoseGoldOnDeath(false)--死亡后自己不扣钱
-        mode:SetTopBarTeamValuesVisible( true )
-        mode:SetStashPurchasingDisabled( true )
-        mode:SetStickyItemDisabled(true)
-        mode:SetFogOfWarDisabled( FOG_OF_WAR_DISABLE )
-        mode:SetCameraDistanceOverride( 1000)--设置镜头
-        mode:SetCustomGameForceHero(SET_FORCE_HERO)
-        mode:SetHUDVisible(18,false)
-    end
+    
+    -- Set GameMode parameters
+    mode=GameRules:GetGameModeEntity()
+    mode:SetCustomHeroMaxLevel(MAX_LEVEL)
+    mode:SetBuybackEnabled(false)
+  --mode:SetUseCustomHeroLevels(true)
+  --mode:SetCustomXPRequiredToReachNextLevel(Custom_XP_Required)
+  --mode:SetLoseGoldOnDeath(false)--死亡后自己不扣钱
+    mode:SetTopBarTeamValuesVisible( true )
+    mode:SetStashPurchasingDisabled( true )
+    mode:SetStickyItemDisabled(true)
+    mode:SetFogOfWarDisabled( FOG_OF_WAR_DISABLE )
+    mode:SetCameraDistanceOverride( 1000)--设置镜头
+    mode:SetCustomGameForceHero(SET_FORCE_HERO)
+    mode:SetHUDVisible(18,false)
+    mode:SetDamageFilter(Dynamic_Wrap(self.game, "DamageFilter"), self.game)
+    mode:SetItemAddedToInventoryFilter( Dynamic_Wrap( self.game, "ItemAddedToInventoryFilter" ), self.game )
+    
 end
 
 -- Evaluate the state of the game
