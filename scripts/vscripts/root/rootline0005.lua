@@ -246,18 +246,29 @@ function GameForUnit:ItemAddedToInventoryFilter( filterTable )
     local hInvPar = EntIndexToHScript( filterTable.inventory_parent_entindex_const )--InventoryParent--库存拥有者
     local slot    = filterTable.suggested_slot
     
+    if hItem:GetName()=='item_tpscroll' return false end
     if hItem == nil or hInvPar == nil then return true end
 
-    if     string.find(hItem:GetAbilityName(),"weapon")    then filterTable.suggested_slot=0
-    elseif string.find(hItem:GetAbilityName(),"defend")    then filterTable.suggested_slot=1
-    elseif string.find(hItem:GetAbilityName(),"fittin")    then filterTable.suggested_slot=2
-    elseif string.find(hItem:GetAbilityName(),"horses")    then filterTable.suggested_slot=3
-    elseif string.find(hItem:GetAbilityName(),"armor")     then filterTable.suggested_slot=4
-    elseif string.find(hItem:GetAbilityName(),"queue")     then filterTable.suggested_slot=5
+    if     string.find(hItem:GetAbilityName(),"weapon")    then slot=0
+    elseif string.find(hItem:GetAbilityName(),"defend")    then slot=1
+    elseif string.find(hItem:GetAbilityName(),"fittin")    then slot=2
+    elseif string.find(hItem:GetAbilityName(),"horses")    then slot=3
+    elseif string.find(hItem:GetAbilityName(),"armor")     then slot=4
+    elseif string.find(hItem:GetAbilityName(),"queue")     then slot=5
     end
+    
+    if  hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
 
-    if hInvPar:GetItemInSlot(filterTable.suggested_slot) then
-        hInvPar:SellItem(hInvPar:GetItemInSlot(filterTable.suggested_slot))
+    filterTable.suggested_slot = slot
+
+    if hInvPar:GetName() == SET_FORCE_HERO then
+        local arms={}
+        table.foreach(HeroList:GetAllHeroes(),function(_,v) 
+            if not v:IsOpposingTeam( hInvPar:GetTeamNumber() ) and v~=hInvPar  then 
+                table.insert(arms,v) 
+            end 
+        end)
+        for i in ipairs(arms) do arms[i]:AddItemByName(hItem:GetName()):SetSellable(false) end
     end
 
     return true
