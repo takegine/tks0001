@@ -246,15 +246,15 @@ function GameForUnit:ItemAddedToInventoryFilter( filterTable )
     local hInvPar = EntIndexToHScript( filterTable.inventory_parent_entindex_const )--InventoryParent--库存拥有者
     local slot    = filterTable.suggested_slot
     
-    if hItem:GetName()=='item_tpscroll' return false end
+    --if hItem:GetName()=='item_tpscroll' then return false end
     if hItem == nil or hInvPar == nil then return true end
 
-    if     string.find(hItem:GetAbilityName(),"weapon")    then slot=0
-    elseif string.find(hItem:GetAbilityName(),"defend")    then slot=1
-    elseif string.find(hItem:GetAbilityName(),"fittin")    then slot=2
-    elseif string.find(hItem:GetAbilityName(),"horses")    then slot=3
-    elseif string.find(hItem:GetAbilityName(),"armor")     then slot=4
-    elseif string.find(hItem:GetAbilityName(),"queue")     then slot=5
+    if     string.find(hItem:GetAbilityName(),"weapon") then slot=0
+    elseif string.find(hItem:GetAbilityName(),"defend") then slot=1
+    elseif string.find(hItem:GetAbilityName(),"fittin") then slot=2
+    elseif string.find(hItem:GetAbilityName(),"horses") then slot=3
+    elseif string.find(hItem:GetAbilityName(),"armor")  then slot=4
+    elseif string.find(hItem:GetAbilityName(),"queue")  then slot=5
     end
     
     if  hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
