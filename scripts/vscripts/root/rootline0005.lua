@@ -246,7 +246,9 @@ function GameForUnit:ItemAddedToInventoryFilter( filterTable )
     local hInvPar = EntIndexToHScript( filterTable.inventory_parent_entindex_const )--InventoryParent--库存拥有者
     local slot    = filterTable.suggested_slot
     
-    --if hItem:GetName()=='item_tpscroll' then return false end
+    --if hItem:GetName()=='item_tpscroll' then return true end
+    
+        
     if hItem == nil or hInvPar == nil then return true end
 
     if     string.find(hItem:GetAbilityName(),"weapon") then slot=0
