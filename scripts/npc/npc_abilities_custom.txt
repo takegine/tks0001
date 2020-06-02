@@ -1,6 +1,3 @@
-// Dota2 Editor
-// Get latest version: https://github.com/zombieJ/nw-dota2editor
-
 "DOTAAbilities"
 {
 	// 开始施法的时候，所有范围内的友军单位获得生命值回复
