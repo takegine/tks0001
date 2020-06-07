@@ -4,47 +4,13 @@ if GameMode == nil then GameMode = class({}) end
 -- It can be used to pre-initialize any values/tables that will be needed later
 function GameMode:InitGameMode()
     print( "Template addon is loaded." )
-	GameRules:SetPreGameTime(SET_PREGAME_TIME)
-    GameRules:SetStartingGold(SET_STARTING_GOLD)
-    --GameRules:SetStrategyTime( 0 )
-    --GameRules:SetHeroSelectionTime(0)
-    --GameRules:SetHeroSelectPenaltyTime(0)
-    GameRules:SetUseUniversalShopMode(true)
-    GameRules:SetHeroRespawnEnabled( false )
-    GameRules:SetCustomGameSetupAutoLaunchDelay(SET_UP_AUTO_LAUNCH_DELAY)
-    GameRules:EnableCustomGameSetupAutoLaunch(true)
-    
-    
-    for i in pairs(CUSTOM_TEAM_PLAYER_COUNT) do
-    GameRules:SetCustomGameTeamMaxPlayers( i, CUSTOM_TEAM_PLAYER_COUNT[i] ) 
-    end
-    --[[
-    local i = 0
-    local j = 0 
-    local k = 0 
-    if      GetMapName() == "map1" then i=1 j=0 k=0 
-    elseif  GetMapName() == "map2" then i=1 j=1 k=0  
-    elseif  GetMapName() == "map3" then i=1 j=1 k=0  
-    elseif  GetMapName() == "map8" then i=1 j=1 k=1  
-    elseif  GetMapName() == "map0" then i=1 j=1 k=1  
-    end
-
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_GOODGUYS, 0 )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_BADGUYS , 0 )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_1, i )--CUSTOM 6
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_2, j )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_3, k )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_4, k )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_5, k )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_6, k )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_7, k )
-    GameRules:SetCustomGameTeamMaxPlayers( DOTA_TEAM_CUSTOM_8, k )
-]]
-    GetNewHero:listen()
+	require("root/GameRules")
 
     self.game = GameForUnit()
     GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
-       
+    GameRules:GetGameModeEntity():SetDamageFilter(Dynamic_Wrap(self.game, "DamageFilter"), self.game)
+    GameRules:GetGameModeEntity():SetItemAddedToInventoryFilter( Dynamic_Wrap( self.game, "ItemAddedToInventoryFilter" ), self.game )
+
     ListenToGameEvent("game_rules_state_change",Dynamic_Wrap(self.game,"OnGameRulesStateChange"), self.game)
     ListenToGameEvent("entity_killed",          Dynamic_Wrap(self.game,"OnEntityKilled"), self.game)
     ListenToGameEvent("npc_spawned",            Dynamic_Wrap(self.game, "OnNPCSpawned"), self.game)
@@ -56,10 +22,6 @@ function GameMode:InitGameMode()
     -- Change random seed
     local timeTxt = string.gsub(string.gsub(GetSystemTime(), ":", ""), "0", "")
     math.randomseed(tonumber(timeTxt))
-
-
-    
-
 end
 
 -- This function is called once when the player fully connects and becomes "Ready" during Loading
@@ -67,30 +29,7 @@ function GameMode:OnConnectFull(keys)
     -- print("[BAREBONES] OnConnectFull")
     
     -- Set GameMode parameters
-    mode=GameRules:GetGameModeEntity()
-    mode:SetCustomHeroMaxLevel(MAX_LEVEL)
-    mode:SetBuybackEnabled(false)
-  --mode:SetUseCustomHeroLevels(true)
-  --mode:SetCustomXPRequiredToReachNextLevel(Custom_XP_Required)
-  --mode:SetLoseGoldOnDeath(false)--死亡后自己不扣钱
-    mode:SetTopBarTeamValuesVisible( true )
-    mode:SetStashPurchasingDisabled( true )
-    mode:SetStickyItemDisabled(true)
-    mode:SetFogOfWarDisabled( FOG_OF_WAR_DISABLE )
-    mode:SetCameraDistanceOverride( 1000)--设置镜头
-    mode:SetCustomGameForceHero(SET_FORCE_HERO)
-    mode:SetHUDVisible(18,false)
-    mode:SetDamageFilter(Dynamic_Wrap(self.game, "DamageFilter"), self.game)
-    mode:SetItemAddedToInventoryFilter( Dynamic_Wrap( self.game, "ItemAddedToInventoryFilter" ), self.game )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_STRENGTH_DAMAGE, 5 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_STRENGTH_HP, 100 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_STRENGTH_HP_REGEN, 0 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_AGILITY_DAMAGE, 5 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_AGILITY_ARMOR, 0.25 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_AGILITY_ATTACK_SPEED, 0 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_DAMAGE, 5 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_MANA, 0.2 )
-    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_MANA_REGEN, 0.01 )
+require("root/GameMode")
     
 end
 
