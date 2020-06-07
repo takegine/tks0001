@@ -57,6 +57,9 @@ function GameMode:InitGameMode()
     local timeTxt = string.gsub(string.gsub(GetSystemTime(), ":", ""), "0", "")
     math.randomseed(tonumber(timeTxt))
 
+
+    
+
 end
 
 -- This function is called once when the player fully connects and becomes "Ready" during Loading
@@ -79,6 +82,15 @@ function GameMode:OnConnectFull(keys)
     mode:SetHUDVisible(18,false)
     mode:SetDamageFilter(Dynamic_Wrap(self.game, "DamageFilter"), self.game)
     mode:SetItemAddedToInventoryFilter( Dynamic_Wrap( self.game, "ItemAddedToInventoryFilter" ), self.game )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_STRENGTH_DAMAGE, 5 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_STRENGTH_HP, 100 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_STRENGTH_HP_REGEN, 0 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_AGILITY_DAMAGE, 5 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_AGILITY_ARMOR, 0.25 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_AGILITY_ATTACK_SPEED, 0 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_DAMAGE, 5 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_MANA, 0.2 )
+    mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_MANA_REGEN, 0.01 )
     
 end
 
