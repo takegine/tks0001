@@ -369,6 +369,12 @@ function GameForUnit:DamageFilter(filterTable)
     if damtype == DAMAGE_TYPE_PHYSICAL then
         --Post reduction
         
+        local armor = victim:GetPhysicalArmorValue(false)
+        local oldkang  = 1-52/48*armor/(18.75+armor)
+        local newkang  = 1-armor/(100+armor)
+        
+        filterTable.damage=filterTable.damage /oldkang *newkang
+
         if not _G.npcBaseType[attacker:GetUnitName()] or not _G.npcBaseType[victim:GetUnitName()] then return true end
 
         local attack_type = _G.npcBaseType[attacker:GetUnitName()][1] or "none"
