@@ -148,17 +148,20 @@ function GameForUnit:OnGameInPlan( ... )
                 if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then
                     local tBuff01 ={}--这一队的所有技能，带ship,去重
                     local tBuff02 ={}--这一队的激活的羁绊
-                    local tTeamMate=FindUnitsInRadius( i +5, Vector(0,0,0), nil, -1, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, 0, false )
+                    local tTeamMate=FindUnitsInRadius( i +5, Vector(0,0,0), nil, -1, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, 0, false )
                 
                     table.foreach(tTeamMate,function(_,v)
                         for c = 0,10 do
                             if v:GetAbilityByIndex(c) then
-                                local hAbi = v:GetAbilityByIndex(c) 
-                                local intab =false
+                                local hAbi  = v:GetAbilityByIndex(c):GetAbilityName()
+                                
+                                --if tkShipList[hAbi] and not tBuff01[hAbi] then tBuff01[hAbi]=true end
+                                
+                                local intab = false
                                 for _,modhad in pairs(tBuff01) do
-                                    if hAbi:GetAbilityName() == modhad then intab =true break end
+                                    if hAbi == modhad then intab =true break end
                                 end
-                                    if intab==false then table.insert(tBuff01,hAbi:GetAbilityName()) end
+                                    if intab==false then table.insert(tBuff01,hAbi) end
                             end
                         end
                     end)
