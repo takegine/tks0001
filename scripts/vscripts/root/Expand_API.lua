@@ -38,8 +38,8 @@ function CDOTA_BaseNPC:CheckLevel(lvl)
 
     while( self:GetLevel() < lvl ) do
             if   self:IsHero() then
-                 self:HeroLevelUp( false )  print("hero...lvlup")
-            else self:CreatureLevelUp( 1 )  print("create...lvlup")
+                 self:HeroLevelUp( false )
+            else self:CreatureLevelUp( 1 )
             end
     end
     
