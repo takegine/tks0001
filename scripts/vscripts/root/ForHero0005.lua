@@ -75,7 +75,6 @@ function GetNewHero:LetHeroTrue( data )
     --DeepPrintTable(data.way)
     local hero = PlayerResource:GetSelectedHeroEntity(data.id)
     local unitName = data.way 
-    local unitlvl  = tonumber(data.lvl) 
     local findcost = 100 --减钱
     --print(unitName)
     if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"shopUp","poorguy") return
@@ -89,20 +88,9 @@ function GetNewHero:LetHeroTrue( data )
     function(v) 
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
-        v:SetUnitCanRespawn(true) 
-        local lv=v:GetLevel()
-        if unitlvl then 
-            while( v:GetLevel() < unitlvl ) do
-                    if v:IsHero() then  v:HeroLevelUp(false) print{"hero...lvlup"}
-                    else v:CreatureLevelUp( 1 )  print{"create...lvlup"}
-                    end
-            end
-            for i=0,15 do 
-                if  v:GetAbilityByIndex(i) then 
-                    v:GetAbilityByIndex(i):SetLevel(v:GetLevel()) 
-                end 
-            end 
-        end
+        v:SetUnitCanRespawn(true)
+        v:CheckLevel(tonumber(data.lvl)+v:GetLevel()-1)
+        print()
     end)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
 

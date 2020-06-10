@@ -30,3 +30,22 @@ function CDOTAGamerules:SetGoldTickTime(TickTime)
     return timerName
 
 end
+
+
+function CDOTA_BaseNPC:CheckLevel(lvl)
+    
+    lvl = lvl or self:GetLevel()+1
+
+    while( self:GetLevel() < lvl ) do
+            if   self:IsHero() then
+                 self:HeroLevelUp( false )  print("hero...lvlup")
+            else self:CreatureLevelUp( 1 )  print("create...lvlup")
+            end
+    end
+    
+    for i=0,15 do 
+        if  self:GetAbilityByIndex(i) then 
+            self:GetAbilityByIndex(i):SetLevel(lvl) 
+        end 
+    end
+end

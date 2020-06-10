@@ -316,16 +316,7 @@ function GameForUnit:OnNPCSpawned(keys )
 end
 
 function GameForUnit:OnPlayerLevelUp(keys) 
-    local hero = EntIndexToHScript(keys.hero_entindex)
-    hero:SetAbilityPoints(0)
-    for i=0,10 do
-        local abi=hero:GetAbilityByIndex( i )
-        if  abi 
-        and abi:GetLevel() < abi:GetMaxLevel() 
-        and abi:GetLevel() < keys.level then
-            abi:SetLevel(keys.level)
-        end
-    end
+    EntIndexToHScript(keys.hero_entindex):SetAbilityPoints(0)
 end
 
 function GameForUnit:DamageFilter(filterTable)
@@ -451,19 +442,9 @@ function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
 
     CreateUnitByNameAsync(vName,vPos,true,nil,nil,iReTeam,  function( v ) 
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
-        v:SetInitialGoalEntity( ShuaGuai_entity )
-        while( v:GetLevel() < level ) do
-               if   v:IsHero() then
-                    v:HeroLevelUp(false)
-               else v:CreatureLevelUp(1)
-               end
-        end
-        for i=0,10 do 
-            if  v:GetAbilityByIndex(i) then 
-                v:GetAbilityByIndex(i):SetLevel(v:GetLevel()) 
-            end 
-        end 
         v:AddAbility("skill_player_countdown"):SetLevel(1)
+        v:SetInitialGoalEntity( ShuaGuai_entity )
+        v:CheckLevel(level)
         v.enemy=true end)  
 end
 
