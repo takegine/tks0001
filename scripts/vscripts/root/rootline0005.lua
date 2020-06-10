@@ -68,13 +68,14 @@ function GameForUnit:OnGameInPlan( ... )
     table.foreach(_G.buildpostab,function(i,p) 
     table.foreach(p,function(_,v) 
         if  v.unit and not v.unit:IsNull() then
-            v.unit:Kill(nil,v.unit)
-            Timer(0.1,function()
-                v.unit:RespawnUnit()
+            if not v.unit:IsAlive() then v.unit:RespawnUnit() end
+            --v.unit:Kill(nil,v.unit)
+            --Timer(0.1,function()
+                --v.unit:RespawnUnit()
                 v.unit:SetOrigin(v.origin+Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()) 
                 v.unit:SetHealth(v.unit:GetMaxHealth()) 
                 v.unit:SetMana(v.unit:GetMaxMana()) 
-            end)
+            --end)
             for q=0,10 do if v.unit:GetAbilityByIndex(q) then v.unit:GetAbilityByIndex(q):EndCooldown()end end
         end
     end)
@@ -108,7 +109,7 @@ function GameForUnit:OnGameInPlan( ... )
                     
                     _G.buildpostab[i]={}
                     table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
-                        if  v:GetName() ~= SET_FORCE_HERO and not v.bench then 
+                        if  v:GetName() ~= SET_FORCE_HERO and v:GetName() ~= "npc_dota_courier" and not v.bench then 
                             _G.buildpostab[i][k]={unit=v,origin=v:GetOrigin()-PosA,lvl=v:GetLevel()}
                         end
                     end)
@@ -348,6 +349,19 @@ function GameForUnit:OnNPCSpawned(keys )
 
     print("[BAREBONES] NPC Spawned",npc:GetUnitName())
     
+end
+
+function GameForUnit:OnPlayerLevelUp(keys) 
+    local hero = EntIndexToHScript(keys.hero_entindex)
+    hero:SetAbilityPoints(0)
+    for i=0,10 do
+        local abi=hero:GetAbilityByIndex( i )
+        if  abi 
+        and abi:GetLevel() < abi:GetMaxLevel() 
+        and abi:GetLevel() < keys.level then
+            abi:SetLevel(keys.level)
+        end
+    end
 end
 
 function GameForUnit:DamageFilter(filterTable)
