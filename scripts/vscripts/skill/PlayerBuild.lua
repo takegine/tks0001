@@ -19,6 +19,7 @@ function OnBack( data )
         target:RemoveAbility(abiName)
         target:RemoveModifierByName("modifier_"..abiName)
         target:SetOrigin(Entities:FindByName(nil,"creep_birth_"..iTeam.."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0) )
+        target:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         tPop.popNow = tPop.popNow + target.popuse  
         CustomNetTables:SetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID()),tPop) 
         
@@ -86,14 +87,9 @@ function LevelUp( data )
     if  hero:GetGold() > findcost then
         hero:SetGold(hero:GetGold()-findcost,false)
         if   target:IsHero() then
-             target:HeroLevelUp(false)
+             target:HeroLevelUp(true)
         else target:CreatureLevelUp(1)
         end
-        for i=0,10 do 
-            if  target:GetAbilityByIndex(i) then 
-                target:GetAbilityByIndex(i):SetLevel(target:GetLevel()) 
-            end 
-        end 
     else
         print("poor guy")
     end
