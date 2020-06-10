@@ -1,5 +1,8 @@
-GameRules:SetPreGameTime(SET_PREGAME_TIME)
+  
+    GameRules:SetPreGameTime(SET_PREGAME_TIME)
     GameRules:SetStartingGold(SET_STARTING_GOLD)
+    GameRules:SetGoldPerTick(1) 
+    GameRules:SetGoldTickTime(1)
     --GameRules:SetStrategyTime( 0 )
     --GameRules:SetHeroSelectionTime(0)
     --GameRules:SetHeroSelectPenaltyTime(0)
