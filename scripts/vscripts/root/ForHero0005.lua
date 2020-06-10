@@ -45,30 +45,32 @@ function GetNewHero:findding_Wj( data )
 end
 
 function GetNewHero:find_wujiang( data )
+    print_r(data)
     local hero     = PlayerResource:GetSelectedHeroEntity(data.id) 
     local chance   = 70  
     local findcost = 100 --减钱
-
-    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"shopUp","poorguy") return
-    else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
-    end
     
-    local rolltable ={}
-    if data.way == "country" then rolltable =_G.tkHeroName[hero.country] end
-    if data.way == "hero" then rolltable = _G.tkHeroName['all'] end
+    if not PlayerResource:Pay( data.PlayerID, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
+    -- print("aaaaaaaaaaaaaaaaaa")
+    -- PlayerResource:SpendGold( data.id, 1000, DOTA_ModifyGold_AbilityCost )
+    -- print("bbbbbbbbbbbbbbbbb")
+        local rolltable ={}
+        if data.way == "country" then rolltable =_G.tkHeroName[hero.country] end
+        if data.way == "hero" then rolltable = _G.tkHeroName['all'] end
 
-    if RollPercentage(chance) then 
-        --local itemID="150"..RandomInt(1,3)
-        local randomID=RandomInt(1,#rolltable)
-        local unitName=rolltable[randomID]
+        if RollPercentage(chance) then 
+            --local itemID="150"..RandomInt(1,3)
+            local randomID=RandomInt(1,#rolltable)
+            local unitName=rolltable[randomID]
 
-        print("find_wujiang",randomID,unitName )
+            print("find_wujiang",randomID,unitName )
 
-        GetNewHero:UptoDJT(data.id,"shopUp",unitName)
-    else
-        GetNewHero:UptoDJT(data.id,"shopUp","noget")
-        hero:SetGold( PlayerResource:GetGold(data.id)+findcost/2, false)
-    end  
+            GetNewHero:UptoDJT(data.id,"shopUp",unitName)
+        else
+            GetNewHero:UptoDJT(data.id,"shopUp","noget")
+            PlayerResource:Pay( data.PlayerID, -findcost/2 )
+        end  
+        
 end
 
 function GetNewHero:LetHeroTrue( data ) 
@@ -77,9 +79,7 @@ function GetNewHero:LetHeroTrue( data )
     local unitName = data.way 
     local findcost = 100 --减钱
     --print(unitName)
-    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(data.id,"shopUp","poorguy") return
-    else hero:SetGold( PlayerResource:GetGold(data.id)-findcost, false)
-    end
+    if not PlayerResource:Pay( data.id, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
 
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
     --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
@@ -153,7 +153,8 @@ function GetNewHero:playerGetCountry( data )
 
     if  tRamdom then  
         unitName = tRamdom[tostring(RandomInt(1,4)) ] 
-        hero:SetGold( PlayerResource:GetGold(data.PlayerID) + 200 , false) 
+        --hero:SetGold( PlayerResource:GetGold(data.PlayerID) + 200 , false) 
+        PlayerResource:Pay( data.PlayerID, -200 )
     end
     
     if  unitName then
@@ -171,9 +172,7 @@ function GetNewHero:itemLevelUp(data)
     local unitlvl  = tonumber(data.lvl) 
     local findcost = 100
     
-    if   hero:GetGold() < findcost then GetNewHero:UptoDJT(playID,"shopUp","poorguy") return
-    else hero:SetGold( PlayerResource:GetGold(playID)-findcost, false)
-    end
+    if not PlayerResource:Pay( data.PlayerID, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
 
     unitlvl = unitlvl + 1
 
@@ -185,7 +184,7 @@ function GetNewHero:itemOnSell(data)
     local hero 	= PlayerResource:GetSelectedHeroEntity(playID) 
     local num	= data.num
     local item	= data.item
-    hero:SetGold(hero:GetGold()+math.random(45,75),false)
+    PlayerResource:Pay( data.PlayerID, -math.random(45,75) )
 
     CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(playID), "wujiang_selled", {num=num})
 end
@@ -211,12 +210,17 @@ function LevelUp( data )
 
     print(PlayerResource:NumTeamPlayers())
 
-    if  hero:GetGold() > findcost then
-        hero:SetGold(hero:GetGold()-findcost,false)
+    if  PlayerResource:Pay( data.PlayerID, findcost ) then 
         target:CreatureLevelUp(1)
     else
-        print("poor guy")
+        GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return 
     end
+    -- if  hero:GetGold() > findcost then
+    --     hero:SetGold(hero:GetGold()-findcost,false)
+    --     target:CreatureLevelUp(1)
+    -- else
+    --     print("poor guy")
+    -- end
 
     
     

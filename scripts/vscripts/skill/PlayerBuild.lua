@@ -84,10 +84,13 @@ function LevelUp( data )
 
     print(PlayerResource:NumTeamPlayers())
 
-    if  hero:GetGold() > findcost then
-        hero:SetGold(hero:GetGold()-findcost,false)
-        target:CheckLevel()
-    else
-        print("poor guy")
-    end
+    if not PlayerResource:Pay( plid, findcost ) then GetNewHero:UptoDJT(plid,"shopUp","poorguy") 
+        else
+            target:CheckLevel() end
+    -- if  hero:GetGold() > findcost then
+    --     hero:SetGold(hero:GetGold()-findcost,false)
+        
+    -- else
+    --     print("poor guy")
+    -- end
 end

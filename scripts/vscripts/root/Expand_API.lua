@@ -1,12 +1,11 @@
 function CDOTAGamerules:SetGoldPerTick(gold) 
 
-    GAMERULE_GOLD_PER_TICK = GAMERULE_GOLD_PER_TICK
-    if gold then GAMERULE_GOLD_PER_TICK = gold return end
+    GAMERULE_GOLD_PER_TICK = GAMERULE_GOLD_PER_TICK or 0
+    if gold then GAMERULE_GOLD_PER_TICK = -gold return end
 
     for i=0,PlayerResource:GetPlayerCount() do
         if  PlayerResource:HasSelectedHero( i )  then
-            PlayerResource:SetGold( i , 
-            PlayerResource:GetGold( i )+(GAMERULE_GOLD_PER_TICK or 0 ), false)
+            PlayerResource:SpendGold( i, GAMERULE_GOLD_PER_TICK, 10 )
         end
     end
 end
@@ -19,7 +18,7 @@ function CDOTAGamerules:SetGoldTickTime(TickTime)
     GameRules.__vTimerNamerTable__[timerName] = true
 
     GameRules:GetGameModeEntity():SetContextThink(timerName,function()
-        if GameRules.__vTimerNamerTable__[timerName] then
+        if  GameRules.__vTimerNamerTable__[timerName] then
             GameRules:SetGoldPerTick()
             return TickTime 
         else
@@ -28,7 +27,6 @@ function CDOTAGamerules:SetGoldTickTime(TickTime)
     end, TickTime)
 
     return timerName
-
 end
 
 
@@ -47,5 +45,16 @@ function CDOTA_BaseNPC:CheckLevel(lvl)
         if  self:GetAbilityByIndex(i) then 
             self:GetAbilityByIndex(i):SetLevel(lvl) 
         end 
+    end
+end
+
+function CDOTA_PlayerResource:Pay( PlayerID, cost )
+
+    if  self:GetGold(PlayerID) < cost then
+        --FireGameEvent('dota_hud_error_message',{reason=0, message="no gold"	})
+        return false
+    else
+        PlayerResource:SpendGold( PlayerID, cost, DOTA_ModifyGold_PurchaseConsumable)
+        return true
     end
 end
