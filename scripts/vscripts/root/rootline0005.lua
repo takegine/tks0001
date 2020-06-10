@@ -119,7 +119,6 @@ function GameForUnit:OnGameInPlan( ... )
         elseif return_time == 3 then GameForUnit:OnGameRoundChange()
         elseif return_time == 2 then--forward
             table.foreach(self:FindAllByKey("all"),function(k,unit) 
-                print(k,unit:GetUnitName())
                 if  unit.enemy then
                     unit:FaceTowards(unit:GetAbsOrigin()+Vector(0,-1,0))
                 else
