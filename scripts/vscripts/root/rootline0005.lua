@@ -244,41 +244,6 @@ function GameForUnit:OnEntityKilled( keys )
     end
 end
 
-function GameForUnit:ItemAddedToInventoryFilter( filterTable )
-    local hItem   = EntIndexToHScript( filterTable.item_entindex_const )--获得的物品
-    local hItemPar= EntIndexToHScript( filterTable.item_parent_entindex_const )
-    local hInvPar = EntIndexToHScript( filterTable.inventory_parent_entindex_const )--InventoryParent--库存拥有者
-    local slot    = filterTable.suggested_slot
-    
-    --if hItem:GetName()=='item_tpscroll' then return true end
-    
-        
-    if hItem == nil or hInvPar == nil then return true end
-
-    if     string.find(hItem:GetAbilityName(),"weapon") then slot=0
-    elseif string.find(hItem:GetAbilityName(),"defend") then slot=1
-    elseif string.find(hItem:GetAbilityName(),"fittin") then slot=2
-    elseif string.find(hItem:GetAbilityName(),"horses") then slot=3
-    elseif string.find(hItem:GetAbilityName(),"armor")  then slot=4
-    elseif string.find(hItem:GetAbilityName(),"queue")  then slot=5
-    end
-    
-    if  hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
-
-    filterTable.suggested_slot = slot
-
-    if hInvPar:GetName() == SET_FORCE_HERO then
-        local arms={}
-        table.foreach(HeroList:GetAllHeroes(),function(_,v) 
-            if not v:IsOpposingTeam( hInvPar:GetTeamNumber() ) and v~=hInvPar  then 
-                table.insert(arms,v) 
-            end 
-        end)
-        for i in ipairs(arms) do arms[i]:AddItemByName(hItem:GetName()):SetSellable(false) end
-    end
-
-    return true
-end
 
 function GameForUnit:OnNPCSpawned(keys )
     local  npc = EntIndexToHScript(keys.entindex)
@@ -432,6 +397,44 @@ function GameForUnit:DamageFilter(filterTable)
 
     return true
 end
+
+function GameForUnit:InventoryFilter( filterTable )
+    local hItem   = EntIndexToHScript( filterTable.item_entindex_const )--获得的物品
+    local hItemPar= EntIndexToHScript( filterTable.item_parent_entindex_const )
+    local hInvPar = EntIndexToHScript( filterTable.inventory_parent_entindex_const )--InventoryParent--库存拥有者
+    local slot    = filterTable.suggested_slot
+    
+    --if hItem:GetName()=='item_tpscroll' then return true end
+    
+        
+    if hItem == nil or hInvPar == nil then return true end
+
+    if     string.find(hItem:GetAbilityName(),"weapon") then slot=0
+    elseif string.find(hItem:GetAbilityName(),"defend") then slot=1
+    elseif string.find(hItem:GetAbilityName(),"fittin") then slot=2
+    elseif string.find(hItem:GetAbilityName(),"horses") then slot=3
+    elseif string.find(hItem:GetAbilityName(),"armor")  then slot=4
+    elseif string.find(hItem:GetAbilityName(),"queue")  then slot=5
+    end
+    
+    if  hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
+
+    filterTable.suggested_slot = slot
+
+    if hInvPar:GetName() == SET_FORCE_HERO then
+        local arms={}
+        table.foreach(HeroList:GetAllHeroes(),function(_,v) 
+            if not v:IsOpposingTeam( hInvPar:GetTeamNumber() ) and v~=hInvPar  then 
+                table.insert(arms,v) 
+            end 
+        end)
+        for i in ipairs(arms) do arms[i]:AddItemByName(hItem:GetName()):SetSellable(false) end
+    end
+
+    return true
+end
+
+function GameForUnit:ExperienceFilter( filterTable ) end
 
 function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
     local ShuaGuai_entity = Entities:FindByName(nil,"creep_birth_"..iTeam.."_0")
