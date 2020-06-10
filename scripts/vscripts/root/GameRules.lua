@@ -1,3 +1,8 @@
+    
+GameRules:SetFirstBloodActive(false)            -- 是否开启第一滴血
+GameRules:SetHideKillMessageHeaders(true)       -- 是否隐藏击杀提示
+GameRules:SetPostGameTime(300)                  -- 设置游戏结束后停留的时间
+GameRules:SetUseBaseGoldBountyOnHeroes(false)   -- 是否使用默认的击杀奖励
   
     GameRules:SetPreGameTime(SET_PREGAME_TIME)
     GameRules:SetStartingGold(SET_STARTING_GOLD)
