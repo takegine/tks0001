@@ -93,7 +93,9 @@ function GetNewHero:LetHeroTrue( data )
         local lv=v:GetLevel()
         if unitlvl then 
             while( v:GetLevel() < unitlvl ) do
-                   v:HeroLevelUp(false)
+                    if v:IsHero() then  v:HeroLevelUp(false) print{"hero...lvlup"}
+                    else v:CreatureLevelUp( 1 )  print{"create...lvlup"}
+                    end
             end
             for i=0,15 do 
                 if  v:GetAbilityByIndex(i) then 
