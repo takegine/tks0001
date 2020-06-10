@@ -244,7 +244,6 @@ function GameForUnit:OnEntityKilled( keys )
     end
 end
 
-
 function GameForUnit:OnNPCSpawned(keys )
     local  npc = EntIndexToHScript(keys.entindex)
     if npc:GetName()== "npc_dota_fort" 
@@ -438,7 +437,6 @@ function GameForUnit:ExperienceFilter( filterTable ) end
 
 function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
     local ShuaGuai_entity = Entities:FindByName(nil,"creep_birth_"..iTeam.."_0")
-    local abiName = "skill_player_countdown"
     local vPos
     local vName
     if iTeam == iReTeam then iReTeam = DOTA_TEAM_BADGUYS end
@@ -465,8 +463,7 @@ function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
                 v:GetAbilityByIndex(i):SetLevel(v:GetLevel()) 
             end 
         end 
-        v:AddAbility(abiName)
-        v:FindAbilityByName(abiName):SetLevel(1)
+        v:AddAbility("skill_player_countdown"):SetLevel(1)
         v.enemy=true end)  
 end
 
