@@ -10,7 +10,7 @@ function GameForUnit:OnGameRoundChange()
     
     print("_G.GAME_ROUND=".._G.GAME_ROUND)
     -- ---------------------------------每一轮开始打印上一局战绩-------
-    
+
     -- -----------------------------------发送轮数消息给所有玩家-------
     for i=1,8 do 
         if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
@@ -41,15 +41,7 @@ function GameForUnit:OnGameInPlan( ... )
 
     -- 修长城
     for i=1,8 do
-        --[[
-        if  PlayerResource:GetSelectedHeroEntity(i-1) and not YOUR_IN_TEST then
-            local caster  = PlayerResource:GetSelectedHeroEntity(i-1)
-            local abiName = "skill_player_notplan"
-            caster:RemoveAbility(abiName)
-            caster:RemoveModifierByName("modifier_"..abiName)
-        end]]
-
-        if  PlayerResource:GetSelectedHeroEntity(i-1) then
+        if PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
             local startPos   =Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()
             local endPos     =Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
             local pathlength =(startPos-endPos)/16
@@ -193,14 +185,6 @@ function GameForUnit:OnGameInPlan( ... )
                         end)
                     end)
                 end
-                --[[
-                --加信使状态(沉默)
-                if  PlayerResource:GetSelectedHeroEntity(i-1) and not YOUR_IN_TEST then
-                    local caster  = PlayerResource:GetSelectedHeroEntity(i-1)
-                    local abiName = "skill_player_notplan"
-                    caster:AddAbility(abiName)
-                    caster:FindAbilityByName(abiName):SetLevel(1)
-                end]]
             end
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
         end
@@ -229,7 +213,7 @@ function GameForUnit:OnEntityKilled( keys )
 
 
     if  killerUnit~=killedUnit and killerUnit:GetName() == "npc_dota_building" then
-        local realKiller = PlayerResource:GetSelectedHeroEntity(killerUnit:GetPlayerOwnerID())--killerUnit:GetPlayerOwner():GetAssignedHero()
+        local realKiller = killerUnit:GetPlayerOwner():GetAssignedHero() --PlayerResource:GetSelectedHeroEntity(killerUnit:GetPlayerOwnerID())
               realKiller:SetHealth( realKiller:GetHealth()-1 )
               
 
