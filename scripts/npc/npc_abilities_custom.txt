@@ -1,5 +1,6 @@
 "DOTAAbilities"
 {
+
 	// 开始施法的时候，所有范围内的友军单位获得生命值回复
 	"skill_hero_rende"
 	{
@@ -400,6 +401,70 @@
 		}
 	}
 
+	"skill_player_lvlup"
+	{
+		"BaseClass"	"ability_lua"
+		"AbilityTextureName"	"mud_golem_rock_destroy"
+		"ScriptFile"	"skill/PlayerBuild.lua"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ALLIES_YES"
+		"MaxLevel"	"1"
+		"AbilityCooldown"	"1"
+	}
+
+	"skill_player_onback"
+	{
+		"BaseClass"	"ability_lua"
+		"AbilityTextureName"	"razor_static_link_alt_gold"
+		"ScriptFile"	"skill/PlayerBuild.lua"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ALLIES_YES"
+		"MaxLevel"	"1"
+		"AbilityCooldown"	"1"
+	}
+
+	"skill_player_onsell"
+	{
+		"BaseClass"	"ability_lua"
+		"AbilityTextureName"	"buyback"
+		"ScriptFile"	"skill/PlayerBuild.lua"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
+		"SpellImmunityType"	"SPELL_IMMUNITY_ALLIES_YES"
+		"MaxLevel"	"1"
+		"AbilityCooldown"	"1"
+	}
+
+	"skill_player_bench"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_PASSIVE"
+		"MaxLevel"	"1"
+		"Modifiers"
+		{
+			"modifier_skill_player_bench"
+			{
+				"Passive"	"1"
+				"States"
+				{
+					"MODIFIER_STATE_ROOTED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_DISARMED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_BLIND"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_MUTED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_UNSELECTABLE"	"MODIFIER_STATE_VALUE_DISABLED"
+					"MODIFIER_STATE_PASSIVES_DISABLED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_ATTACK_IMMUNE"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_SOFT_DISARMED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_COMMAND_RESTRICTED"	"MODIFIER_STATE_VALUE_ENABLED"
+					"MODIFIER_STATE_NO_HEALTH_BAR"	"MODIFIER_STATE_VALUE_ENABLED"
+				}
+				"IsHidden"	"1"
+				"Properties"	{}
+				"TextureName"	"keeper_of_the_light_spirit_form_illuminate"
+			}
+		}
+	}
+
 	"skill_player_noattack"
 	{
 		"BaseClass"	"ability_datadriven"
@@ -430,37 +495,6 @@
 		"Modifiers"
 		{
 			"modifier_skill_player_countdown"
-			{
-				"Passive"	"1"
-				"States"
-				{
-					"MODIFIER_STATE_ROOTED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_SILENCED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_DISARMED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_BLIND"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_MUTED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_UNSELECTABLE"	"MODIFIER_STATE_VALUE_DISABLED"
-					"MODIFIER_STATE_PASSIVES_DISABLED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_ATTACK_IMMUNE"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_SOFT_DISARMED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_COMMAND_RESTRICTED"	"MODIFIER_STATE_VALUE_ENABLED"
-					"MODIFIER_STATE_NO_HEALTH_BAR"	"MODIFIER_STATE_VALUE_ENABLED"
-				}
-				"IsHidden"	"1"
-				"Properties"	{}
-				"TextureName"	"keeper_of_the_light_spirit_form_illuminate"
-			}
-		}
-	}
-
-	"skill_player_bench"
-	{
-		"BaseClass"	"ability_datadriven"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_HIDDEN | DOTA_ABILITY_BEHAVIOR_PASSIVE"
-		"MaxLevel"	"1"
-		"Modifiers"
-		{
-			"modifier_skill_player_bench"
 			{
 				"Passive"	"1"
 				"States"
@@ -1108,47 +1142,6 @@
 		}
 	}
 
-	"skill_player_onback"
-	{
-		"BaseClass"	"ability_datadriven"
-		"AbilityTextureName"	"razor_static_link_alt_gold"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
-		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
-		"MaxLevel"	"1"
-		"AbilityCastRange"	"9999"
-		"OnSpellStart"
-		{
-			"RunScript"
-			{
-				"Target"	"TARGET"
-				"ScriptFile"	"skill/PlayerBuild.lua"
-				"Function"	"OnBack"
-			}
-		}
-	}
-
-	"skill_player_onsell"
-	{
-		"BaseClass"	"ability_datadriven"
-		"AbilityTextureName"	"buyback"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
-		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
-		"MaxLevel"	"1"
-		"AbilityCooldown"	"2"
-		"AbilityCastRange"	"9999"
-		"OnSpellStart"
-		{
-			"RunScript"
-			{
-				"Target"	"TARGET"
-				"ScriptFile"	"skill/PlayerBuild.lua"
-				"Function"	"OnSell"
-			}
-		}
-	}
-
 	"skill_hero_lieren"
 	{
 		"BaseClass"	"ability_datadriven"
@@ -1393,27 +1386,6 @@
 			{
 				"var_type"	"FIELD_INTEGER"
 				"armorlost"	"-4"
-			}
-		}
-	}
-
-	"skill_player_lvlup"
-	{
-		"BaseClass"	"ability_datadriven"
-		"AbilityTextureName"	"mud_golem_rock_destroy"
-		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_UNIT_TARGET"
-		"AbilityUnitTargetType"	"DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
-		"AbilityUnitTargetTeam"	"DOTA_UNIT_TARGET_TEAM_FRIENDLY"
-		"MaxLevel"	"1"
-		"AbilityCooldown"	"2"
-		"AbilityCastRange"	"9999"
-		"OnSpellStart"
-		{
-			"RunScript"
-			{
-				"Target"	"TARGET"
-				"ScriptFile"	"skill/PlayerBuild.lua"
-				"Function"	"LevelUp"
 			}
 		}
 	}
