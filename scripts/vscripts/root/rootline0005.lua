@@ -10,22 +10,20 @@ function GameForUnit:OnGameRoundChange()
     
     print("_G.GAME_ROUND=".._G.GAME_ROUND)
     -- ---------------------------------每一轮开始打印上一局战绩-------
-    -- -----------------------------------发送轮数消息给所有玩家-------
     
+    -- -----------------------------------发送轮数消息给所有玩家-------
     for i=1,8 do 
         if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
-            if _G.GAME_ROUND == 0 then--选主公
+            if _G.GAME_ROUND == 0 then
 
                 local home_ent = Entities:FindByName(nil,"creep_birth_"..i.."_3"):GetOrigin()
                 local zhugong  = CreateUnitByName("tower_zhugong",home_ent,false,nil,nil,i+5)
                 table.foreach(FindUnitsInRadius(i+5,home_ent,nil,-1,1,1,0,0,false),function(_,v) if v:GetName()==SET_FORCE_HERO then zhugong:SetOwner(v) end end)
-                               
-            elseif _G.GAME_ROUND ==  1 
-                or _G.GAME_ROUND ==  2
-                or _G.GAME_ROUND ==  3  
-                then--PVE
-                for j=1,_G.GAME_ROUND*5 do ShuaGuai("npc_majia",nil,1,i,i) end
-            else--pvp
+               
+            elseif tkRounList[tostring(_G.GAME_ROUND)] then
+                table.foreach( tkRounList[tostring(_G.GAME_ROUND)],function(_,v) ShuaGuai(v.unit,nil,v.lvl,i,i) end)
+
+            else
                 local Ts   = RandomInt(1,#_G.buildpostab) 
                 local PosB = Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
                 table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,PosB-v.origin,v.lvl,i,Ts) end)
@@ -229,17 +227,20 @@ function GameForUnit:OnEntityKilled( keys )
     local killedUnit = EntIndexToHScript( keys.entindex_killed   ) 
     local killerUnit = EntIndexToHScript( keys.entindex_attacker ) 
 
-    if  killedUnit.enemy then killedUnit:Destroy() 
-        if #GameForUnit:FindAllByKey("enemy")==0  then RemoveTimer(TimeForBatter) GameForUnit:OnGameInPlan()  end
-    end
 
-    if  killerUnit~=killedUnit and killerUnit:GetName() == "npc_dota_building" then 
+    if  killerUnit~=killedUnit and killerUnit:GetName() == "npc_dota_building" then
         local realKiller = PlayerResource:GetSelectedHeroEntity(killerUnit:GetPlayerOwnerID())--killerUnit:GetPlayerOwner():GetAssignedHero()
               realKiller:SetHealth( realKiller:GetHealth()-1 )
-        if    realKiller:GetHealth() == 0 then 
+              
+
+        if    realKiller:GetHealth() <= 0 then 
               GameRules:MakeTeamLose( realKiller:GetTeamNumber() )
-              killerUnit:Destroy()
+              --killerUnit:Destroy()
         end
+    end
+
+    if  killedUnit.enemy then killedUnit:Destroy() 
+        if #GameForUnit:FindAllByKey("enemy")==0  then RemoveTimer(TimeForBatter) GameForUnit:OnGameInPlan()  end
     end
 end
 
