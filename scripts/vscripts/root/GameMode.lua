@@ -25,5 +25,4 @@ mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_DAMAGE, 5 )
 mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_MANA, 0.2 )
 mode:SetCustomAttributeDerivedStatValue( DOTA_ATTRIBUTE_INTELLIGENCE_MANA_REGEN, 0.01 )--失效
 mode:SetSendToStashEnabled( false )
-mode:SetKillingSpreeAnnouncerDisabled( false )
 mode:SetHudCombatEventsDisabled( true )

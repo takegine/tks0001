@@ -45,7 +45,6 @@ function GetNewHero:findding_Wj( data )
 end
 
 function GetNewHero:find_wujiang( data )
-    print_r(data)
     local hero     = PlayerResource:GetSelectedHeroEntity(data.id) 
     local chance   = 70  
     local findcost = 100 --减钱
