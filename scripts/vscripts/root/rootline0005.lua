@@ -25,7 +25,7 @@ function GameForUnit:OnGameRoundChange()
 
             else
                 local Ts   = RandomInt(1,#_G.buildpostab) 
-                local PosB = Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
+                local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
                 table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,PosB-v.origin,v.lvl,i,Ts) end)
             end
         end
@@ -62,7 +62,7 @@ function GameForUnit:OnGameInPlan( ... )
             --v.unit:Kill(nil,v.unit)
             --Timer(0.1,function()
                 --v.unit:RespawnUnit()
-                v.unit:SetOrigin(v.origin+Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()) 
+                v.unit:SetOrigin(v.origin+Entities:FindByName(nil,"creep_birth_"..i.."_2"):GetOrigin()) 
                 v.unit:SetHealth(v.unit:GetMaxHealth()) 
                 v.unit:SetMana(v.unit:GetMaxMana()) 
             --end)
@@ -90,7 +90,7 @@ function GameForUnit:OnGameInPlan( ... )
             for i=1,8 do
                 if PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
                     _G.buildpostab[i]={}
-                    local PosA   =Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()
+                    local PosA   =Entities:FindByName(nil,"creep_birth_"..i.."_2"):GetOrigin()
                     -- local PosB   =Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
                     -- local PosC   =Entities:FindByName(nil,"tree_birth_"..i.."_2"):GetOrigin()
 
@@ -115,7 +115,7 @@ function GameForUnit:OnGameInPlan( ... )
         
         if  return_time > 0  then 
             CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BETWEEN_ROUND,timeNow=return_time} )
-            print("round countdown time:"..return_time)
+            print("countdown round  time:"..return_time)
             if not GameRules:IsGamePaused() then return_time=return_time-1 end
             return 1 
         else
@@ -191,7 +191,7 @@ function GameForUnit:OnGameInPlan( ... )
         if return_time<TIME_BATTER_MAX then
             if not GameRules:IsGamePaused() then return_time=return_time+1 end
             CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BATTER_MAX,timeNow=return_time} )
-            print("batter countdown time:"..return_time)
+            print("countdown batter time:"..return_time)
             
             table.foreach(Entities:FindAllByTeam( 2 ), function(_,v) if v:IsIdle() then  v:SetRequiresReachingEndPath(true) end end)
             return 1 
