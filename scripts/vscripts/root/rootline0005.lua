@@ -181,6 +181,17 @@ function GameForUnit:OnGameInPlan( ... )
                             end
                         end)
                     end)
+
+                    table.foreach(tTeamMate,function(_,v)
+                        if v:IsHero() then
+                            for q=0,5 do
+                                if v:GetItemInSlot(q)~=v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q) then
+                                v:RemoveItem(v:GetItemInSlot(q))
+                                v:AddItem(v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q))
+                                end
+                            end
+                        end
+                    end)
                 end
             end
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
@@ -378,27 +389,27 @@ function GameForUnit:InventoryFilter( filterTable )
         
     if hItem == nil or hInvPar == nil then return true end
 
-    if     string.find(hItem:GetAbilityName(),"weapon") then slot=0
-    elseif string.find(hItem:GetAbilityName(),"defend") then slot=1
-    elseif string.find(hItem:GetAbilityName(),"fittin") then slot=2
-    elseif string.find(hItem:GetAbilityName(),"horses") then slot=3
-    elseif string.find(hItem:GetAbilityName(),"armor")  then slot=4
-    elseif string.find(hItem:GetAbilityName(),"queue")  then slot=5
+    if     string.find(hItem:GetAbilityName(),"weapon")  then slot=0
+    elseif string.find(hItem:GetAbilityName(),"defend")  then slot=1
+    elseif string.find(hItem:GetAbilityName(),"jewelry") then slot=2
+    elseif string.find(hItem:GetAbilityName(),"horses")  then slot=3
+    elseif string.find(hItem:GetAbilityName(),"format")  then slot=4
+    elseif string.find(hItem:GetAbilityName(),"queue")   then slot=5
     end
     
     if  hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
 
     filterTable.suggested_slot = slot
 
-    if hInvPar:GetName() == SET_FORCE_HERO then
-        local arms={}
-        table.foreach(HeroList:GetAllHeroes(),function(_,v) 
-            if not v:IsOpposingTeam( hInvPar:GetTeamNumber() ) and v~=hInvPar  then 
-                table.insert(arms,v) 
-            end 
-        end)
-        for i in ipairs(arms) do arms[i]:AddItemByName(hItem:GetName()):SetSellable(false) end
-    end
+    -- if hInvPar:GetName() == SET_FORCE_HERO then
+    --     local arms={}
+    --     table.foreach(HeroList:GetAllHeroes(),function(_,v) 
+    --         if not v:IsOpposingTeam( hInvPar:GetTeamNumber() ) and v~=hInvPar  then 
+    --             table.insert(arms,v) 
+    --         end 
+    --     end)
+    --     for i in ipairs(arms) do arms[i]:AddItemByName(hItem:GetName()):SetSellable(false) end
+    -- end
 
     return true
 end
