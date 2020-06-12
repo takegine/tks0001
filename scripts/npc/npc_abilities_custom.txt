@@ -5019,4 +5019,18 @@
 			}
 		}
 	}
+
+	"skill_player_testwork"
+	{
+		"BaseClass"	"ability_datadriven"
+		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+		"OnSpellStart"
+		{
+			"RunScript"
+			{
+				"ScriptFile"	"testworking.lua"
+				"Function"	"wow"
+			}
+		}
+	}
 }

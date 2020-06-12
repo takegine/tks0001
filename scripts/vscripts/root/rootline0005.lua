@@ -79,7 +79,7 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{1} )
             
             --全体防守加状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(self:FindAllByKey("all"),function(_,v) 
+            table.foreach(Entities:FindAllByTeam(1),function(_,v) 
                 if v:IsMoving() then v:Stop() end
                 local abiName = "skill_player_countdown"
                 v:AddAbility(abiName)
@@ -89,30 +89,26 @@ function GameForUnit:OnGameInPlan( ... )
         elseif return_time == 4 then--mark
             for i=1,8 do
                 if PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
-                    local PosA   =Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()
-                    local PosB   =Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
-                    local PosC   =Entities:FindByName(nil,"tree_birth_"..i.."_2"):GetOrigin()
-
-                    local startPos   = Vector((PosC.x-PosB.x)/2+PosA.x,(PosC.y-PosB.y)/2+PosA.y,0)
-                    local endPos     = Vector((PosC.x-PosB.x)/2+PosB.x,(PosC.y-PosB.y)/2+PosB.y,0)
-                    local width      = math.sqrt( math.pow(PosC.x-PosB.x, 2)+ math.pow(PosC.y-PosB.y, 2) )
-                    
                     _G.buildpostab[i]={}
-                    table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
-                        if  v:GetName() ~= SET_FORCE_HERO and v:GetName() ~= "npc_dota_courier" and not v.bench then 
-                            _G.buildpostab[i][k]={unit=v,origin=v:GetOrigin()-PosA,lvl=v:GetLevel()}
-                        end
-                    end)
+                    local PosA   =Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()
+                    -- local PosB   =Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
+                    -- local PosC   =Entities:FindByName(nil,"tree_birth_"..i.."_2"):GetOrigin()
+
+                    -- local startPos   = Vector((PosC.x-PosB.x)/2+PosA.x,(PosC.y-PosB.y)/2+PosA.y,0)
+                    -- local endPos     = Vector((PosC.x-PosB.x)/2+PosB.x,(PosC.y-PosB.y)/2+PosB.y,0)
+                    -- local width      = math.sqrt( math.pow(PosC.x-PosB.x, 2)+ math.pow(PosC.y-PosB.y, 2) )
+                    
+                    -- table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
+                    table.foreach(Entities:FindAllByTeam(  1, i ),function(k,u) if not u.bench then _G.buildpostab[i][k]={unit=u, origin=u:GetOrigin()-PosA, lvl=u:GetLevel()} end end)
                 end
             end
 
         elseif return_time == 3 then GameForUnit:OnGameRoundChange()
         elseif return_time == 2 then--forward
-            table.foreach(self:FindAllByKey("all"),function(k,unit) 
-                if  unit.enemy then
-                    unit:FaceTowards(unit:GetAbsOrigin()+Vector(0,-1,0))
-                else
-                    unit:FaceTowards(unit:GetAbsOrigin()+Vector(0,1,0))
+            table.foreach(Entities:FindAllByTeam(),function(k,u) 
+                if  u.enemy then
+                    u:FaceTowards(u:GetAbsOrigin()+Vector(0,-1,0))
+                else u:FaceTowards(u:GetAbsOrigin()+Vector(0,1,0))
                 end
             end)
         end
@@ -127,7 +123,7 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{2} )
             
             --全体删状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(self:FindAllByKey("all"),function(_,caster) 
+            table.foreach(Entities:FindAllByTeam(),function(_,caster) 
                 local abiName = "skill_player_countdown"
                 caster:RemoveAbility(abiName)
                 caster:RemoveModifierByName("modifier_"..abiName)
@@ -138,7 +134,8 @@ function GameForUnit:OnGameInPlan( ... )
                 if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then
                     local tBuff01 ={}--这一队的所有技能，带ship,去重
                     local tBuff02 ={}--这一队的激活的羁绊
-                    local tTeamMate=FindUnitsInRadius( i +5, Vector(0,0,0), nil, -1, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, 0, false )
+                    local tTeamMate=Entities:FindAllByTeam(1,i)
+                    --FindUnitsInRadius( i +5, Vector(0,0,0), nil, -1, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, 0, false )
                 
                     table.foreach(tTeamMate,function(_,v)
                         for c = 0,10 do
@@ -196,12 +193,10 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BATTER_MAX,timeNow=return_time} )
             print("batter countdown time:"..return_time)
             
-            table.foreach(GameForUnit:FindAllByKey("enemy"),function(_,v) 
-                if v:IsIdle() then  v:SetRequiresReachingEndPath(true) end
-            end)
+            table.foreach(Entities:FindAllByTeam( 2 ), function(_,v) if v:IsIdle() then  v:SetRequiresReachingEndPath(true) end end)
             return 1 
         else
-            table.foreach(self:FindAllByKey("enemy"),function(_,unit) unit:Kill(nil,unit) end)
+            table.foreach(Entities:FindAllByTeam( 2 ), function(_,unit) unit:Kill(nil,unit) end)
             CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=false,timeMax=0,timeNow=0} )
         end
     end)
@@ -224,7 +219,7 @@ function GameForUnit:OnEntityKilled( keys )
     end
 
     if  killedUnit.enemy then killedUnit:Destroy() 
-        if #GameForUnit:FindAllByKey("enemy")==0  then RemoveTimer(TimeForBatter) GameForUnit:OnGameInPlan()  end
+        if #Entities:FindAllByTeam(2)==0  then RemoveTimer(TimeForBatter) GameForUnit:OnGameInPlan()  end
     end
 end
 

@@ -1,10 +1,5 @@
-// Dota2 Editor
-// Get latest version: https://github.com/zombieJ/nw-dota2editor
-
 "DOTAHeroes"
 {
-	"Version"		"1"
-
 	// ================
 	// 信使
 	"npc_dota_hero_phoenix"
@@ -12,14 +7,14 @@
 		// Hero to override
 		"override_hero"	"npc_dota_hero_phoenix"
 		// Ability 1
-		"Ability1"	""
-		"Ability2"	""
-		"Ability3"	""
-		"Ability4"	""
+		"Ability1"	"skill_player_onback"
+		"Ability2"	"skill_player_onsell"
+		"Ability3"	"skill_player_lvlup"
+		"Ability4"	"skill_player_testwork"
 		"Ability5"	""
-		"Ability6"	"skill_player_onback"
-		"Ability7"	"skill_player_onsell"
-		"Ability8"	"skill_player_lvlup"
+		"Ability6"	""
+		"Ability7"	""
+		"Ability8"	""
 		"Ability9"	"skill_player_noattack"
 		"Ability10"	""
 		"Ability11"	""
