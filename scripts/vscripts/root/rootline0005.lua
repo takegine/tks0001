@@ -391,7 +391,7 @@ function GameForUnit:InventoryFilter( filterTable )
 
     if     string.find(hItem:GetAbilityName(),"weapon")  then slot=0
     elseif string.find(hItem:GetAbilityName(),"defend")  then slot=1
-    elseif string.find(hItem:GetAbilityName(),"jewelry") then slot=2
+    elseif string.find(hItem:GetAbilityName(),"armor") then slot=2
     elseif string.find(hItem:GetAbilityName(),"horses")  then slot=3
     elseif string.find(hItem:GetAbilityName(),"format")  then slot=4
     elseif string.find(hItem:GetAbilityName(),"queue")   then slot=5
