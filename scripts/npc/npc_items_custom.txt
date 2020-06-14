@@ -37,7 +37,7 @@
 		// General
 		// -------------------------------------------------------------------------------------------------------------
 		"BaseClass"	"item_datadriven"
-		"AbilityTextureName"	"item_wuping_qinggangjian"
+		"AbilityTextureName"	"wuping_qinggangjian"
 		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE"
 		// Item Info
 		// -------------------------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@
 		// General
 		// -------------------------------------------------------------------------------------------------------------
 		
-		"AbilityTextureName"	"item_wuping_baiyuhuan"
+		"AbilityTextureName"	"wuping_baiyuhuan"
 		"AbilityBehavior"	"DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_AURA"
 		// Casting
 		// -------------------------------------------------------------------------------------------------------------
