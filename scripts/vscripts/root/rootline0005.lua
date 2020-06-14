@@ -254,6 +254,7 @@ function GameForUnit:OnNPCSpawned(keys )
         if GetMapName=="map0" then CustomGameEventManager:Send_ServerToTeam(npc:GetTeam(), "CameraRotateHorizontal", {angle=npc:GetPlayerID()*360/8}) end
     else
         local NameX = npc:GetUnitName()
+        --print(NameX)
         if _G.npcBaseType[NameX] then
             local attack_type = _G.npcBaseType[NameX][1] or "none"
             local defend_type = _G.npcBaseType[NameX][2] or "none"
@@ -264,11 +265,13 @@ function GameForUnit:OnNPCSpawned(keys )
 
         elseif npc:IsHero() then
             for k,v in pairs(tkHeroList)do
-                if NameX==v.override_hero then NameX=k break end
+                --print(k,v.override_hero)
+                if NameX==string.lower(v.override_hero) then NameX=k break end
             end
             local attack_type = tkHeroList[NameX]["TksAttackType"] or "none"
             local defend_type = tkHeroList[NameX]["TksDefendType"] or "none"
             
+            --print(NameX,attack_type,defend_type)
             npc:AddNewModifier(npc, nil, "modifier_attack_" .. attack_type, {})
             npc:AddNewModifier(npc, nil, "modifier_defend_" .. defend_type, {})
             npc.popuse = tonumber(tkHeroList[NameX]["TksPopUse"]) or 1
