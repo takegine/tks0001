@@ -9,7 +9,7 @@ SET_STARTING_GOLD  = 4000
 LOCAL_POPLATION    = 10
 FOG_OF_WAR_DISABLE = true
 
-YOUR_IN_TEST       = true
+YOUR_IN_TEST       = false
 LOCAL_VERSION      = '0005'
 
 
