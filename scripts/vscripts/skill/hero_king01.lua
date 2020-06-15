@@ -13,7 +13,6 @@ function yinghan( keys )
 	if  not caster:HasModifier(modifierName) 
 	and caster:GetHealth() < caster:GetMaxHealth()/2 then
 		ability:ApplyDataDrivenModifier( caster, caster, modifierName, nil )
-		caster:SetModelScale(caster:GetModelScale()+0.2)
 	end
 end
 
