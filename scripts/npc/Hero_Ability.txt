@@ -15,7 +15,7 @@
 		"4" "skill_ship_taoyuan"          //桃园结义
 		"5" "skill_ship_wuhu_gy"          //五虎上将
 	}
-	"npc_dota_hero_arcwarden"            //override_hero黄忠
+	"npc_dota_hero_arc_warden"            //override_hero黄忠
 	{
 		"1" "skill_hero_juji"             //狙击
 		"2" "skill_hero_liegong"          //烈弓
@@ -23,7 +23,7 @@
 		"4" "skill_ship_zhiqu_hz"         //智取定军山
 		"5" "skill_ship_wuhu_hz"          //五虎上将
 	}
-	"npc_dota_hero_ancientapparition"    //override_hero火诸葛
+	"npc_dota_hero_ancient_apparition"    //override_hero火诸葛
 	{
 		"1" "skill_hero_bagua"            //八卦
 		"2" "skill_hero_huogong"          //火攻
@@ -43,7 +43,7 @@
 		"4" "skill_ship_qunxing_zg"       //群星陨落
 		"5" "skill_ship_xingyue_zg"       //星月交辉
 	}
-	"npc_dota_hero_bountyhunter"         //override_hero刘备
+	"npc_dota_hero_bounty_hunter"         //override_hero刘备
 	{
 		"1" "skill_hero_rende"            //仁德
 		"2" "skill_ship_menjie_lb"        //梦结良缘
@@ -97,7 +97,7 @@
 		"4" "skill_ship_qijin_zy"         //七近七出
 		"5" "skill_ship_wuhu_zy"          //五虎上将
 	}
-		"npc_dota_hero_drowranger"        //override_hero祝融
+		"npc_dota_hero_drow_ranger"        //override_hero祝融
 	{
 		"1" "skill_hero_lieren"           //烈刃
 		"2" "skill_ship_nanman_zr"        //南蛮兽王

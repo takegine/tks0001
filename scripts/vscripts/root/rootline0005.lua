@@ -255,7 +255,15 @@ function GameForUnit:OnNPCSpawned(keys )
     else
         local NameX = npc:GetUnitName()
         --print(NameX)
-        if able_table[NameX] then table.foreach(able_table[NameX],function(k,a) npc:AddAbility(a):SetLevel(npc:GetLevel()) end) end
+        if able_table[NameX] then 
+            table.foreach(able_table[NameX],function(k,a) 
+                local abiname =  npc:AddAbility(a)
+                if abiname then 
+                    abiname:SetLevel(npc:GetLevel()) 
+                end
+            end) 
+        end
+
         if _G.npcBaseType[NameX] then
             local attack_type = _G.npcBaseType[NameX][1] or "none"
             local defend_type = _G.npcBaseType[NameX][2] or "none"
