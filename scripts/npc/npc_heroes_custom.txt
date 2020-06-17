@@ -44,7 +44,7 @@
 		"AttributeAgilityGain"	"0"
 		"AttributeIntelligenceGain"	"0"
 	}
-	
+
 	// 张飞
 	"zhangfei"
 	{
@@ -418,7 +418,6 @@
 		"BountyGoldMax"	"174"
 	}
 
-
 	// 赵云
 	"zhaoyun"
 	{
@@ -577,7 +576,6 @@
 		"BountyGoldMin"	"95"
 		"BountyGoldMax"	"111"
 	}
-
 
 	// 庞统
 	"pangtong"
@@ -847,6 +845,7 @@
 		"BountyGoldMin"	"141"
 		"BountyGoldMax"	"157"
 	}
+
 	// 刘禅
 	"liushan"
 	{
@@ -898,7 +897,8 @@
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"71"
 		"BountyGoldMax"	"87"
-}
+	}
+
 	// 法正
 	"fazheng"
 	{

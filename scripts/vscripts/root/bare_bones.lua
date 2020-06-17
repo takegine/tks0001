@@ -86,26 +86,6 @@ function GameMode:ExampleConsoleCommand()
     -- print("*********************************************")
 end
 
-function GameMode:OnHeroInGame(hero)
-    -- print("[BAREBONES] Hero spawned in game for first time -- " .. hero:GetUnitName())
-
-    -- Store a reference to the player handle inside this hero handle.
-    hero.player = PlayerResource:GetPlayer(hero:GetPlayerID())
-    -- Store the player's name inside this hero handle.
-    hero.playerName = PlayerResource:GetPlayerName(hero:GetPlayerID())
-
-    local innate_ability = hero:FindAbilityByName("builder_invulnerable")
-    if innate_ability then
-        innate_ability:SetLevel(1)
-        innate_ability:SetHidden(true)
-    end
-end
-
--- The overall game state has changed
-function GameMode:OnGameRulesStateChange(keys)
-    -- print("[BAREBONES] GameRules State Changed")
-end
-
 -- An entity somewhere has been hurt.  This event fires very often with many units so don't do too many expensive
 -- operations here
 function GameMode:OnEntityHurt(keys)
