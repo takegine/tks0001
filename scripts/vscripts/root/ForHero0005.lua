@@ -76,7 +76,7 @@ function GetNewHero:LetHeroTrue( data )
     --DeepPrintTable(data.way)
     local hero = PlayerResource:GetSelectedHeroEntity(data.id)
     local unitName = data.way 
-    local findcost = 100 --减钱
+    local findcost = tkHeroList[unitName] and tkHeroList[unitName]['TksPayedGold'] or 50
     --print(unitName)
     if not PlayerResource:Pay( data.id, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
 
@@ -87,9 +87,16 @@ function GetNewHero:LetHeroTrue( data )
     function(v) 
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
+        table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
+        function(k,a) 
+            local abiT =  v:AddAbility('skill_player_'..a)
+            if abiT then abiT:SetLevel(v:GetLevel()) end
+        end) 
+        
+        v:FindAbilityByName('skill_player_price'):CastAbility()
         v:SetUnitCanRespawn(true)
         v:CheckLevel(tonumber(data.lvl)+v:GetLevel()-1)
-        print()
+        
     end)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
 
@@ -186,41 +193,4 @@ function GetNewHero:itemOnSell(data)
     PlayerResource:Pay( data.PlayerID, -math.random(45,75) )
 
     CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(playID), "wujiang_selled", {num=num})
-end
------------------------------------------------------playerBuild的参考----------------------
-
-function OnSell( data )
-    local target   = data.target
-    local caster   = data.caster
-    if target == caster then return end
-    local onsell   = false
-    local heroName = target:GetUnitName()
-    local itemName = string.gsub(heroName,"npc","item")
-    
-end
-
-function LevelUp( data )
-    local target   = data.target
-    local caster   = data.caster
-    if target == caster then print("is wrong") return end
-    local plid     = caster:GetPlayerOwnerID()
-    local hero     = PlayerResource:GetSelectedHeroEntity(plid)
-    local findcost = 100 --减钱
-
-    print(PlayerResource:NumTeamPlayers())
-
-    if  PlayerResource:Pay( data.PlayerID, findcost ) then 
-        target:CreatureLevelUp(1)
-    else
-        GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return 
-    end
-    -- if  hero:GetGold() > findcost then
-    --     hero:SetGold(hero:GetGold()-findcost,false)
-    --     target:CreatureLevelUp(1)
-    -- else
-    --     print("poor guy")
-    -- end
-
-    
-    
 end

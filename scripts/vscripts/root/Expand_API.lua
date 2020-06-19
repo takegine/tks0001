@@ -170,3 +170,8 @@ function CEntities:FindAllByTeam( enemy , team )
     -- end
     -- return rheroes]]
 end
+
+
+function CEntities:Pos(iTeam, iSide)
+    return Entities:FindByName(nil,"creep_birth_"..iTeam.."_"..iSide):GetOrigin()
+end

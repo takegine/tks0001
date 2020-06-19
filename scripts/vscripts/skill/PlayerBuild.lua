@@ -168,18 +168,17 @@ function skill_player_toggle:OnSpellStart()
     local playerID = tostring(caster:GetPlayerOwnerID())
    -- local onback   = false
     local iTeam    = caster:GetTeamNumber()-5
-    local abiName  = "skill_player_bench"
+    local lock  = "skill_player_lock"
     local tPop     = CustomNetTables:GetTableValue( "Hero_Population", playerID) 
     --item:SetPurchaseTime(0)
     --item:SetPurchaser( caster )
 
-    if  caster:HasAbility(abiName) then
+    if  caster:HasModifier(lock..'_bench') then
         tPop.popNow = tPop.popNow + caster.popuse
         --if tPop.popNow > tPop.popMax then return end
         caster.bench = nil
-        caster:RemoveAbility(abiName)
-        caster:RemoveModifierByName("modifier_"..abiName)
-        caster:SetOrigin(Entities:FindByName(nil,"creep_birth_"..iTeam.."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0) )
+        caster:RemoveModifierByName(lock..'_bench')
+        caster:SetOrigin(Entities:Pos(iTeam, 2)+ Vector (RandomFloat(-300, 300), RandomFloat(-100, 200), 0) )
         caster:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
     
         CustomNetTables:SetTableValue( "Hero_Population", playerID,tPop) 
@@ -197,8 +196,7 @@ function skill_player_toggle:OnSpellStart()
             if  posempty then
                 caster.bench = true
                 caster:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
-                caster:AddAbility(abiName)
-                caster:FindAbilityByName(abiName):SetLevel(1)
+                caster:FindAbilityByName(lock):ApplyDataDrivenModifier(caster, caster, lock..'_bench', nil)
                 caster:SetOrigin(itemPos)
                 tPop.popNow = tPop.popNow - caster.popuse  
                 CustomNetTables:SetTableValue( "Hero_Population", playerID,tPop)

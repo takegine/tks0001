@@ -1,9 +1,7 @@
 if GameForUnit == nil then GameForUnit = class({}) end
 
 function GameForUnit:OnGameRulesStateChange( keys )
-    if   GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then 
-         GameForUnit:OnGameRoundChange() 
-    end    
+    if   GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then GameForUnit:OnGameRoundChange() end    
 end
 
 function GameForUnit:OnGameRoundChange()
@@ -16,7 +14,7 @@ function GameForUnit:OnGameRoundChange()
         if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
             if _G.GAME_ROUND == 0 then
 
-                local home_ent = Entities:FindByName(nil,"creep_birth_"..i.."_3"):GetOrigin()
+                local home_ent = Entities:Pos(i,3)--Entities:FindByName(nil,"creep_birth_"..i.."_3"):GetOrigin()
                 local zhugong  = CreateUnitByName("tower_zhugong",home_ent,false,nil,nil,i+5)
                 table.foreach(FindUnitsInRadius(i+5,home_ent,nil,-1,1,1,0,0,false),function(_,v) if v:GetName()==SET_FORCE_HERO then zhugong:SetOwner(v) end end)
                
@@ -25,8 +23,8 @@ function GameForUnit:OnGameRoundChange()
 
             else
                 local Ts   = RandomInt(1,#_G.buildpostab) 
-                local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
-                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,PosB-v.origin,v.lvl,i,Ts) end)
+                --local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
+                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,Entities:Pos(i,1)-v.origin,v.lvl,i,Ts) end)
             end
         end
     end
@@ -37,6 +35,7 @@ end
 function GameForUnit:OnGameInPlan( ... )
     CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{0} )
     local return_time= TIME_BETWEEN_ROUND 
+    local lock = 'skill_player_lock'
     _G.GAME_ROUND    = _G.GAME_ROUND + 1
 
     -- 修长城
@@ -55,18 +54,29 @@ function GameForUnit:OnGameInPlan( ... )
         end
     end
         -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
+        
+    table.foreach(Entities:FindAllByTeam( 1 ),function(_,v) 
+     
+        if v.bench then 
+            v:RemoveModifierByName( lock..'_plan') 
+        elseif not v:HasModifier(lock..'_battle') then 
+            v:Destroy()
+        end 
+    end)
     table.foreach(_G.buildpostab,function(i,p) 
     table.foreach(p,function(_,v) 
         if  v.unit and not v.unit:IsNull() then
-            if not v.unit:IsAlive() then v.unit:RespawnUnit() end
+            --if not v.unit:IsAlive() then v.unit:RespawnUnit() end
             --v.unit:Kill(nil,v.unit)
             --Timer(0.1,function()
                 --v.unit:RespawnUnit()
-                v.unit:SetOrigin(v.origin+Entities:FindByName(nil,"creep_birth_"..i.."_2"):GetOrigin()) 
-                v.unit:SetHealth(v.unit:GetMaxHealth()) 
-                v.unit:SetMana(v.unit:GetMaxMana()) 
+                
+                v.unit:RemoveModifierByName( lock..'_battle') 
+                v.unit:SetOrigin(v.origin+Entities:Pos(i, 2) )
+                --v.unit:SetHealth(v.unit:GetMaxHealth()) 
+                --v.unit:SetMana(v.unit:GetMaxMana()) 
             --end)
-            for q=0,10 do if v.unit:GetAbilityByIndex(q) then v.unit:GetAbilityByIndex(q):EndCooldown()end end
+            --for q=0,10 do if v.unit:GetAbilityByIndex(q) then v.unit:GetAbilityByIndex(q):EndCooldown()end end
         end
     end)
     end)
@@ -79,34 +89,35 @@ function GameForUnit:OnGameInPlan( ... )
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{1} )
             
             --全体防守加状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(Entities:FindAllByTeam(1),function(_,v) 
-                if v:IsMoving() then v:Stop() end
-                local abiName = "skill_player_countdown"
-                v:AddAbility(abiName)
-                v:FindAbilityByName(abiName):SetLevel(1)
+            table.foreach(Entities:FindAllByTeam(1),function(_,u) 
+                if u:IsMoving() then u:Stop() end
+                u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_plan', nil)
+                
             end)
 
         elseif return_time == 4 then--mark
             for i=1,8 do
                 if PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
                     _G.buildpostab[i]={}
-                    local PosA   =Entities:FindByName(nil,"creep_birth_"..i.."_2"):GetOrigin()
-                    -- local PosB   =Entities:FindByName(nil,"tree_birth_"..i.."_1"):GetOrigin()
-                    -- local PosC   =Entities:FindByName(nil,"tree_birth_"..i.."_2"):GetOrigin()
-
-                    -- local startPos   = Vector((PosC.x-PosB.x)/2+PosA.x,(PosC.y-PosB.y)/2+PosA.y,0)
-                    -- local endPos     = Vector((PosC.x-PosB.x)/2+PosB.x,(PosC.y-PosB.y)/2+PosB.y,0)
-                    -- local width      = math.sqrt( math.pow(PosC.x-PosB.x, 2)+ math.pow(PosC.y-PosB.y, 2) )
-                    
-                    -- table.foreach(FindUnitsInLine(i+5, startPos, endPos,nil, width, DOTA_UNIT_TARGET_TEAM_FRIENDLY,DOTA_UNIT_TARGET_ALL,0),function(k,v) 
-                    table.foreach(Entities:FindAllByTeam(  1, i ),function(k,u) if not u.bench then _G.buildpostab[i][k]={unit=u, origin=u:GetOrigin()-PosA, lvl=u:GetLevel()} end end)
+                    table.foreach(Entities:FindAllByTeam( 1, i),function(k,u) 
+                        if not u.bench then 
+                            _G.buildpostab[i][k]={unit=u, origin=u:GetOrigin()-Entities:Pos(i,2), lvl=u:GetLevel()}
+                            --Timer(1, function() 
+                                print("xxxxx",u:GetUnitName(), u:GetOrigin(), u:GetTeamNumber())
+                                CreateUnitByNameAsync( u:GetUnitName(), u:GetOrigin(), true,nil,nil, u:GetTeamNumber(), function( v ) v:CheckLevel(u:GetLevel()) v:SetUnitCanRespawn(false) end)  
+                            --end)
+                            
+                            u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_battle', nil)
+                            u:SetOrigin(Entities:Pos(i,3)+Vector(0, 0, -180) )
+                        end
+                    end)
                 end
             end
 
         elseif return_time == 3 then GameForUnit:OnGameRoundChange()
         elseif return_time == 2 then--forward
             table.foreach(Entities:FindAllByTeam(),function(k,u) 
-                if  u.enemy then
+                if  u.enemy or u.bench then
                     u:FaceTowards(u:GetAbsOrigin()+Vector(0,-1,0))
                 else u:FaceTowards(u:GetAbsOrigin()+Vector(0,1,0))
                 end
@@ -124,9 +135,12 @@ function GameForUnit:OnGameInPlan( ... )
             
             --全体删状态 (禁锢 缴械 无敌 沉默) 
             table.foreach(Entities:FindAllByTeam(),function(_,caster) 
-                local abiName = "skill_player_countdown"
-                caster:RemoveAbility(abiName)
-                caster:RemoveModifierByName("modifier_"..abiName)
+                -- local abiName = "skill_player_countdown"
+                -- caster:RemoveAbility(abiName)
+                -- print(caster:GetName(), caster:HasModifier("modifier_"..abiName))
+                if not caster.bench then
+                caster:RemoveModifierByName( lock..'_plan' )
+                end
                 --caster:RemoveModifierByName("modifier_"..abiName.."enemy")
             end)            
             
@@ -182,16 +196,16 @@ function GameForUnit:OnGameInPlan( ... )
                         end)
                     end)
 
-                    table.foreach(tTeamMate,function(_,v)
-                        if v:IsHero() then
-                            for q=0,5 do
-                                if v:GetItemInSlot(q)~=v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q) then
-                                v:RemoveItem(v:GetItemInSlot(q))
-                                v:AddItem(v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q))
-                                end
-                            end
-                        end
-                    end)
+                    -- table.foreach(tTeamMate,function(_,v)
+                    --     if v:IsHero() then
+                    --         for q=0,5 do
+                    --             if v:GetItemInSlot(q)~=v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q) then
+                    --             v:RemoveItem(v:GetItemInSlot(q))
+                    --             v:AddItem(v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q))
+                    --             end
+                    --         end
+                    --     end
+                    -- end)
                 end
             end
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
@@ -254,14 +268,9 @@ function GameForUnit:OnNPCSpawned(keys )
         if GetMapName=="map0" then CustomGameEventManager:Send_ServerToTeam(npc:GetTeam(), "CameraRotateHorizontal", {angle=npc:GetPlayerID()*360/8}) end
     else
         local NameX = npc:GetUnitName()
-        --print(NameX)
-            table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
-            function(k,a) 
-                local abiT =  npc:AddAbility('skill_player_'..a)
-                if abiT then abiT:SetLevel(npc:GetLevel()) end
-            end) 
-            
-            npc:FindAbilityByName('skill_player_price'):CastAbility()
+        --print(NameX) 
+        local abiT =  npc:AddAbility('skill_player_lock')
+        if abiT then abiT:SetLevel(npc:GetLevel()) end
 
         if able_table[NameX] then 
             table.foreach(able_table[NameX],function(k,a) 
@@ -440,6 +449,7 @@ function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
     local ShuaGuai_entity = Entities:FindByName(nil,"creep_birth_"..iTeam.."_0")
     local vPos
     local vName
+    local lock = 'skill_player_lock'
     if iTeam == iReTeam then iReTeam = DOTA_TEAM_BADGUYS end
 
     if origin == nil then
@@ -450,12 +460,13 @@ function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
         vName=CreateName:GetUnitName()
     end 
 
-    CreateUnitByNameAsync(vName,vPos,true,nil,nil,iReTeam,  function( v ) 
-        v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
-        v:AddAbility("skill_player_countdown"):SetLevel(1)
-        v:SetInitialGoalEntity( ShuaGuai_entity )
-        v:CheckLevel(level)
-        v.enemy=true end)  
+    CreateUnitByNameAsync(vName,vPos,true,nil,nil,iReTeam,  function( u ) 
+        u:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
+        u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_plan', nil)
+        -- v:AddAbility("skill_player_countdown"):SetLevel(1)
+        u:SetInitialGoalEntity( ShuaGuai_entity )
+        u:CheckLevel(level)
+        u.enemy=true end)  
 end
 
 function GameForUnit:FindAllByKey(key)
