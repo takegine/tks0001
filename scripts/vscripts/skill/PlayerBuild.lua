@@ -1,107 +1,234 @@
 
-skill_player_onback = skill_player_onback or {}
---------------------------------------------------------------------------------
+-- skill_player_price
+-- skill_player_lvlup
+-- skill_player_lvlkeep
+-- skill_player_onsale
+-- skill_player_sell
+-- skill_player_toggle
 
-function skill_player_onback:CastFilterResultTarget(  hTarget ) return ChecktTarget( { hTarget = hTarget, team = self:GetCaster():GetTeamNumber()} ) end
-function skill_player_onback:GetCustomCastErrorTarget(hTarget ) return ErrorTarget( hTarget ) end
-function skill_player_onback:OnSpellStart(  )
-    print("PlayerBuild:OnBack")
-    
-    local target   = self:GetCursorTarget()
+require('root/ToolsFromX')
+----------------------------------------------------------------------------
+skill_player_price = skill_player_price or {}
+
+LinkLuaModifier( "modifier_skill_player_price", "skill/PlayerBuild.lua", LUA_MODIFIER_MOTION_NONE )
+
+function skill_player_price:IsHidden() return true end
+function skill_player_price:OnSpellStart()
+
     local caster   = self:GetCaster()
-   -- local onback   = false
-    local iTeam    = target:GetTeamNumber()-5
-    local abiName  = "skill_player_bench"
-    local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID())) 
-    --item:SetPurchaseTime(0)
-    --item:SetPurchaser( caster )
+    local modiName = 'modifier_skill_player_price'
 
-    if  target:HasAbility(abiName) then
-        target.bench = nil
-        target:RemoveAbility(abiName)
-        target:RemoveModifierByName("modifier_"..abiName)
-        target:SetOrigin(Entities:FindByName(nil,"creep_birth_"..iTeam.."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0) )
-        target:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
-        tPop.popNow = tPop.popNow + target.popuse
-        CustomNetTables:SetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID()),tPop) 
-        
-        return
+    if not caster:IsHero() then return end
+    if not caster:HasModifier(modiName) then
+           caster:AddNewModifier( caster, self , modiName , nil )
     end
 
-    --[[
-    --在记录表中删掉这个单位
-    if _G.buildpostab[iTeam] then
-        table.foreach(_G.buildpostab[iTeam],function(k,v) 
-            if v.unit==target:GetUnitName() and v.origin==target:GetOrigin() then v=nil end 
-        end)
-    end
-    ]]
-        
-    local x = caster.Ticket and 6 or 5
-    for i = 1 , x do
-        local posempty   = true
-        local itemPos    = Entities:FindByName( nil, "dianjiangtai_"..iTeam.."_"..i):GetAbsOrigin()
-        local isemptytab = Entities:FindAllInSphere(itemPos,50)
-        
-        for _,v in pairs(isemptytab) do
-            if v:IsAlive() then posempty=false break end
-        end
-        if  posempty==true then
-            target.bench = true
-            target:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
-            target:AddAbility(abiName)
-            target:FindAbilityByName(abiName):SetLevel(1)
-            target:SetOrigin(itemPos)
-            tPop.popNow = tPop.popNow - target.popuse  
-            CustomNetTables:SetTableValue( "Hero_Population", tostring(target:GetPlayerOwnerID()),tPop) 
-            return
-        end
-    end
+    caster:SetModifierStackCount( modiName, caster, 0.05 * RandomInt( 11, 20) * ( tkHeroList[caster:GetName()]['TksPayedGold']*caster:GetLevel()+385) ) 
+
 end
 
-    
-skill_player_onsell = skill_player_onsell or {}
---------------------------------------------------------------------------------
-
-
-function skill_player_onsell:CastFilterResultTarget(  hTarget ) return ChecktTarget( { hTarget = hTarget, team = self:GetCaster():GetTeamNumber()} ) end
-function skill_player_onsell:GetCustomCastErrorTarget(hTarget ) return ErrorTarget( hTarget ) end
-function skill_player_onsell:OnSpellStart()
-    local target   = self:GetCursorTarget()
-    local caster   = self:GetCaster()
-    local plid     = caster:GetPlayerOwnerID()
-
-    target:ForceKill(true)
-    PlayerResource:Pay( plid, -100 ) 
-    
-end
+modifier_skill_player_price = modifier_skill_player_price or {}
+function modifier_skill_player_price:IsHidden()		return false end
+function modifier_skill_player_price:IsPurgable() 	return false end
+function modifier_skill_player_price:RemoveOnDeath()	return true end
 
 
 skill_player_lvlup = skill_player_lvlup or {}
 --------------------------------------------------------------------------------
 
-function skill_player_lvlup:CastFilterResultTarget(  hTarget ) return ChecktTarget( { hTarget = hTarget, team = self:GetCaster():GetTeamNumber()} ) end
-function skill_player_lvlup:GetCustomCastErrorTarget( hTarget ) return ErrorTarget( hTarget ) end
-function skill_player_lvlup:OnSpellStart()
-    local target   = self:GetCursorTarget()
+function skill_player_lvlup:CastFilterResult() 
+    if not IsServer() then return end
+    
+    if CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
+
     local caster   = self:GetCaster()
     local plid     = caster:GetPlayerOwnerID()
     local hero     = PlayerResource:GetSelectedHeroEntity(plid)
-    local findcost = 100 --减钱
+    local basecost = self:GetLevelSpecialValueFor("basecost", self:GetLevel() )
+    local vipcost  = self:GetLevelSpecialValueFor("vipcost", self:GetLevel() )
 
-    print(PlayerResource:NumTeamPlayers())
+    local viptable = LoadKeyValues("scripts/npc/vipcost.kv")
 
-    if not PlayerResource:Pay( plid, findcost ) then GetNewHero:UptoDJT(plid,"shopUp","poorguy") 
-        else
-            target:CheckLevel() end
-    -- if  hero:GetGold() > findcost then
-    --     hero:SetGold(hero:GetGold()-findcost,false)
-        
-    -- else
-    --     print("poor guy")
-    -- end
+    local findcost = viptable[caster:GetName()] and vipcost or basecost
+
+    if caster:GetLevel()==10 
+    or hero:GetGold()<findcost 
+    then  return UF_FAIL_CUSTOM 
+    end
+    
+    return 0
 end
 
+function skill_player_lvlup:GetCustomCastError() 
+    if self:GetCaster():GetLevel()==10 then return "MAX LEVEL" end
+    return 'poorguy'
+end
+
+function skill_player_lvlup:OnSpellStart()
+    
+    local caster   = self:GetCaster()
+    local plid     = caster:GetPlayerOwnerID()
+    local hero     = PlayerResource:GetSelectedHeroEntity(plid)
+    local basecost = self:GetLevelSpecialValueFor("basecost", self:GetLevel() )
+    local vipcost  = self:GetLevelSpecialValueFor("vipcost", self:GetLevel() )
+
+    local viptable = LoadKeyValues("scripts/npc/vipcost.kv")
+
+    local findcost = viptable[caster:GetName()] and vipcost or basecost
+
+    if PlayerResource:Pay( plid, findcost ) then 
+        caster:CheckLevel() 
+        caster:FindAbilityByName('skill_player_price'):CastAbility()
+    end
+end
+
+
+
+skill_player_lvlkeep = skill_player_lvlkeep or {}
+--------------------------------------------------------------------------------
+function skill_player_lvlkeep:CastFilterResult(   ) 
+    
+    if CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
+    
+    return 0 
+end
+function skill_player_lvlkeep:GetCustomCastError( ) return ErrorTarget(  ) end
+
+function skill_player_lvlkeep:OnSpellStart()
+    
+    local caster   = self:GetCaster()
+    local plid     = caster:GetPlayerOwnerID()
+    local hero     = PlayerResource:GetSelectedHeroEntity(plid)
+
+    for i= 1,10 do
+        if not caster:FindAbilityByName('skill_player_lvlup'):CastAbility() then break end
+    end
+end
+
+skill_player_onsale = skill_player_onsale or {}
+--------------------------------------------------------------------------------
+function skill_player_onsale:CastFilterResult(   ) 
+    
+    if CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
+    
+    return 0 
+end
+function skill_player_onsale:GetCustomCastError( ) return ErrorTarget(  ) end
+function skill_player_onsale:OnSpellStart()
+    
+    local caster   = self:GetCaster()
+    local plid     = caster:GetPlayerOwnerID()
+    local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(plid)) 
+
+    if  PlayerResource:Pay( plid, -caster:GetModifierStackCount( 'modifier_skill_player_price', caster) ) then
+
+        tPop.popNow = tPop.popNow - caster.popuse  
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(plid),tPop) 
+        caster:Destroy()
+    end
+    
+end
+
+
+skill_player_toggle = skill_player_toggle or {}
+--------------------------------------------------------------------------------
+function skill_player_toggle:CastFilterResult( ) 
+    if not IsServer() then return end
+    
+    if CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
+
+    local caster   = self:GetCaster()
+    local hero     = caster:GetPlayerOwner()
+    local playerID = tostring(caster:GetPlayerOwnerID())
+    local tPop     = CustomNetTables:GetTableValue( "Hero_Population", playerID) 
+    tPop.popNow = tPop.popNow + self:GetCaster().popuse
+    if tPop.popNow > tPop.popMax then 
+        self.Result="outofyourpop"
+        return UF_FAIL_CUSTOM
+    end
+    
+    return 0
+end
+
+function skill_player_toggle:GetCustomCastError() 
+    
+    if self.Result=="outofyourpop" then 
+        self.Result=nil
+        return "#outofyourpop" end
+
+    return "....."
+
+end
+
+function skill_player_toggle:OnSpellStart()
+        
+    --local target   = self:GetCursorTarget()
+    local caster   = self:GetCaster()
+    local hero     = caster:GetPlayerOwner()
+    local playerID = tostring(caster:GetPlayerOwnerID())
+   -- local onback   = false
+    local iTeam    = caster:GetTeamNumber()-5
+    local abiName  = "skill_player_bench"
+    local tPop     = CustomNetTables:GetTableValue( "Hero_Population", playerID) 
+    --item:SetPurchaseTime(0)
+    --item:SetPurchaser( caster )
+
+    if  caster:HasAbility(abiName) then
+        tPop.popNow = tPop.popNow + caster.popuse
+        --if tPop.popNow > tPop.popMax then return end
+        caster.bench = nil
+        caster:RemoveAbility(abiName)
+        caster:RemoveModifierByName("modifier_"..abiName)
+        caster:SetOrigin(Entities:FindByName(nil,"creep_birth_"..iTeam.."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0) )
+        caster:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
+    
+        CustomNetTables:SetTableValue( "Hero_Population", playerID,tPop) 
+    else
+        local x = hero.Ticket and 6 or 5
+        for i = 1 , x do
+            local posempty   = true
+            local itemPos    = Entities:FindByName( nil, "dianjiangtai_"..iTeam.."_"..i):GetAbsOrigin()
+            local isemptytab = Entities:FindAllInSphere(itemPos,100)
+            print(i,x)
+            print_r(isemptytab)
+            for _,v in pairs(isemptytab) do
+                if v.bFirstSpawned then posempty=false break end
+            end
+            if  posempty then
+                caster.bench = true
+                caster:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
+                caster:AddAbility(abiName)
+                caster:FindAbilityByName(abiName):SetLevel(1)
+                caster:SetOrigin(itemPos)
+                tPop.popNow = tPop.popNow - caster.popuse  
+                CustomNetTables:SetTableValue( "Hero_Population", playerID,tPop)
+                break
+            end
+        end
+    end
+
+    -- --在记录表中删掉这个单位
+    -- if _G.buildpostab[iTeam] then
+    --     table.foreach(_G.buildpostab[iTeam],function(k,v) 
+    --         if v.unit==caster:GetUnitName() and v.origin==caster:GetOrigin() then v=nil end 
+    --     end)
+    -- end
+        
+    
+end
+
+skill_player_sell = skill_player_sell or {}
+--------------------------------------------------------------------------------
+function skill_player_sell:CastFilterResultTarget(  hTarget ) return ChecktTarget( { hTarget = hTarget, team = self:GetCaster():GetTeamNumber()} ) end
+function skill_player_sell:GetCustomCastErrorTarget(hTarget ) return ErrorTarget( hTarget ) end
+function skill_player_sell:OnSpellStart()
+    local target   = self:GetCursorTarget()
+    local caster   = self:GetCaster()
+    local plid     = caster:GetPlayerOwnerID()
+
+    target:FindAbilityByName('skill_player_onsale'):CastAbility()
+    
+end
 
 --------------------------------------------------------------------------------
 function ChecktTarget(  data )

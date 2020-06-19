@@ -7,7 +7,7 @@
 		// Hero to override
 		"override_hero"	"npc_dota_hero_phoenix"
 		// Ability 1
-		"Ability1"	""
+		"Ability1"	"skill_player_sell"
 		"Ability2"	""
 		"Ability3"	""
 		"Ability4"	""
@@ -23,6 +23,8 @@
 		"Ability14"	""
 		"Ability15"	""
 		"Ability16"	""
+		"Ability17"	""
+		"Ability18"	""
 		// Range of vision at night time.
 		"VisionNighttimeRange"	"1800"
 		"StatusHealthRegen"	"0"
@@ -46,7 +48,7 @@
 	}
 
 	// 张飞
-	"zhangfei"
+	"npc_dota_hero_bristleback"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -92,6 +94,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"land"
 		"TksDefendType"	"fire"
+		"TksPayedGold"	"325"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"89"
@@ -99,7 +102,7 @@
 	}
 
 	// 魏延
-	"weiyan"
+	"npc_dota_hero_brewmaster"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -145,6 +148,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"fire"
 		"TksDefendType"	"fire"
+		"TksPayedGold"	"350"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"76"
@@ -152,7 +156,7 @@
 	}
 
 	// 孟获
-	"menghuo"
+	"npc_dota_hero_beastmaster"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -198,6 +202,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"land"
 		"TksDefendType"	"tree"
+		"TksPayedGold"	"480"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"128"
@@ -205,7 +210,7 @@
 	}
 
 	// 马岱
-	"madai"
+	"npc_dota_hero_clinkz"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -251,6 +256,7 @@
 		"TksPopUse"	"2"
 		"TksAttackType"	"tree"
 		"TksDefendType"	"land"
+		"TksPayedGold"	"375"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"1400"
@@ -259,7 +265,7 @@
 	}
 
 	// 马超
-	"machao"
+	"npc_dota_hero_alchemist"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -305,6 +311,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"land"
 		"TksDefendType"	"land"
+		"TksPayedGold"	"555"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"174"
@@ -312,7 +319,7 @@
 	}
 
 	// 姜维
-	"jiangwei"
+	"npc_dota_hero_bloodseeker"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -358,6 +365,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"none"
 		"TksDefendType"	"none"
+		"TksPayedGold"	"300"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"83"
@@ -365,7 +373,7 @@
 	}
 
 	// 黄忠
-	"huangzhong"
+	"npc_dota_hero_arc_warden"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -411,6 +419,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"tree"
 		"TksDefendType"	"electrical"
+		"TksPayedGold"	"600"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"1600"
@@ -419,7 +428,7 @@
 	}
 
 	// 赵云
-	"zhaoyun"
+	"npc_dota_hero_broodmother"
 	{
 		"Ability1"	"paoxiao"
 		"Ability2"	"yinghan"
@@ -465,6 +474,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"none"
 		"TksDefendType"	"none"
+		"TksPayedGold"	"499"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"132"
@@ -472,7 +482,7 @@
 	}
 
 	// 关羽
-	"guanyu"
+	"npc_dota_hero_abaddon"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -518,6 +528,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"water"
 		"TksDefendType"	"land"
+		"TksPayedGold"	"399"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"108"
@@ -525,7 +536,7 @@
 	}
 
 	// 刘备
-	"liubei"
+	"npc_dota_hero_bounty_hunter"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -571,6 +582,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"none"
 		"TksDefendType"	"none"
+		"TksPayedGold"	"350"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"95"
@@ -578,7 +590,7 @@
 	}
 
 	// 庞统
-	"pangtong"
+	"npc_dota_hero_batrider"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -624,6 +636,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"fire"
 		"TksDefendType"	"fire"
+		"TksPayedGold"	"666"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"1100"
@@ -632,7 +645,7 @@
 	}
 
 	// 祝融
-	"zhurong"
+	"npc_dota_hero_drow_ranger"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -678,6 +691,7 @@
 		"TksPopUse"	"2"
 		"TksAttackType"	"tree"
 		"TksDefendType"	"tree"
+		"TksPayedGold"	"375"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"1500"
@@ -686,7 +700,7 @@
 	}
 
 	// 关银屏
-	"guanyinping"
+	"npc_dota_hero_antimage"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -732,6 +746,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"land"
 		"TksDefendType"	"fire"
+		"TksPayedGold"	"325"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"83"
@@ -739,7 +754,7 @@
 	}
 
 	// 火诸葛
-	"huozhuge"
+	"npc_dota_hero_ancient_apparition"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -785,6 +800,7 @@
 		"TksPopUse"	"4"
 		"TksAttackType"	"fire"
 		"TksDefendType"	"fire"
+		"TksPayedGold"	"666"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"1100"
@@ -793,7 +809,7 @@
 	}
 
 	// 老诸葛
-	"laozhuge"
+	"npc_dota_hero_bane"
 	{
 		"Ability1"	""
 		"Ability2"	""
@@ -839,6 +855,7 @@
 		"TksPopUse"	"3"
 		"TksAttackType"	"water"
 		"TksDefendType"	"land"
+		"TksPayedGold"	"535"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"900"
@@ -893,6 +910,7 @@
 		"TksPopUse"	"2"
 		"TksAttackType"	"none"
 		"TksDefendType"	"none"
+		"TksPayedGold"	"250"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"BountyGoldMin"	"71"
@@ -946,6 +964,7 @@
 		"TksPopUse"	"2"
 		"TksAttackType"	"fire"
 		"TksDefendType"	"none"
+		"TksPayedGold"	"535"
 		"UnitLabel"	"shuguo"
 		"StatusManaRegen"	"0"
 		"ProjectileSpeed"	"1500"

@@ -255,6 +255,14 @@ function GameForUnit:OnNPCSpawned(keys )
     else
         local NameX = npc:GetUnitName()
         --print(NameX)
+            table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
+            function(k,a) 
+                local abiT =  npc:AddAbility('skill_player_'..a)
+                if abiT then abiT:SetLevel(npc:GetLevel()) end
+            end) 
+            
+            npc:FindAbilityByName('skill_player_price'):CastAbility()
+
         if able_table[NameX] then 
             table.foreach(able_table[NameX],function(k,a) 
                 local abiname =  npc:AddAbility(a)
