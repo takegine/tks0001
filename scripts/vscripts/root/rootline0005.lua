@@ -103,8 +103,7 @@ function GameForUnit:OnGameInPlan( ... )
                         if not u.bench then 
                             _G.buildpostab[i][k]={unit=u, origin=u:GetOrigin()-Entities:Pos(i,2), lvl=u:GetLevel()}
                             --Timer(1, function() 
-                                print("xxxxx",u:GetUnitName(), u:GetOrigin(), u:GetTeamNumber())
-                                CreateUnitByNameAsync( u:GetUnitName(), u:GetOrigin(), true,nil,nil, u:GetTeamNumber(), function( v ) v:CheckLevel(u:GetLevel()) v:SetUnitCanRespawn(false) end)  
+                            CreateUnitByNameAsync( u:GetUnitName(), u:GetOrigin(), true,nil,nil, u:GetTeamNumber(), function( v ) v:CheckLevel(u:GetLevel()) v:SetUnitCanRespawn(false) end)  
                             --end)
                             
                             u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_battle', nil)
