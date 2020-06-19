@@ -113,7 +113,7 @@ function CreateitemButton(num,itemName,lvl) {
         NewButton.GetChild(1).text = $.Localize(itemName)//"DOTA_Tooltip_ability_"+
         NewButton.GetChild(2).text = lvl
         NewButton.SetPanelEvent('onactivate',function() {    goget(num); }  ) ;
-        NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;
+        // NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;创建右键菜单
         $.CreatePanel('Panel', NewButton.GetChild(1),itemName);
         $.Msg(itemName.slice(9)," ",NewButton.id," ",NewButton.GetChild(1).GetChild(0).id)
     //NewButton.GetChild(0).id = String(itemName)
