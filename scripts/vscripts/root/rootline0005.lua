@@ -16,8 +16,9 @@ function GameForUnit:OnGameRoundChange()
 
                 local home_ent = Entities:Pos(i,3)--Entities:FindByName(nil,"creep_birth_"..i.."_3"):GetOrigin()
                 local zhugong  = CreateUnitByName("tower_zhugong",home_ent,false,nil,nil,i+5)
-                table.foreach(FindUnitsInRadius(i+5,home_ent,nil,-1,1,1,0,0,false),function(_,v) if v:GetName()==SET_FORCE_HERO then zhugong:SetOwner(v) end end)
-               
+                --table.foreach(FindUnitsInRadius(i+5,home_ent,nil,-1,1,1,0,0,false),function(_,v) if v:GetName()==SET_FORCE_HERO then zhugong:SetOwner(v) end end)
+                zhugong:SetPlayer(i+5)
+
             elseif tkRounList[tostring(_G.GAME_ROUND)] then
                 table.foreach( tkRounList[tostring(_G.GAME_ROUND)],function(_,v) ShuaGuai(v.unit,nil,v.lvl,i,i) end)
 
@@ -51,6 +52,8 @@ function GameForUnit:OnGameInPlan( ... )
 
             local refreshupcount = _G.GAME_ROUND==1 and 10 or 5
             for R=1,refreshupcount do GetNewHero:UptoDJT(i-1,"shopUp",SET_FIRST_HERO) end
+
+            Entities:GetPlayer(i+5).ship={}
         end
     end
         -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
@@ -102,12 +105,18 @@ function GameForUnit:OnGameInPlan( ... )
                     table.foreach(Entities:FindAllByTeam( 1, i),function(k,u) 
                         if not u.bench then 
                             _G.buildpostab[i][k]={unit=u, origin=u:GetOrigin()-Entities:Pos(i,2), lvl=u:GetLevel()}
+                            local hero = Entities:GetPlayer(i +5 )
+
                             --Timer(1, function() 
-                            CreateUnitByNameAsync( u:GetUnitName(), u:GetOrigin(), true,nil,nil, u:GetTeamNumber(), function( v ) v:CheckLevel(u:GetLevel()) v:SetUnitCanRespawn(false) end)  
+                            CreateUnitByNameAsync( u:GetUnitName(), u:GetOrigin(), true,hero,hero, u:GetTeamNumber(), function( v ) 
+                                v:CheckLevel(u:GetLevel()) 
+                                v:SetUnitCanRespawn(false) 
+                                v:SetPlayer(u:GetTeamNumber()) 
+                            end)  
                             --end)
                             
                             u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_battle', nil)
-                            u:SetOrigin(Entities:Pos(i,3)+Vector(0, 0, -180) )
+                            u:SetOrigin(Entities:Pos(i,3)+Vector(0, 0, 999) )
                         end
                     end)
                 end
@@ -149,62 +158,106 @@ function GameForUnit:OnGameInPlan( ... )
                     local tBuff02 ={}--这一队的激活的羁绊
                     local tTeamMate=Entities:FindAllByTeam(1,i)
                     --FindUnitsInRadius( i +5, Vector(0,0,0), nil, -1, DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_ALL, DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES + DOTA_UNIT_TARGET_FLAG_FOW_VISIBLE, 0, false )
-                
-                    table.foreach(tTeamMate,function(_,v)
-                        for c = 0,10 do
-                            if v:GetAbilityByIndex(c) then
-                                local hAbi  = v:GetAbilityByIndex(c):GetAbilityName()
-                                
-                                --if tkShipList[hAbi] and not tBuff01[hAbi] then tBuff01[hAbi]=true end
-                                
-                                local intab = false
-                                for _,modhad in pairs(tBuff01) do
-                                    if hAbi == modhad then intab =true break end
-                                end
-                                    if intab==false then table.insert(tBuff01,hAbi) end
-                            end
-                        end
-                    end)
-
-                    table.foreach(tBuff01,function(_,v)
-                        local modup = false
-                        if tkShipList[v] then
-                            local count = 0
-                            local nedcount = 0 
-                            table.foreach(tkShipList[v],function() nedcount=nedcount+1 end)
-                            for _,heroneed in pairs(tkShipList[v]) do
-                                for _,unit in pairs(tTeamMate) do 
-                                    if unit:GetUnitName() == heroneed then count=count+1 break end
-                                end
-                                    if count == nedcount then modup=true break end
-                            end 
-                        end
+                    
+                    table.foreach(tkShipList,function(s,n)
                         
-                        if modup == true then table.insert(tBuff02,v) end
-                    end) 
+                        local modup = false
+                        local count = 0
+                        local needcount = #n >2 and table.foreach(tTeamMate,function(_,u) if u:GetUnitName() == '神吕蒙' then return true end end) and #n-1 or #n
+                        table.foreach(n,function(_,unit) 
+                            
+                            local usedunit = {}
+                            for _,u in pairs(tTeamMate) do 
+                                    
+                                local used = false
+                                for _,d in pairs(usedunit) do 
+                                    if d==u then  
+                                        used = true 
+                                        break 
+                                    end 
+                                end
 
-                    table.foreach(tTeamMate,function(_,v)
-                        table.foreach(tBuff02,function(_,abiname) 
-                            if v:FindAbilityByName(abiname ) then
-                                local hAbi = v:FindAbilityByName(abiname )
-                                local modName = "Modifier_"..abiname
-                                if hAbi:GetCaster():HasModifier(modName ) then RemoveModifierByName(modName) end
-                                hAbi:ApplyDataDrivenModifier(hAbi:GetCaster(), hAbi:GetCaster(), modName, nil)
-                                --print("tBuff02",hAbi:GetCaster():GetUnitName(),hAbi:GetCaster():HasModifier(modName ),modName )
+                                if not used and u:GetUnitName() == unit then 
+                                    table.insert(usedunit,u)
+                                    count=count+1 
+                                    break 
+                                end
+                            end
+                            
+                            if count >= needcount then 
+                                modup=true
                             end
                         end)
+                        
+                        if modup == true then 
+                            -- for _,h in pairs(Entities:FindAllByName( SET_FORCE_HERO ) ) do
+                            --     if  h:GetTeamNumber()== i+5 then
+                            --         h.ship[string.sub(s,12)]=true
+                            --         break
+                            --     end
+                            -- end
+                            Entities:GetPlayer(i +5 ).ship[string.sub(s,12)]=true
+                        end
+
                     end)
 
                     -- table.foreach(tTeamMate,function(_,v)
-                    --     if v:IsHero() then
-                    --         for q=0,5 do
-                    --             if v:GetItemInSlot(q)~=v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q) then
-                    --             v:RemoveItem(v:GetItemInSlot(q))
-                    --             v:AddItem(v:GetPlayerOwner():GetAssignedHero():GetItemInSlot(q))
+                    --     for c = 0,10 do
+                    --         if v:GetAbilityByIndex(c) then
+                    --             local hAbi  = v:GetAbilityByIndex(c):GetAbilityName()
+                                
+                    --             --if tkShipList[hAbi] and not tBuff01[hAbi] then tBuff01[hAbi]=true end
+                                
+                    --             local intab = false
+                    --             for _,modhad in pairs(tBuff01) do
+                    --                 if hAbi == modhad then intab =true break end
                     --             end
+                    --                 if intab==false then table.insert(tBuff01,hAbi) end
                     --         end
                     --     end
                     -- end)
+
+                    -- table.foreach(tBuff01,function(_,v)
+                    --     local modup = false
+                    --     if tkShipList[v] then
+                    --         local count = 0
+                    --         local nedcount = 0 
+                    --         table.foreach(tkShipList[v],function() nedcount=nedcount+1 end)
+                    --         for _,heroneed in pairs(tkShipList[v]) do
+                    --             for _,unit in pairs(tTeamMate) do 
+                    --                 if unit:GetUnitName() == heroneed then count=count+1 break end
+                    --             end
+                    --                 if count == nedcount then modup=true break end
+                    --         end 
+                    --     end
+                        
+                    --     if modup == true then table.insert(tBuff02,v) end
+                    -- end) 
+
+                    -- table.foreach(tTeamMate,function(_,v)
+                    --     table.foreach(tBuff02,function(_,abiname) 
+                    --         if v:FindAbilityByName(abiname ) then
+                    --             local hAbi = v:FindAbilityByName(abiname )
+                    --             local modName = "Modifier_"..abiname
+                    --             if hAbi:GetCaster():HasModifier(modName ) then RemoveModifierByName(modName) end
+                    --             hAbi:ApplyDataDrivenModifier(hAbi:GetCaster(), hAbi:GetCaster(), modName, nil)
+                    --             --print("tBuff02",hAbi:GetCaster():GetUnitName(),hAbi:GetCaster():HasModifier(modName ),modName )
+                    --         end
+                    --     end)
+                    -- end)
+
+                    for q=0,5 do
+                        local oitem = Entities:GetPlayer(i +5 ):GetItemInSlot(q)
+                        if oitem then
+                            local vitem = CreateItem(oitem:GetName(),nil,nil)
+                            table.foreach(tTeamMate,function(_,v)
+                                if  v:GetItemInSlot(q) ~= vitem then
+                                    v:RemoveItem(v:GetItemInSlot(q))
+                                    v:AddItem( vitem )
+                                end
+                            end)
+                        end
+                    end
                 end
             end
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
@@ -258,9 +311,8 @@ function GameForUnit:OnNPCSpawned(keys )
     npc.bFirstSpawned = true
 
     if npc:GetName()==SET_FORCE_HERO then
-        for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end 
-
-        npc.Ticket=PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
+        for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end
+        npc.Ticket = PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
 
         CustomUI:DynamicHud_Create(npc:GetPlayerID(),"psd","file://{resources}/layout/custom_game/uiscreen.xml",nil)
         CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerID()),{popMax=LOCAL_POPLATION,popNow=0} ) 
@@ -450,7 +502,7 @@ function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
     local vName
     local lock = 'skill_player_lock'
     if iTeam == iReTeam then iReTeam = DOTA_TEAM_BADGUYS end
-
+    local hero = Entities:GetPlayer(iReTeam) 
     if origin == nil then
         vPos =ShuaGuai_entity:GetOrigin()
         vName=CreateName
@@ -459,7 +511,7 @@ function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
         vName=CreateName:GetUnitName()
     end 
 
-    CreateUnitByNameAsync(vName,vPos,true,nil,nil,iReTeam,  function( u ) 
+    CreateUnitByNameAsync(vName,vPos,true,hero,hero,iReTeam,  function( u ) 
         u:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_plan', nil)
         -- v:AddAbility("skill_player_countdown"):SetLevel(1)
