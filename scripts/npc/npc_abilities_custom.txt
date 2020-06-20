@@ -357,7 +357,7 @@
 	}
 
 	// 15%概率对300范围内敌军造成物理伤害
-	"skill_hero_wusheng"
+	"skill_hero_wusheng111"
 	{
 		"BaseClass"	"ability_datadriven"
 		"AbilityTextureName"	"greevil_blade_fury"
@@ -466,7 +466,7 @@
 	}
 
 	// 15%概率对300范围内敌军造成物理伤害
-	"skill_hero_wusheng_clone"
+	"skill_hero_wusheng"
 	{
 		"BaseClass"	"ability_datadriven"
 		"AbilityTextureName"	"greevil_blade_fury"
