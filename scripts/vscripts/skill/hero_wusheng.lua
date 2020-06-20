@@ -1,20 +1,28 @@
+-- 西索
+-- 2020/06/17
+-- 关羽的武圣，带羁绊加强
+
+LinkLuaModifier( "modifier_skill_hero_wusheng_abivam", "skill/hero_wusheng.lua", LUA_MODIFIER_MOTION_NONE )
+LinkLuaModifier( "modifier_skill_hero_wusheng_armor", "skill/hero_wusheng.lua", LUA_MODIFIER_MOTION_NONE )
+
 function wusheng(keys)
   
-	local caster  = keys.caster  
-    local target  = keys.target
-    local ability = keys.ability
-    local attacker= keys.attacker
-    local chance  = ability:GetLevelSpecialValueFor("chance",(ability:GetLevel()-1))
-    local damage  = ability:GetLevelSpecialValueFor("damage",(ability:GetLevel()-1))
-    local radius  = GetAOERadius()
-    local owner   = caster:GetOwner()
-    local damage_type  = GetAbilityDamageType()
-	local target_team  = GetAbilityTargetTeam()
-	local target_types = GetAbilityTargetType()
-    local target_flags = GetAbilityTargetFlags()
-print(owner:GetName())
+	local caster  = keys.caster     --施法者，这里是关羽
+    local target  = keys.target     --目标，这里应该是空值
+    local ability = keys.ability    --技能，这里是武圣
+    local attacker= keys.attacker   --攻击，触发这个脚本的攻击单位，攻击了关羽的单位
+    local owner   = caster:GetOwner() or {ship={}}--关羽的持有者，即 玩家操作的信使
 
-    --判断第一个格子（武器栏）是不是青龙偃月刀
+--技能KV中的参数
+    local chance  = ability:GetLevelSpecialValueFor("chance", (ability:GetLevel()-1) )
+    local damage  = ability:GetLevelSpecialValueFor("damage", (ability:GetLevel()-1) )
+    local radius  = ability:GetLevelSpecialValueFor("radius", (ability:GetLevel()-1) )
+    local damage_type  = ability:GetAbilityDamageType()
+	local target_team  = ability:GetAbilityTargetTeam()
+	local target_types = ability:GetAbilityTargetType()
+    local target_flags = ability:GetAbilityTargetFlags()
+    
+    --判断物品：第一个格子（武器栏）是不是青龙偃月刀
     if caster:GetItemInSlot(0) and caster:GetItemInSlot(0):GetName()=='item_weapon_qinglongyanyuedao' then
         chance = chance * 2
     end
@@ -23,25 +31,31 @@ print(owner:GetName())
     if not RollPercentage(chance) then return end
 
     --判断羁绊：虎父无犬女生效，那么添加一个技能吸血效果。
-    if owner.ship['HuFuWuQuanNv'] then
-        caster:AddNewModifier( hero, ability , "modifier_skill_hero_wusheng_for_guanyu", {duration= 0.1} )
+    if owner.ship['hufu'] then
+        caster:AddNewModifier( caster, ability , "modifier_skill_hero_wusheng_abivam", {duration=0.1} )
     end
 
     --判断羁绊：桃园结义生效，那么添加一个护甲效果。
-    if owner.ship['TaoYuanJieYi'] then
-        if caster:HasModifier('modifier_skill_hero_wusheng_armor') then
-            caster:SetModifierStackCount( modifierName, caster ,
-            caster:GetModifierStackCount( modifierName, caster )+1) 
+    if owner.ship['taoyuan'] then
+    local modifierName="modifier_skill_hero_wusheng_armor"
+        if caster:HasModifier( modifierName ) then
+            caster:SetModifierStackCount( modifierName, caster , caster:GetModifierStackCount( modifierName, caster )+1) 
         else
-            caster:AddNewModifier( hero, ability , "modifier_skill_hero_wusheng_armor", {duration= 5} )
+            caster:AddNewModifier( caster, ability , modifierName , {duration= 5} )
             caster:SetModifierStackCount( modifierName, caster ,1) 
         end
     end
 
-    --判断羁绊：桃园结义生效，那么添加一个护甲效果。
-    if owner.ship['WuHuShangJiang'] then
-        damage=damage*1.5
+    --判断羁绊：五虎上将生效，那么伤害和范围提升50%。
+    if owner.ship['wuhu'] then
+        damage = damage *1.5
+        radius = radius *1.5
+
     end
+
+    local zhuan = ParticleManager:CreateParticle("particles/econ/items/axe/axe_cinder/axe_cinder_battle_hunger_start.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
+    ParticleManager:SetParticleControl(zhuan, 0, keys.attacker:GetAbsOrigin())
+    ParticleManager:ReleaseParticleIndex(zhuan)
 
     --范围伤害
 	local damage_table = {}
@@ -57,11 +71,12 @@ print(owner:GetName())
                                     caster:GetOrigin(), 
                                     nil, 
                                     radius,
-                                    target_team, 
+                                    target_team, --这个值在13行
                                     target_types, 
                                     target_flags, 
                                     0, 
                                     true)
+
     for k,v in pairs(enemy) do
         damage_table.victim = v
         ApplyDamage(damage_table)
@@ -74,22 +89,21 @@ end
 
 
 ------------------------------
-LinkLuaModifier( "modifier_skill_hero_wusheng_for_guanyu", "skill/hero_wusheng.lua", LUA_MODIFIER_MOTION_NONE )
-if modifier_skill_hero_wusheng_for_guanyu == nil then modifier_skill_hero_wusheng_for_guanyu = class({}) end
+if modifier_skill_hero_wusheng_abivam == nil then modifier_skill_hero_wusheng_abivam = class({}) end
 
-function modifier_skill_hero_wusheng_for_guanyu:IsHidden()		return false end
-function modifier_skill_hero_wusheng_for_guanyu:IsPurgable()	return false end
-function modifier_skill_hero_wusheng_for_guanyu:RemoveOnDeath()	return true end
-function modifier_skill_hero_wusheng_for_guanyu:GetAttributes()	return MODIFIER_ATTRIBUTE_MULTIPLE end
-function modifier_skill_hero_wusheng_for_guanyu:DeclareFunctions()	return { MODIFIER_EVENT_ON_TAKEDAMAGE } end
+function modifier_skill_hero_wusheng_abivam:IsHidden()		return false end
+function modifier_skill_hero_wusheng_abivam:IsPurgable()	return false end
+function modifier_skill_hero_wusheng_abivam:RemoveOnDeath()	return true end
+function modifier_skill_hero_wusheng_abivam:GetAttributes()	    return MODIFIER_ATTRIBUTE_MULTIPLE end
+function modifier_skill_hero_wusheng_abivam:DeclareFunctions()	return { MODIFIER_EVENT_ON_TAKEDAMAGE } end
 
-function modifier_skill_hero_wusheng_for_guanyu:OnCreated()
+function modifier_skill_hero_wusheng_abivam:OnCreated()
 	if IsServer() and not self:GetAbility() then self:Destroy() end
 end
 --- Enum DamageCategory_t
 -- DOTA_DAMAGE_CATEGORY_ATTACK = 1
 -- DOTA_DAMAGE_CATEGORY_SPELL = 0
-function modifier_skill_hero_wusheng_for_guanyu:OnTakeDamage( keys )
+function modifier_skill_hero_wusheng_abivam:OnTakeDamage( keys )
 	if keys.attacker ~= self:GetParent() or keys.unit:IsBuilding() or keys.unit:IsOther() then	return end
 		-- Spell lifesteal handler
 	if self:GetParent():FindAllModifiersByName(self:GetName())[1] == self 
@@ -125,11 +139,10 @@ end
 
 ---------------------------------------------------------
 
-LinkLuaModifier( "modifier_skill_hero_wusheng_armor", "skill/hero_wusheng.lua", LUA_MODIFIER_MOTION_NONE )
 if modifier_skill_hero_wusheng_armor == nil then modifier_skill_hero_wusheng_armor = class({}) end
 
 function modifier_skill_hero_wusheng_armor:IsHidden()		return false end
-function modifier_skill_hero_wusheng_armor:IsPurgable()	return false end
+function modifier_skill_hero_wusheng_armor:IsPurgable() 	return false end
 function modifier_skill_hero_wusheng_armor:RemoveOnDeath()	return true end
-function modifier_skill_hero_wusheng_for_guanyu:DeclareFunctions()	return { MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS } end
-function modifier_skill_hero_wusheng_for_guanyu:GetModifierPhysicalArmorBonus()	return 10 end
+function modifier_skill_hero_wusheng_armor:DeclareFunctions()	return { MODIFIER_PROPERTY_PHYSICAL_ARMOR_BONUS_UNIQUE_ACTIVE } end
+function modifier_skill_hero_wusheng_armor:GetModifierPhysicalArmorBonusUniqueActive()	return 10*self:GetStackCount() end
