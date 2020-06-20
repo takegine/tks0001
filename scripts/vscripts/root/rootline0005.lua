@@ -33,7 +33,7 @@ function GameForUnit:OnGameRoundChange()
     if _G.GAME_ROUND == 0 then GameForUnit:OnGameInPlan() end
 end
 
-function GameForUnit:OnGameInPlan( ... )
+function GameForUnit:OnGameInPlan( )
     CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{0} )
     local return_time= TIME_BETWEEN_ROUND 
     local lock = 'skill_player_lock'
@@ -300,7 +300,7 @@ function GameForUnit:OnEntityKilled( keys )
     end
 end
 
-function GameForUnit:OnNPCSpawned(keys )
+function GameForUnit:OnNPCSpawned( keys )
     local  npc = EntIndexToHScript(keys.entindex)
     if npc:GetName()== "npc_dota_fort" 
     or npc:GetName()== "npc_dota_building" 
@@ -385,11 +385,11 @@ function GameForUnit:OnNPCSpawned(keys )
     
 end
 
-function GameForUnit:OnPlayerLevelUp(keys) 
+function GameForUnit:OnPlayerLevelUp( keys ) 
     EntIndexToHScript(keys.hero_entindex):SetAbilityPoints(0)
 end
 
-function GameForUnit:DamageFilter(filterTable)
+function GameForUnit:DamageFilter( filterTable )
     --[[
     table.foreach( filterTable,function(k,v)  print("Damage: " .. k .. " " .. tostring(v) ) end)
 
@@ -496,7 +496,7 @@ end
 
 function GameForUnit:ExperienceFilter( filterTable ) end
 
-function ShuaGuai( CreateName,origin,level,iTeam,iReTeam)
+function ShuaGuai( CreateName, origin, level, iTeam, iReTeam)
     local ShuaGuai_entity = Entities:FindByName(nil,"creep_birth_"..iTeam.."_0")
     local vPos
     local vName
