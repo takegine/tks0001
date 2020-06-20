@@ -2,7 +2,28 @@
 
 "DOTAShips"
 {
-	
+	//虎父无犬女   关银屏关羽
+    "skill_ship_hufu" 
+    {
+        "01" "npc_dota_hero_anti_mage"
+        "02" "npc_dota_hero_abaddon"
+    }
+    //桃园结义   刘备关羽张飞
+    "skill_ship_taoyuan" 
+    {
+        "01" "npc_dota_hero_bountyhunter"
+        "02" "npc_dota_hero_abaddon"  
+        "03" "npc_dota_hero_bristleback"
+    }
+    //五虎上将   关羽张飞赵云马超黄忠
+    "skill_ship_wuhu" 
+    {
+        "01" "npc_dota_hero_abaddon"
+        "02" "npc_dota_hero_bristleback"  
+        "03" "npc_dota_hero_broodmother"
+        "04" "npc_dota_hero_alchemist"  
+        "05" "npc_dota_hero_arc_warden"
+    }
 }
 
 
