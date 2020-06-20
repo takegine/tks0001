@@ -5,7 +5,7 @@ _G.GAME_ROUND   = 0--初始化轮数
    tkItemList   = LoadKeyValues('scripts/npc/npc_items_custom.txt')
    tkUnitList   = LoadKeyValues('scripts/npc/npc_units_custom.txt')
    tkHeroList   = LoadKeyValues('scripts/npc/npc_heroes_custom.txt')
-   tkShipList   = LoadKeyValues('scripts/npc/npc_ships_custom.txt')
+   tkShipList   = {}
    able_table   = LoadKeyValues('scripts/npc/npc_skill_custom.txt')
    tkRounList   = LoadKeyValues('scripts/npc/npc_round_custom.txt')
    DamageKV     = LoadKeyValues("scripts/damage_table.kv")
@@ -27,6 +27,11 @@ if #_G.ItemHeroName == 0  then
       end
   end
 end
+
+table.foreach( LoadKeyValues('scripts/npc/npc_ships_custom.txt'), function(s,n)
+    tkShipList[s]={}
+    table.foreach(n,function(_,u) table.insert(tkShipList[s], u) end)
+end)
 
 Custom_XP_Required ={
     100000
