@@ -175,3 +175,22 @@ end
 function CEntities:Pos(iTeam, iSide)
     return Entities:FindByName(nil,"creep_birth_"..iTeam.."_"..iSide):GetOrigin()
 end
+
+function CEntities:GetPlayer(iTeam)
+    for _,h in pairs(Entities:FindAllByName( SET_FORCE_HERO ) ) do
+        if  h:GetTeamNumber()== iTeam then
+            return h
+        end
+    end
+end
+
+function CDOTA_BaseNPC:SetPlayer()
+    local iTeam = self:GetTeamNumber()
+    for _,h in pairs(Entities:FindAllByName( SET_FORCE_HERO ) ) do
+        if  h:GetTeamNumber()== iTeam then
+            self:SetOwner(h)
+            return h
+        end
+    end
+    return nil
+end
