@@ -160,7 +160,7 @@
 			{
 				"IsDebuff"	"1"
 				"IsHidden"	"1"
-				"ThinkInterval"	"%aura_damage_interval"
+				"ThinkInterval"	"%aura_interval"
 				"OnIntervalThink"
 				{
 					"RunScript"
@@ -168,6 +168,7 @@
 						"ScriptFile"	"skill/item_weapon_baiyuhuan_aura.lua"
 						"Function"	"HeartstopperAura"
 						"visibility_modifier"	"modifier_heartstopper_debuff_visibility"
+						"aura_damage" "%aura_damage"
 					}
 				}
 				"OnDestroy"
@@ -193,17 +194,17 @@
 			{
 				"var_type"	"FIELD_INTEGER"
 				// If you change this, also change the AbilityCastRange above
-				"aura_radius"	"1200"
+				"aura_radius"	"640"//640 800 960 1120 1280
 			}
 			"02"
 			{
 				"var_type"	"FIELD_FLOAT"
-				"aura_damage"	"-1 -2 -3 -4 -5 -6"
+				"aura_damage"	"1"//1 2 3 4 5 6
 			}
 			"03"
 			{
 				"var_type"	"FIELD_FLOAT"
-				"aura_damage_interval"	"0.2"
+				"aura_interval"	"1"
 			}
 		}
 	}
