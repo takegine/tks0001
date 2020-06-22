@@ -116,7 +116,7 @@ function GameForUnit:OnGameInPlan( )
                             --end)
                             
                             u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_battle', nil)
-                            u:SetOrigin(Entities:Pos(i,3)+Vector(0, 0, 999) )
+                            u:SetOrigin(Entities:Pos(i,3)+Vector(0, 0, -999) )
                         end
                     end)
                 end
@@ -246,18 +246,28 @@ function GameForUnit:OnGameInPlan( )
                     --     end)
                     -- end)
 
-                    for q=0,5 do
-                        local oitem = Entities:GetPlayer(i +5 ):GetItemInSlot(q)
-                        if oitem then
-                            local vitem = CreateItem(oitem:GetName(),nil,nil)
-                            table.foreach(tTeamMate,function(_,v)
-                                if  v:GetItemInSlot(q) ~= vitem then
-                                    v:RemoveItem(v:GetItemInSlot(q))
-                                    v:AddItem( vitem )
-                                end
-                            end)
+                    -- for q=0,5 do
+                    --     local oitem = Entities:GetPlayer(i +5 ):GetItemInSlot(q)
+                    --     if oitem then
+                    --         local vitem = CreateItem(oitem:GetName(),nil,nil)
+                    --         table.foreach(tTeamMate,function(_,v)
+                    --             if  v:GetItemInSlot(q) ~= vitem then
+                    --                 v:RemoveItem(v:GetItemInSlot(q))
+                    --                 v:AddItem( vitem )
+                    --             end
+                    --         end)
+                    --     end
+                    -- end
+                    table.foreach(tTeamMate,function(_,v)
+                        for q=0,5 do
+                            local oitem = Entities:GetPlayer(i +5 ):GetItemInSlot(q)
+                            local vitem = v:GetItemInSlot(q)
+                            if oitem and (not vitem or vitem:GetName()~=oitem:GetName() ) then
+                                v:RemoveItem(vitem)
+                                v:AddItem( CreateItem(oitem:GetName(),v,v) )
+                            end
                         end
-                    end
+                    end)
                 end
             end
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
