@@ -74,9 +74,10 @@ end
 
 function GetNewHero:LetHeroTrue( data ) 
     --DeepPrintTable(data.way)
-    local hero = PlayerResource:GetSelectedHeroEntity(data.id)
+    local hero     = PlayerResource:GetSelectedHeroEntity(data.id)
     local unitName = data.way 
     local findcost = tkHeroList[unitName] and tkHeroList[unitName]['TksPayedGold'] or 50
+    local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id)) 
     --print(unitName)
     if not PlayerResource:Pay( data.id, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
 
@@ -96,6 +97,9 @@ function GetNewHero:LetHeroTrue( data )
         v:FindAbilityByName('skill_player_price'):CastAbility()
         v:SetUnitCanRespawn(true)
         v:CheckLevel(tonumber(data.lvl)+v:GetLevel()-1)
+        
+        tPop.popNow = tPop.popNow + v.popuse  
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
         
     end)
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   

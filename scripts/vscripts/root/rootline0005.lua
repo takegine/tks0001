@@ -385,10 +385,6 @@ function GameForUnit:OnNPCSpawned( keys )
         end
         
         if not npc:GetPlayerOwner() then return end
-
-        local tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID())) 
-        tPop.popNow = tPop.popNow + npc.popuse  
-        CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerOwnerID()),tPop) 
     end
 
     print("[BAREBONES] NPC Spawned",npc:GetUnitName())
