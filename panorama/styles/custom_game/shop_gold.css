@@ -41,9 +41,12 @@
 
 .itemblock{
   flow-children:right;
-
 }
 
+.shopitem{
+
+  height:60px;
+}
 
 .ElementShopText
 {/****按钮的闪烁动画*****/

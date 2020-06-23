@@ -13,9 +13,9 @@ function Yes()
     // $("#ElementShop").RemoveClass("ElementShopText");//移除闪烁特效
 }
 
-function shopup(data) {
-    $.Msg(data)
-}
+// function shopup(data) {
+//     $.Msg(data)
+// }
 
 function UpdateGold() {
     
@@ -26,9 +26,7 @@ function UpdateGold() {
 {
     
     UpdateGold();
-    GameEvents.Subscribe( "gold_shopUp", shopUp)
-// CustomNetTables.SubscribeNetTableListener( "Elements_Tabel", UpdateShop );
-
-// $("#ShopInfo").visible = false;
+    // GameEvents.Subscribe( "gold_shopUp", shopUp)
+    $("#ShopInfo").visible = false;
 
 })();

@@ -16,13 +16,37 @@
         <Panel hittest="false" id="ShopInfo" class="ShopInfoAnim "><!--弹出窗口-->
             
             <Label  text="升级装备"/>
-            <Panel id="升级装备" class="itemblock" />
+            <Panel id="升级装备" class="itemblock">
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(1,1)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(1,2)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(1,3)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(1,4)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(1,5)'/>
+            </Panel>
             <Label  text="升级阵法"/>
-            <Panel id="升级阵法" class="itemblock" />
+            <Panel id="升级阵法" class="itemblock">
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(2,1)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(2,2)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(2,3)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(2,4)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(2,5)'/>
+            </Panel>
             <Label  text="选择阵法"/>
-            <Panel id="选择阵法" class="itemblock" />
+            <Panel id="选择阵法" class="itemblock">
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(3,1)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(3,2)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(3,3)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(3,4)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(3,5)'/>
+            </Panel>
             <Label  text="升级科技"/>
-            <Panel id="升级科技" class="itemblock" />
+            <Panel id="升级科技" class="itemblock">
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(4,1)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(4,2)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(4,3)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(4,4)'/>
+                <Image class="shopitem" src="file://{images}/${custom_game/shuffle.psd}"  onactivate='dataup(4,5)'/>
+            </Panel>
         </Panel>
     </Panel>
 </root>
