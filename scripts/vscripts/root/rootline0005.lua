@@ -264,7 +264,10 @@ function GameForUnit:OnGameInPlan( )
                             local vitem = v:GetItemInSlot(q)
                             if oitem and (not vitem or vitem:GetName()~=oitem:GetName() ) then
                                 v:RemoveItem(vitem)
-                                v:AddItem( CreateItem(oitem:GetName(),v,v) )
+                                local additem = CreateItem(oitem:GetName(),v,v)
+                                additem:SetCurrentCharges(oitem:GetCurrentCharges())
+                                v:AddItem( additem )
+
                             end
                         end
                     end)
@@ -475,15 +478,15 @@ function GameForUnit:InventoryFilter( filterTable )
         
     if hItem == nil or hInvPar == nil then return true end
 
-    if     string.find(hItem:GetAbilityName(),"weapon")  then slot=0
-    elseif string.find(hItem:GetAbilityName(),"defend")  then slot=1
-    elseif string.find(hItem:GetAbilityName(),"armor") then slot=2
-    elseif string.find(hItem:GetAbilityName(),"horses")  then slot=3
-    elseif string.find(hItem:GetAbilityName(),"format")  then slot=4
-    elseif string.find(hItem:GetAbilityName(),"queue")   then slot=5
+    local slotlist={ 'weapon', 'defend', 'jewelry', 'horses', 'format', 'queue' }
+    for k,v in pairs(slotlist) do
+        if  string.find(hItem:GetAbilityName(),v) then 
+            slot = k-1
+            break
+        end
     end
-    
-    if  hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
+
+    if hInvPar:GetItemInSlot(slot) then hInvPar:RemoveItem(hInvPar:GetItemInSlot(slot)) end
 
     filterTable.suggested_slot = slot
 
