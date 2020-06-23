@@ -27,7 +27,7 @@ GameUI.CustomUIConfig().team_colors[DOTATeam_t.DOTA_TEAM_CUSTOM_2] = "#994a31";
 // var newUI = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("lower_hud").FindChildTraverse("center_with_stats").FindChildTraverse("center_block");
 // var NoGlyphAndRadar = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("minimap_container");
 // var NoTPScrollUI = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("lower_hud").FindChildTraverse("center_with_stats").FindChildTraverse("center_block");
-// var NoKDA = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("stackable_side_panels");
+var NoKDA = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("stackable_side_panels");
 // var NoNewRightPanel = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("lower_hud").FindChildTraverse("center_with_stats").FindChildTraverse("center_block");
 // var NoNeutralItemSlot = $.GetContextPanel().GetParent().GetParent().FindChildTraverse("HUDElements").FindChildTraverse("lower_hud").FindChildTraverse("center_with_stats").FindChildTraverse("center_block");
 
@@ -48,8 +48,8 @@ GameUI.CustomUIConfig().team_colors[DOTATeam_t.DOTA_TEAM_CUSTOM_2] = "#994a31";
 // shopUI.FindChildTraverse("Main").FindChildTraverse("ItemCombinesAndBasicItemsContainer").style.visibility = "collapse";
 
 //  NoGlyphAndRadar.FindChildTraverse("GlyphScanContainer").style.visibility = "collapse";
-// NoKDA.FindChildTraverse("quickstats").style.visibility = "collapse";
-// NoKDA.FindChildTraverse("PlusStatus").style.visibility = "collapse";
+NoKDA.FindChildTraverse("quickstats").style.visibility = "collapse";
+NoKDA.FindChildTraverse("PlusStatus").style.visibility = "collapse";
 
 // $.Msg("sssss",DotaDefaultUIElement_t);
 // GameUI.CustomUIConfig().dotaUi = newUI;
