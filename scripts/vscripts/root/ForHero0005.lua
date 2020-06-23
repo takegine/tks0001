@@ -84,8 +84,12 @@ function GetNewHero:LetHeroTrue( data )
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
     --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
     --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
-    CreateUnitByNameAsync(unitName,vPos,true,hero,hero,hero:GetTeamNumber(),
-    function(v) 
+    local v = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber() )
+ 
+
+    tPop.popNow = tPop.popNow + v.popuse
+    if tPop.popNow <= tPop.popMax then 
+        
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
         table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
@@ -93,18 +97,19 @@ function GetNewHero:LetHeroTrue( data )
             local abiT =  v:AddAbility('skill_player_'..a)
             if abiT then abiT:SetLevel(v:GetLevel()) end
         end) 
-        
+
         v:FindAbilityByName('skill_player_price'):CastAbility()
         v:SetUnitCanRespawn(true)
         v:CheckLevel(tonumber(data.lvl)+v:GetLevel()-1)
-        
-        tPop.popNow = tPop.popNow + v.popuse  
-        CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
-        
-    end)
-    --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
 
-    if data.No then GetNewHero:UptoDJT(data.id,"shopUp",data.No) end
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
+
+    --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
+    else
+        PlayerResource:Pay( data.id, -findcost )
+        v:Destroy() 
+    end
+    if data.No then GetNewHero:UptoDJT(data.id,"shopUp",tPop.popNow > tPop.popMax and 'poorpop' or data.No) end
 end 
             
 function GetNewHero:UptoDJT(playID,key,parmas)

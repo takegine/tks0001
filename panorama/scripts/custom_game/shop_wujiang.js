@@ -84,6 +84,7 @@ function close(i){
 function shopUp(data){
     if(data.event == "noget"){GameUI.SendCustomHUDError( "#noget", "ui_find_match_change_options" )}
     else if(data.event == "poorguy"){ GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" )    }
+    else if(data.event == "poorpop"){ GameUI.SendCustomHUDError( "#outofyourpop", "Loot_Drop_Stinger_Short" )    }
     else if(typeof(data.event) == "number"){ 
             RemoveitemButton(data.event) 
             }    
