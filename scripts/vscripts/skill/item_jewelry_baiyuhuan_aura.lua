@@ -5,9 +5,9 @@ function HeartstopperAura( keys )
 	local caster  = keys.caster
 	local ability = keys.ability or caster:GetItemInSlot(2)
 	local target  = keys.target
-	local aura_damage   = keys.aura_damage
 	local target_max_hp = target:GetMaxHealth() / 100
 
+	local aura_damage   = ability:GetLevelSpecialValueFor("aura_damage", (ability:GetCurrentCharges() - 1))
 	if caster:GetUnitName() == SET_FORCE_HERO then return end
 	-- Shows the debuff on the target's modifier bar only if Necrophos is visible
 	local visibility_modifier = keys.visibility_modifier

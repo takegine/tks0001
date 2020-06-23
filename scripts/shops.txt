@@ -14,7 +14,7 @@
 
 	"weapons_armor"
     {
-		"item"		"item_armor_baiyuhuan"
+		"item"		"item_jewelry_baiyuhuan"
 	}
 	//"misc"  {}//其他
 	//-----------------------------------------------------

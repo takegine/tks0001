@@ -95,7 +95,7 @@
 
 	// 白玉环
 	// 借鉴 戒心光环
-	"item_armor_baiyuhuan"
+	"item_jewelry_baiyuhuan"
 	{
 		// General
 		// -------------------------------------------------------------------------------------------------------------
@@ -117,6 +117,8 @@
 		"ItemDeclarations"	"DECLARE_PURCHASES_TO_TEAMMATES | DECLARE_PURCHASES_IN_SPEECH | DECLARE_PURCHASES_TO_SPECTATORS"
 		"ItemShopTags"	"damage;unique"
 		"ItemRequirements"	{}
+		"ItemDisplayCharges" "1"
+		"ItemInitialCharges" "1"
 		"Modifiers"
 		{
 			"modifier_heartstopper_aura_datadriven"
@@ -138,10 +140,9 @@
 				{
 					"RunScript"
 					{
-						"ScriptFile"	"skill/item_weapon_baiyuhuan_aura.lua"
+						"ScriptFile"	"skill/item_jewelry_baiyuhuan_aura.lua"
 						"Function"	"HeartstopperAura"
 						"visibility_modifier"	"modifier_heartstopper_debuff_visibility"
-						"aura_damage" "%aura_damage"
 					}
 				}
 				"OnDestroy"
@@ -167,12 +168,12 @@
 			{
 				"var_type"	"FIELD_INTEGER"
 				// If you change this, also change the AbilityCastRange above
-				"aura_radius"	"640"//640 800 960 1120 1280
+				"aura_radius"	"640 800 960 1120 1280"
 			}
 			"02"
 			{
 				"var_type"	"FIELD_FLOAT"
-				"aura_damage"	"1"//1 2 3 4 5 6
+				"aura_damage"	"1 2 3 4 5 6"
 			}
 			"03"
 			{
