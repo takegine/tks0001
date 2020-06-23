@@ -1,0 +1,28 @@
+<root>
+    <styles>
+        
+        <include src="s2r://panorama/styles/custom_game/shop_gold.css" />
+    </styles>
+    <scripts>
+        <include src="s2r://panorama/scripts/custom_game/shop_gold.js" />
+    </scripts>
+    
+    <Panel hittest="false" class="ElementShopPanel">
+
+        <Button class="btnleft" id="ElementShop" onactivate='Yes()'> <!--按钮-->
+            <Label id="readytext" text=""/>
+        </Button>
+
+        <Panel hittest="false" id="ShopInfo" class="ShopInfoAnim "><!--弹出窗口-->
+            
+            <Label  text="升级装备"/>
+            <Panel id="升级装备" class="itemblock" />
+            <Label  text="升级阵法"/>
+            <Panel id="升级阵法" class="itemblock" />
+            <Label  text="选择阵法"/>
+            <Panel id="选择阵法" class="itemblock" />
+            <Label  text="升级科技"/>
+            <Panel id="升级科技" class="itemblock" />
+        </Panel>
+    </Panel>
+</root>
