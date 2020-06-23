@@ -14,9 +14,9 @@
 
 		<Panel hittest="false" id="PopMain">
 
-			<Panel id="PopExample" >
+			<Button id="PopExample" onactivate='Population_Up()' onmouseover='DOTAShowTextTooltip(#Population_Sale)' onmouseout='DOTAHideTextTooltip()'>
 				<Label class="PopExampleTest" text="" />
-			</Panel>
+			</Button>
 		</Panel>
 
 	</Panel>

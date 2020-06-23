@@ -21,6 +21,7 @@ function GameMode:InitGameMode()
     CustomGameEventManager:RegisterListener("createnewherotest", Dynamic_Wrap(self,"createnewherotest") )
     CustomGameEventManager:RegisterListener("refreshlist",       Dynamic_Wrap(self, 'refreshlist'))
 
+    shopbuild.new()
     -- Change random seed
     local timeTxt = string.gsub(string.gsub(GetSystemTime(), ":", ""), "0", "")
     math.randomseed(tonumber(timeTxt))
