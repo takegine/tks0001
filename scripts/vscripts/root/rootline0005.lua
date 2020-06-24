@@ -24,6 +24,7 @@ function GameForUnit:OnGameRoundChange()
 
             else
                 local Ts   = RandomInt(1,#_G.buildpostab) 
+                while not _G.buildpostab[Ts] do Ts = RandomInt(1,#_G.buildpostab) end
                 --local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
                 table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,Entities:Pos(i,1)-v.origin,v.lvl,i,Ts) end)
             end
@@ -51,9 +52,10 @@ function GameForUnit:OnGameInPlan( )
             end
 
             local refreshupcount = _G.GAME_ROUND==1 and 10 or 5
-            for R=1,refreshupcount do GetNewHero:UptoDJT(i-1,"shopUp",SET_FIRST_HERO) end
+            local hero = Entities:GetPlayer(i+5)
+            for R=1,refreshupcount do GetNewHero:UptoDJT(hero:GetPlayerID(),"shopUp",SET_FIRST_HERO) end
 
-            Entities:GetPlayer(i+5).ship={}
+            hero.ship={}
         end
     end
         -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
