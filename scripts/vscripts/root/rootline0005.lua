@@ -26,7 +26,7 @@ function GameForUnit:OnGameRoundChange()
                 local Ts   = RandomInt(1,#_G.buildpostab) 
                 while not _G.buildpostab[Ts] do Ts = RandomInt(1,#_G.buildpostab) end
                 --local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
-                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit,Entities:Pos(i,1)-v.origin,v.lvl,i,Ts) end)
+                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit:GetUnitName(),Entities:Pos(i,1)-v.origin,v.lvl,i,Ts) end)
             end
         end
     end
@@ -508,21 +508,15 @@ end
 function GameForUnit:ExperienceFilter( filterTable ) end
 
 function ShuaGuai( CreateName, origin, level, iTeam, iReTeam)
+    
     local ShuaGuai_entity = Entities:FindByName(nil,"creep_birth_"..iTeam.."_0")
-    local vPos
-    local vName
     local lock = 'skill_player_lock'
-    if iTeam == iReTeam then iReTeam = DOTA_TEAM_BADGUYS end
     local hero = Entities:GetPlayer(iReTeam) 
-    if origin == nil then
-        vPos =ShuaGuai_entity:GetOrigin()
-        vName=CreateName
-    else
-        vPos =origin
-        vName=CreateName:GetUnitName()
-    end 
+    
+    iReTeam = iTeam ~= iReTeam and iReTeam or DOTA_TEAM_BADGUYS
+    origin = origin or ShuaGuai_entity:GetOrigin()
 
-    CreateUnitByNameAsync(vName,vPos,true,hero,hero,iReTeam,  function( u ) 
+    CreateUnitByNameAsync(CreateName,origin,true,hero,hero,iReTeam,  function( u ) 
         u:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
         u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_plan', nil)
         -- v:AddAbility("skill_player_countdown"):SetLevel(1)
