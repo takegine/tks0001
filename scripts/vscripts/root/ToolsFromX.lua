@@ -55,3 +55,11 @@ end
 function RemoveTimer(timerName)
         GameRules.__vTimerNamerTable__[timerName] = nil
 end
+
+function msg_m(list)
+    Msg( string.format( "Self: %s\n{\n", list ) )
+	for k,v in pairs( list ) do
+		Msg( string.format( "%s=>%s\n", k, v ) )
+    end
+    Msg( "}\n" )
+end
