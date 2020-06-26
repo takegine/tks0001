@@ -40,7 +40,7 @@ function GetNewHero:findding_Wj( data )
         elseif type(x) == "table" then for k,v in pairs(x)do print('input',k,v) end
         else GetNewHero:LetHeroTrue( data ) --if type(x)=="string" then--x ~= "undefined"
         end
-    else GetNewHero:UptoDJT(data.id,"shopUp","poorguy")
+    else GetNewHero:UptoDJT(data.id,"errorMessage","poorguy")
     end
 end
 
@@ -49,7 +49,7 @@ function GetNewHero:find_wujiang( data )
     local chance   = 70  
     local findcost = 100 --减钱
     
-    if not PlayerResource:Pay( data.PlayerID, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
+    if not PlayerResource:Pay( data.PlayerID, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"errorMessage","poorguy") return end
     -- print("aaaaaaaaaaaaaaaaaa")
     -- PlayerResource:SpendGold( data.id, 1000, DOTA_ModifyGold_AbilityCost )
     -- print("bbbbbbbbbbbbbbbbb")
@@ -66,7 +66,7 @@ function GetNewHero:find_wujiang( data )
 
             GetNewHero:UptoDJT(data.id,"shopUp",unitName)
         else
-            GetNewHero:UptoDJT(data.id,"shopUp","noget")
+            GetNewHero:UptoDJT(data.id,"errorMessage","noget")
             PlayerResource:Pay( data.PlayerID, -findcost/2 )
         end  
         
@@ -79,7 +79,7 @@ function GetNewHero:LetHeroTrue( data )
     local findcost = tkHeroList[unitName] and tkHeroList[unitName]['TksPayedGold'] or 50
     local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id)) 
     --print(unitName)
-    if not PlayerResource:Pay( data.id, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
+    if not PlayerResource:Pay( data.id, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"errorMessage","poorguy") return end
 
     local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
     --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
@@ -107,11 +107,12 @@ function GetNewHero:LetHeroTrue( data )
     --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
     else
         PlayerResource:Pay( data.id, -findcost )
-        v:Destroy() 
+        v:Destroy()
+        GetNewHero:UptoDJT(data.id,"errorMessage",'poorpop')
     end
-    if data.No then GetNewHero:UptoDJT(data.id,"shopUp",tPop.popNow > tPop.popMax and 'poorpop' or data.No) end
+    if data.No then GetNewHero:UptoDJT(data.id,"shopUp", {event=data.No, bool=v:IsNull()}) end
 end 
-            
+
 function GetNewHero:UptoDJT(playID,key,parmas)
     key = "wujiang_"..key
     local sendtab={}
@@ -215,7 +216,7 @@ function GetNewHero:itemLevelUp(data)
     local unitlvl  = tonumber(data.lvl) 
     local findcost = 100
     
-    if not PlayerResource:Pay( data.PlayerID, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"shopUp","poorguy") return end
+    if not PlayerResource:Pay( data.PlayerID, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"errorMessage","poorguy") return end
 
     unitlvl = unitlvl + 1
 

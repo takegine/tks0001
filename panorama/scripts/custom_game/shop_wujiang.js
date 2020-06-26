@@ -3,11 +3,11 @@ var maxhero = 10
 
 function gofind(i){
     if($('#DianJiangTai').GetChild(maxhero-1)){
-        GameUI.SendCustomHUDError( "#fulloftable", "ui_find_match_change_options" );
+        errorMessamge('fulloftable');
         return
         }
     else if(Players.GetGold(Players.GetLocalPlayer() )<100 ){
-        GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
+        errorMessamge('poorguy');
         return
         }
     else{ $.Msg("input="+i)
@@ -17,26 +17,29 @@ function gofind(i){
 }
 function goget(i) {
     $.Msg("goget")
-    var iWays = $('#DianJiangTai').FindChild("hero"+i).GetChild(1).GetChild(0).id
-    var level = $('#DianJiangTai').FindChild("hero"+i).GetChild(2).text
+    var evpanel = $('#DianJiangTai').FindChild("hero"+i)
+    var sendmes = {id: Players.GetLocalPlayer(),No:i}
+        sendmes.way = evpanel.GetChild(1).GetChild(0).id
+        sendmes.lvl = evpanel.GetChild(2).text
             //iWays = $.GetContextPanel().GetParent().id()
     var tPop=CustomNetTables.GetTableValue( "Hero_Population", Players.GetLocalPlayer())
     var stat=CustomNetTables.GetTableValue( "game_stat", "game_round_stat" )[1]
-         if(!iWays ){ return }
+         if(!sendmes.way ){ return }
     else if(stat=="1"){
-            GameUI.SendCustomHUDError( "#OnGameRoundChange", "Tutorial.Notice.Speech" )
+        errorMessamge('OnGameRoundChange');
             return }
     else if(stat=="2"){
-            GameUI.SendCustomHUDError( "#OnGameInProgress", "Tutorial.Notice.Speech" )
+        errorMessamge('OnGameInProgress');
             return }
     else if(!(tPop['popNow']<tPop['popMax'])){
-            GameUI.SendCustomHUDError( "#outofyourpop", "Loot_Drop_Stinger_Short" )
+        errorMessamge('poorpop');
             return }
     else if(Players.GetGold(Players.GetLocalPlayer() )<100 ){
-            GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;
+        errorMessamge('poorguy');
             return }
-    else {  $.Msg('input='+i+iWays);
-            GameEvents.SendCustomGameEventToServer( "get_wujiang", {id: Players.GetLocalPlayer(),way: iWays,No:i,lvl:level} );
+    else {  $.Msg('input='+i+sendmes.way);
+            evpanel.visible = false;
+            GameEvents.SendCustomGameEventToServer( "get_wujiang", sendmes );
             }
 }
 function showtab() {
@@ -82,11 +85,16 @@ function close(i){
 }
 
 function shopUp(data){
-    if(data.event == "noget"){GameUI.SendCustomHUDError( "#noget", "ui_find_match_change_options" )}
-    else if(data.event == "poorguy"){ GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" )    }
-    else if(data.event == "poorpop"){ GameUI.SendCustomHUDError( "#outofyourpop", "Loot_Drop_Stinger_Short" )    }
-    else if(typeof(data.event) == "number"){ 
-            RemoveitemButton(data.event) 
+    // if(data.event == "noget"){errorMessamge('noget')}
+    // else if(data.event == "poorguy"){ errorMessamge('poorguy')   }
+    // else if(data.event == "poorpop"){ errorMessamge('poorpop')    }
+    // else 
+    if(typeof(data.event) == "number"){ 
+            if (data.bool){
+                $('#DianJiangTai').FindChild("hero"+data.event).visible = true;
+            }
+            else
+                RemoveitemButton(data.event) 
             }    
     else{ 
         for (var i=1;i<maxhero+1;i++){
@@ -98,9 +106,9 @@ function shopUp(data){
                 break;
             }  
         } 
-        $.Msg("shopUp"," ",data," ",data.event);
-        $("#DianJiangTai").visible = true;
-        //$("#gethero3").visible = true;
+    $.Msg("shopUp"," ",data," ",data.event);
+    $("#DianJiangTai").visible = true;
+    //$("#gethero3").visible = true;
     }
 }
 
@@ -113,8 +121,8 @@ function CreateitemButton(num,itemName,lvl) {
         //NewButton.GetChild(1).id(itemName)
         NewButton.GetChild(1).text = $.Localize(itemName)//"DOTA_Tooltip_ability_"+
         NewButton.GetChild(2).text = lvl
-        NewButton.SetPanelEvent('onactivate',function() {    goget(num); }  ) ;
-        // NewButton.SetPanelEvent('oncontextmenu',function() { CreateitemPanel(num,itemName); }  ) ;创建右键菜单
+        NewButton.SetPanelEvent('onactivate',() => { goget(num); }  ) ;
+        // NewButton.SetPanelEvent('oncontextmenu',() => { CreateitemPanel(num,itemName); }  ) ;创建右键菜单
         $.CreatePanel('Panel', NewButton.GetChild(1),itemName);
         $.Msg(itemName.slice(9)," ",NewButton.id," ",NewButton.GetChild(1).GetChild(0).id)
     //NewButton.GetChild(0).id = String(itemName)
@@ -134,14 +142,14 @@ function CreateitemPanel(num,itemName) {
     var NewPanel = $.CreatePanel('Panel',$('#DianJiangTai').GetParent(),"itemMenu");
         NewPanel.BLoadLayoutSnippet("RightClick"); 
         NewPanel.GetParent().hittest=true;
-        NewPanel.GetParent().SetPanelEvent('onactivate',function() { RemoveitemPanel(); }  ) ; 
+        NewPanel.GetParent().SetPanelEvent('onactivate',() => { RemoveitemPanel(); }  ) ; 
       //NewPanel.GetChild(0).SetDialogVariable('item_panel_name', itemName)
-        NewPanel.GetChild(0).SetPanelEvent('onactivate',function() { 
+        NewPanel.GetChild(0).SetPanelEvent('onactivate',() => { 
             var level = $('#DianJiangTai').FindChild("hero"+num).GetChild(2).text
             //GameUI.SendCustomHUDError( "#noreadyforlvlup", "Loot_Drop_Stinger_Short" );
             GameEvents.SendCustomGameEventToServer( "item_lvl_up", {num: num,lvl:level} ); 
             RemoveitemPanel();}  ) ;
-        NewPanel.GetChild(1).SetPanelEvent('onactivate',function() { 
+        NewPanel.GetChild(1).SetPanelEvent('onactivate',() => { 
             GameEvents.SendCustomGameEventToServer( "item_on_sell", {num: num,item:itemName} ); 
             RemoveitemPanel();}  ) ;
 
@@ -185,6 +193,24 @@ function RemoveitemPanel() {
     RemoveButton.DeleteAsync(0);
 }
 
+function errorMessamge(mes) {
+    // $.Msg(mes, " ", typeof(mes.event), " ", typeof(mes))
+    mes = typeof(mes)=="object" ? mes.event : mes
+    if(mes=='fulloftable')
+        {GameUI.SendCustomHUDError( "#fulloftable", "ui_find_match_change_options" );}
+    if(mes=='poorguy')
+        {GameUI.SendCustomHUDError( "#poorguy", "General.NoGold" ) ;}
+    if(mes=='poorpop')
+        {GameUI.SendCustomHUDError( "#outofyourpop", "Loot_Drop_Stinger_Short" )}
+    if(mes=='OnGameRoundChange')
+        {GameUI.SendCustomHUDError( "#OnGameRoundChange", "Tutorial.Notice.Speech" )}
+    if(mes=='OnGameInProgress')
+        {GameUI.SendCustomHUDError( "#OnGameInProgress", 'Tutorial.Notice.Speech' )}
+    if(mes=='noget')
+        {GameUI.SendCustomHUDError( "#noget", "ui_find_match_change_options" )}
+    
+}
+
 /*function OnGameInProgress(data){
     if (data.event = 0){  $("#NoPoint").visible = true; }
     if (data.event = 1){  $("#NoPoint").visible = false;}
@@ -193,8 +219,9 @@ function RemoveitemPanel() {
 GameEvents.Subscribe( "OnGameInProgress", OnGameInProgress)*/
 (function(){    
     GameEvents.Subscribe( "wujiang_shopUp", shopUp)
-    GameEvents.Subscribe( "wujiang_lvlup" , function(params) { $('#DianJiangTai').FindChild("hero"+params.num).GetChild(2).text = params.lvl })
-    GameEvents.Subscribe( "wujiang_selled", function(params) { RemoveitemButton(params.num) } )
+    GameEvents.Subscribe( "wujiang_errorMessage", errorMessamge)
+    GameEvents.Subscribe( "wujiang_lvlup" , (params) => { $('#DianJiangTai').FindChild("hero"+params.num).GetChild(2).text = params.lvl })
+    GameEvents.Subscribe( "wujiang_selled", (params) => { RemoveitemButton(params.num) } )
     //$('#hero3').GetChild(0).itemname="item_empty_block";
     $("#find1").visible = false;
     $("#find2").visible = false;
