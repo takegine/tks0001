@@ -1,7 +1,9 @@
 if GameForUnit == nil then GameForUnit = class({}) end
 
 function GameForUnit:OnGameRulesStateChange( keys )
-    if   GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then GameForUnit:OnGameRoundChange() end    
+    if   GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then 
+        Timer(1,function() GameForUnit:OnGameRoundChange() end) 
+    end    
 end
 
 function GameForUnit:OnGameRoundChange()
