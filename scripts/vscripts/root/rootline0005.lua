@@ -9,40 +9,13 @@ end
 function GameForUnit:OnGameRoundChange()
     
     print("_G.GAME_ROUND=".._G.GAME_ROUND)
-    -- ---------------------------------每一轮开始打印上一局战绩-------
-
-    -- -----------------------------------发送轮数消息给所有玩家-------
-    for i=1,8 do 
-        if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
-            if _G.GAME_ROUND == 0 then
-
-                local home_ent = Entities:Pos(i,3)--Entities:FindByName(nil,"creep_birth_"..i.."_3"):GetOrigin()
-                local zhugong  = CreateUnitByName("tower_zhugong",home_ent,false,nil,nil,i+5)
-                --table.foreach(FindUnitsInRadius(i+5,home_ent,nil,-1,1,1,0,0,false),function(_,v) if v:GetName()==SET_FORCE_HERO then zhugong:SetOwner(v) end end)
-                zhugong:SetPlayer(i+5)
-
-            elseif tkRounList[tostring(_G.GAME_ROUND)] then
-                table.foreach( tkRounList[tostring(_G.GAME_ROUND)],function(_,v) ShuaGuai(v.unit,nil,v.lvl,i,i) end)
-
-            else
-                local Ts   = RandomInt(1,#_G.buildpostab) 
-                while not _G.buildpostab[Ts] do Ts = RandomInt(1,#_G.buildpostab) end
-                --local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
-                table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit:GetUnitName(),Entities:Pos(i,1)-v.origin,v.lvl,i,Ts) end)
-            end
-        end
-    end
-
-    if _G.GAME_ROUND == 0 then GameForUnit:OnGameInPlan() end
-end
-
-function GameForUnit:OnGameInPlan( )
+    
     CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{0} )
     local return_time= TIME_BETWEEN_ROUND 
     local lock = 'skill_player_lock'
     _G.GAME_ROUND    = _G.GAME_ROUND + 1
 
-    -- 修长城
+    -- greatwall
     for i=1,8 do
         if PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
             local startPos   =Entities:FindByName(nil,"tree_birth_"..i.."_0"):GetOrigin()
@@ -60,7 +33,7 @@ function GameForUnit:OnGameInPlan( )
             hero.ship={}
         end
     end
-        -- ------------------如果有上一轮的位置和单位，按照保存创建单位---- 
+        -- ------------------复位---- 
         
     table.foreach(Entities:FindAllByTeam( 1 ),function(_,v) 
      
@@ -88,21 +61,27 @@ function GameForUnit:OnGameInPlan( )
     end)
     end)
     
-    
-    -- --------------做一个倒数，倒数结束后，记录当前所有单位的位置-----
-    CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BETWEEN_ROUND,timeNow=return_time} )
+    CustomNetTables:SetTableValue( "game_stat", "game_countdown",{ countDown=true, timeMax=TIME_BETWEEN_ROUND, timeNow=return_time} )
     local TimeForPlan = Timer(function()
         if return_time == 5 then--lock
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{1} )
-            
+            local defendlist = Entities:FindAllByTeam(1)
+
+            if PlayerResource:GetPlayerCount() == 1 
+            and #defendlist==0 then
+                GameForUnit:OnGameRoundChange( )
+                return
+            end
+
             --全体防守加状态 (禁锢 缴械 无敌 沉默) 
-            table.foreach(Entities:FindAllByTeam(1),function(_,u) 
+            table.foreach(defendlist,function(_,u) 
                 if u:IsMoving() then u:Stop() end
                 u:FindAbilityByName(lock):ApplyDataDrivenModifier(u, u, lock..'_plan', nil)
                 
             end)
 
         elseif return_time == 4 then--mark
+
             for i=1,8 do
                 if PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then 
                     _G.buildpostab[i]={}
@@ -126,7 +105,24 @@ function GameForUnit:OnGameInPlan( )
                 end
             end
 
-        elseif return_time == 3 then GameForUnit:OnGameRoundChange()
+        elseif return_time == 3 then--copy
+
+            for i=1,8 do 
+                if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then
+        
+        
+                    if tkRounList[tostring(_G.GAME_ROUND)] then
+                        table.foreach( tkRounList[tostring(_G.GAME_ROUND)],function(_,v) ShuaGuai(v.unit,nil,v.lvl,i,i) end)
+        
+                    else
+                        local Ts   = RandomInt(1,#_G.buildpostab) 
+                        while not _G.buildpostab[Ts] do Ts = RandomInt(1,#_G.buildpostab) end
+                        --local PosB = Entities:FindByName(nil,"creep_birth_"..i.."_1"):GetOrigin()
+                        table.foreach( _G.buildpostab[Ts],function(_,v) ShuaGuai(v.unit:GetUnitName(),Entities:Pos(i,1)-v.origin,v.lvl,i,Ts) end)
+                    end
+                end
+            end
+
         elseif return_time == 2 then--forward
             table.foreach(Entities:FindAllByTeam(),function(k,u) 
                 if  u.enemy or u.bench then
@@ -313,7 +309,7 @@ function GameForUnit:OnEntityKilled( keys )
     end
 
     if  killedUnit.enemy then killedUnit:Destroy() 
-        if #Entities:FindAllByTeam(2)==0  then RemoveTimer(TimeForBatter) GameForUnit:OnGameInPlan()  end
+        if #Entities:FindAllByTeam(2)==0  then RemoveTimer(TimeForBatter) GameForUnit:OnGameRoundChange()  end
     end
 end
 
@@ -330,6 +326,11 @@ function GameForUnit:OnNPCSpawned( keys )
     if npc:GetName()==SET_FORCE_HERO then
         for i=0,15 do if npc:GetAbilityByIndex(i) ~= nil then  npc:GetAbilityByIndex(i):SetLevel(1) end end
         npc.Ticket = PlayerResource:HasCustomGameTicketForPlayerID(npc:GetPlayerOwnerID())
+
+        CreateUnitByName("tower_zhugong",
+                        Entities:Pos(npc:GetTeamNumber()-5,3),
+                        false,nil,nil,
+                        npc:GetTeamNumber()):SetOwner(npc)
 
         CustomUI:DynamicHud_Create(npc:GetPlayerID(),"psd","file://{resources}/layout/custom_game/uiscreen.xml",nil)
         CustomNetTables:SetTableValue( "Hero_Population", tostring(npc:GetPlayerID()),{popMax=LOCAL_POPLATION,popNow=0} ) 
