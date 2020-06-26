@@ -10,11 +10,11 @@
 .btnleft{/*按钮集齐静态*/
   width :128px;
   height: 40px;
-  color:#f0ec1b;
+  color:#fcf9f9;
   font-size: 36px;
   text-align:center;
   font-weight: bold;
-  background-color:  #d3dd43e0 ;
+  background-color:  #83811be0 ;
 }
 
 .btnleft:hover{/*按钮集齐鼠标悬浮*/
