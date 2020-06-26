@@ -1,80 +1,136 @@
 /**中间进入游戏时选择难度**/
-#psd{width:100%;height: 100%;overflow: clip;}
-
-
-#UIstartmain,#FirstHero,{
-      horizontal-align:center;/**竖直居中**/
-   vertical-align:center;/**水平居中**/
-
-   flow-children:right;
-/*background-image: url("file://{resources}/images/loading_screen.jpg");
-border: 1px solid #eeeeee;*/
-   background-size: 100%;
-
-   margin-left:-10px; 
+#psd {
+   width: 100%;
+   height: 100%;
+   overflow: clip;
 }
 
-#ModeS{
-margin-top: 20px;
-margin-left: 30px;
+
+#UIstartmain,
+#FirstHero,
+   {
+   horizontal-align: center;
+   /**竖直居中**/
+   vertical-align: center;
+   /**水平居中**/
+
+   flow-children: right-wrap;
+   /*background-image: url("file://{resources}/images/loading_screen.jpg");
+border: 1px solid #eeeeee;*/
+   /* background-size: 100%; */
+
+   /* margin-left: -5px; */
+   width: 592px;
+}
+
+#ModeS {
+   margin-top: 20px;
+   margin-left: 30px;
    font-size: 30px;
 }
 
-#Options_shu{background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Shu_3.jpg");}
-#Options_wu {background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Wu_3.jpg");}
-#Options_wei{background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Wei_3.jpg");}
-#Options_qun{background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Qun_3.jpg");}
+.Options_1 {
+   background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Shu_3.jpg");
+}
 
-.Options{width:128px;height: 255px;margin-left: 20px;}
-.Options:hover{   box-shadow: #ffffff80 2px 2px 10px 0px;}
+.Options_2 {
+   background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Wu_3.jpg");
+}
+
+.Options_3 {
+   background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Wei_3.jpg");
+}
+
+.Options_4 {
+   background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Qun_3.jpg");
+}
+.Options_5 {
+   background-image: url("file://{resources}/images/custom_game/round0/ForceCard_Random.jpg");
+   margin-top: 20px;
+   margin-left: -10px;
+   /* clip: rect( 0, 100%, 70%, 10% ); */
+   width: 500px;
+   height: 220px;
+   horizontal-align: center;
+}
+.Options_5:hover {
+   box-shadow: #ffffff80 2px 2px 10px 0px;
+}
+
+.Options {
+   width: 128px;
+   height: 255px;
+   margin-left: 10px;
+}
+
+.Options:hover {
+   box-shadow: #ffffff80 2px 2px 10px 0px;
+}
 
 
-.Mode{
+.Mode {
    margin-left: 20px;
    font-size: 50px;
 
-   
+
 }
-.modelabel{
+
+.modelabel {
    font-size: 30px;
-   margin-top:-7px;
+   margin-top: -7px;
    color: #fff;
 }
-   
-.ModeInfo{
+
+.ModeInfo {
    font-size: 30px;
    border: 24px;
 }
 
-.Hidden{visibility:collapse;}
-
-#btn{/*按钮集齐静态*/
-         width :572px;
-         height: 50px;
-         
-         horizontal-align:center;/**竖直居中**/
-         vertical-align:center;/**水平居中**/
-         margin-top: 350px;
-         background-color: green;
+.Hidden {
+   visibility: collapse;
 }
 
-#btn:hover{/*按钮集齐鼠标悬浮*/
-         color:#e66465;
-         box-shadow: 1px 2px 10px rgba(255,76,106,0.75);
+#btn {
+   /*按钮集齐静态*/
+   width: 572px;
+   height: 50px;
+
+   horizontal-align: center;
+   /**竖直居中**/
+   vertical-align: center;
+   /**水平居中**/
+   margin-top: 350px;
+   background-color: green;
 }
-.vote{
-   color:#00454D;
+
+#btn:hover {
+   /*按钮集齐鼠标悬浮*/
+   color: #e66465;
+   box-shadow: 1px 2px 10px rgba(255, 76, 106, 0.75);
+}
+
+.vote {
+   color: #00454D;
    font-size: 30px;
-   horizontal-align:center;/**竖直居中**/
-   vertical-align:center;/**水平居中**/
+   horizontal-align: center;
+   /**竖直居中**/
+   vertical-align: center;
+   /**水平居中**/
 
 }
 
-.userhead{height:30px;width:30px;border-radius: 100%;   /**  border: 1px solid #eeeeee;**/}
+.userhead {
+   height: 30px;
+   width: 30px;
+   border-radius: 100%;
+   /**  border: 1px solid #eeeeee;**/
+}
 
 
 
-#spl0,#spl1,#spl2,#spl3
-{
-   flow-children:down;
+#spl0,
+#spl1,
+#spl2,
+#spl3 {
+   flow-children: down;
 }

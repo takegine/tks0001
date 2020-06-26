@@ -10,6 +10,13 @@
     </scripts>
         <snippets>
 
+		<snippet name="selectSnip">
+            <Button > 
+                <Image src ="" />
+                <DOTAScenePanel unit=""  light="global_light" antialias="true" renderdeferred="fasle" particleonly="false" style="width:100px; height:100px; opacity-mask:url(s2r://panorama/images/masks/chat_opacity_mask_png.vtex);"/>
+                <Label text="" />
+            </Button>
+		</snippet>
 		<snippet name="QuestLine">
             <Button class="btnhero"
                     onactivate='' 
@@ -23,14 +30,14 @@
 	</snippets>
     <Panel hittest="false">
         <Panel id="psd" hittest="false"><!--中间进入游戏时选择难度-->
-            <Panel id="UIstartmain" hittest="false">
+            <Panel id="UIstartmain" hittest="false"/>
 
-                <Button id="Options_shu" class='Options' onactivate="OpenInfo(1)"><Label class="vote"/></Button>
+                <!-- <Button id="Options_shu" class='Options' onactivate="OpenInfo(1)"><Label class="vote"/></Button>
                 <Button id="Options_wu"  class='Options' onactivate="OpenInfo(2)"><Label class="vote"/></Button>
                 <Button id="Options_wei" class='Options' onactivate="OpenInfo(3)"><Label class="vote"/></Button>
                 <Button id="Options_qun" class='Options' onactivate="OpenInfo(4)"><Label class="vote"/></Button>
             </Panel>
-                <Button id="btn" onactivate="OpenInfo(5)"><Label class="vote" text="#random"/></Button> 
+                <Button id="btn" onactivate="OpenInfo(5)"><Label class="vote" text="#random"/></Button>  -->
             <Panel id="FirstHero" hittest="false"/>
         </Panel>
     </Panel>

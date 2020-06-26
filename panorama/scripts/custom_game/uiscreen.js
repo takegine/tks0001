@@ -1,51 +1,64 @@
 
-function OpenInfo( keys ){
-	$.Msg("input keys=" + keys ); 
-	var sendnum
-	if(keys<10){
+function OpenInfo( keys, hero ){
+	$.Msg("uiscreen input keys=" + keys ,hero); 
+	var sendnum = {event:keys}
+	if(hero){ sendnum.unit= hero }
+
+	var stat= $("#UIstartmain").GetAttributeInt("hero",1)
+	$('#UIstartmain').SetAttributeInt("hero",stat+1)
+
+	$.Msg('stat: ', stat)
+	if(stat==1){
+		}
+	else if(stat==2){
+		$("#UIstartmain").SetAttributeInt("hero",3)
 		$("#UIstartmain").visible = false;
-		$("#btn").SetPanelEvent('onactivate',function() { OpenInfo(10) }  ) ;
-		//randomvote(11) 
-		sendnum=keys;
+		if(keys==5) {
+			sendnum.unit={
+				1:$('#UIstartmain').GetChild(0).GetChild(2).GetChild(0).id,
+				2:$('#UIstartmain').GetChild(1).GetChild(2).GetChild(0).id,
+				3:$('#UIstartmain').GetChild(2).GetChild(2).GetChild(0).id,
+				4:$('#UIstartmain').GetChild(3).GetChild(2).GetChild(0).id,
+			};
+		}
 	}
-	else {
-		if(keys==10){  sendnum={  	1:$('#FirstHero').GetChild(0).GetChild(1).GetChild(0).id,
-									2:$('#FirstHero').GetChild(1).GetChild(1).GetChild(0).id,
-									3:$('#FirstHero').GetChild(2).GetChild(1).GetChild(0).id,
-									4:$('#FirstHero').GetChild(3).GetChild(1).GetChild(0).id,
-								};
-					}
-		else{ 	sendnum = $('#FirstHero').FindChild("hero"+keys).GetChild(1).GetChild(0).id; }
-		//var itemname=$('#FirstHero').FindChild("hero"+keys).GetChild(1).GetChild(0).id
-		//GameEvents.SendCustomGameEventToServer( "find_wujiang", {id: Players.GetLocalPlayer(),way: itemname,No:0} ); 
-				$("#FirstHero").visible = false;
-				$("#btn").visible = false; 
-		} 
-	$.Msg("input sendnum=" + sendnum ); 
-	GameEvents.SendCustomGameEventToServer( "player_get_country", {event:sendnum} );
+	else {return}
+
+	$.Msg("uiscreen input event=" + sendnum.event , " unit ", sendnum.unit); 
+	GameEvents.SendCustomGameEventToServer( "player_get_country", sendnum );
 }
 
 function wujiang_first(params) {
-	$.Msg("input keys=" + params.event ); 
-	var num		 =params.num+10
-	var itemName =params.event
-	var NewPanel = $.CreatePanel('Button', $('#FirstHero'),"hero"+num);
-		NewPanel.BLoadLayoutSnippet("QuestLine");
-        NewPanel.GetChild(0).SetUnit(itemName,'nil' ,true);
-        //NewPanel.GetChild(0).scr = 'file://{resources}/images/custom_game/unithead/wujiang_'+itemName.slice(9)+'.jpg'
-		NewPanel.GetChild(1).text = $.Localize(itemName)
-		NewPanel.SetPanelEvent('onactivate',function() {OpenInfo(num) }  ) ;
-        $.CreatePanel('Panel', NewPanel.GetChild(1),itemName);
+	$.Msg("uiscreen input keys=" + params.event ); 
+	var num		 = params.num
+	var itemName = params.event
+	var cagPanel = $('#sele_'+num)
+		cagPanel.SetPanelEvent('onactivate',() => {OpenInfo(num, itemName) }  ) ;
+		
+		upclass(cagPanel, num+10);
+	if (num<5)
+		cagPanel.GetChild(1).SetUnit(itemName,'nil' ,true);
+		cagPanel.GetChild(2).text = $.Localize(itemName);
+		$.CreatePanel('Panel', cagPanel.GetChild(2), itemName)
+	
 }
 
-/*function randomvote(num) {
-	var NewPanel = $.CreatePanel('Button', $('#psd'),"voterandom"+num);
-		NewPanel.BLoadLayoutSnippet("voterandom");
-		NewPanel
-}*/
+function upclass(panel,num) {
+	panel.SetHasClass('Options', num<5);
+	panel.SetHasClass('Options_'+num, num<6);
+}
+
+function createselectpanel(num) {
+	var selPanel = $.CreatePanel('Button', $('#UIstartmain'),"sele_"+num);
+		selPanel.BLoadLayoutSnippet("selectSnip");
+		selPanel.SetPanelEvent(`onactivate`,() => {OpenInfo(num) }  ) ;
+		upclass(selPanel,num);
+}
 
 (function()	{ 
-	$("#UIstartmain").visible = true;
+	// $("#UIstartmain").visible = true;
 	GameEvents.Subscribe( "wujiang_first", wujiang_first);
+	for(var i=1;i<=5;i++){createselectpanel(i)}
+	$.Schedule(25, () => { OpenInfo( 5 ); })
 
 })();

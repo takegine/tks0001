@@ -125,8 +125,36 @@ function GetNewHero:UptoDJT(playID,key,parmas)
     --if string.find(event,"npc") then event=string.gsub(event,"npc","item") end
     CustomGameEventManager:Send_ServerToPlayer( PlayerResource:GetPlayer(playID), key, sendtab )
 end
-
 function GetNewHero:playerGetCountry( data )
+    print_r(data)
+    local hero = PlayerResource:GetSelectedHeroEntity(data.PlayerID)
+    local unit = data.unit
+    local num  = data.event
+    if  num == 5 then 
+        num = RandomInt(1,4)
+        if unit then unit = unit[tostring(RandomInt(1,4))] end
+        PlayerResource:Pay( data.PlayerID, -200 )
+    end
+    print(num,unit)
+    if unit and unit~= "undefined" then 
+        GetNewHero:LetHeroTrue( {id=data.PlayerID,way=unit,lvl=1} ) 
+        print("GetNewHero:playerGetCountry",unitName)
+    elseif not hero.country then
+        local country = {"shuguo", "wuguo", "weiguo", "qunxiong" }
+        hero.country  = country[num]
+
+        for i=1,4 do
+            local unitID   = RandomInt(1,#_G.tkHeroName[hero.country])
+            local unitname = _G.tkHeroName[hero.country][unitID]
+
+            GetNewHero:UptoDJT(data.PlayerID,"first",{num=i, event=unitname})
+            print("first_wujiang",unitname)
+        end
+
+        print("playerGetCountry",hero.country)
+    end
+end
+function GetNewHero:playerGetCountry2( data )
     local hero = PlayerResource:GetSelectedHeroEntity(data.PlayerID)
     local unitName
     local num
