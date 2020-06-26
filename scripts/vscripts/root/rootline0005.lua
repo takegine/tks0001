@@ -64,12 +64,22 @@ function GameForUnit:OnGameRoundChange()
     local TimeForPlan = Timer(function()
         if return_time == 5 then--lock
             CustomNetTables:SetTableValue( "game_stat", "game_round_stat",{1} )
-            local defendlist = Entities:FindAllByTeam(1)
+            local defendlist = Entities:FindAllByTeam( 1 )
 
-            if PlayerResource:GetPlayerCount() == 1
-            and #defendlist==0 then
-                GameForUnit:OnGameRoundChange( )
-                return
+            if   PlayerResource:GetPlayerCount() == 1
+            and  not tkRounList[tostring(_G.GAME_ROUND)]
+            then local benchcount = 0
+
+                table.foreach(defendlist,function(_,v)
+                    if v.bench then
+                        benchcount = benchcount + 1
+                    end
+                end)
+
+                if #defendlist == benchcount then
+                    GameForUnit:OnGameRoundChange( )
+                    return
+                end
             end
 
             --全体防守加状态 (禁锢 缴械 无敌 沉默)
@@ -110,7 +120,7 @@ function GameForUnit:OnGameRoundChange()
                 if  PlayerResource:GetPlayerCountForTeam( i +5 ) == 1 then
 
 
-                    if tkRounList[tostring(_G.GAME_ROUND)] then
+                    if  tkRounList[tostring(_G.GAME_ROUND)] then
                         table.foreach( tkRounList[tostring(_G.GAME_ROUND)],function(_,v) ShuaGuai(v.unit,nil,v.lvl,i,i) end)
 
                     else
@@ -274,20 +284,20 @@ function GameForUnit:OnGameRoundChange()
             end
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
         end
-    end)
 
-    TimeForBatter = Timer(TIME_BETWEEN_ROUND+1,function()
-        if return_time<TIME_BATTER_MAX then
-            if not GameRules:IsGamePaused() then return_time=return_time+1 end
-            CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BATTER_MAX,timeNow=return_time} )
-            print("countdown batter time:"..return_time)
-
-            table.foreach(Entities:FindAllByTeam( 2 ), function(_,v) if v:IsIdle() then  v:SetRequiresReachingEndPath(true) end end)
-            return 1
-        else
-            table.foreach(Entities:FindAllByTeam( 2 ), function(_,unit) unit:Kill(nil,unit) end)
-            CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=false,timeMax=0,timeNow=0} )
-        end
+        TimeForBatter = Timer(TIME_BETWEEN_ROUND+1,function()
+            if return_time<TIME_BATTER_MAX then
+                if not GameRules:IsGamePaused() then return_time=return_time+1 end
+                CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BATTER_MAX,timeNow=return_time} )
+                print("countdown batter time:"..return_time)
+    
+                table.foreach(Entities:FindAllByTeam( 2 ), function(_,v) if v:IsIdle() then  v:SetRequiresReachingEndPath(true) end end)
+                return 1
+            else
+                table.foreach(Entities:FindAllByTeam( 2 ), function(_,unit) unit:Kill(nil,unit) end)
+                CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=false,timeMax=0,timeNow=0} )
+            end
+        end)
     end)
 end
 
