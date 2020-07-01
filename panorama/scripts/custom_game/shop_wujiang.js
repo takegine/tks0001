@@ -18,7 +18,7 @@ function gofind(i){
 function goget(i) {
     $.Msg("goget")
     var evpanel = $('#DianJiangTai').FindChild("hero"+i)
-    var sendmes = {id: Players.GetLocalPlayer(),No:i}
+    var sendmes = {id: Players.GetLocalPlayer(), No:i}
         sendmes.way = evpanel.GetChild(1).GetChild(0).id
         sendmes.lvl = evpanel.GetChild(2).text
             //iWays = $.GetContextPanel().GetParent().id()
@@ -30,9 +30,6 @@ function goget(i) {
             return }
     else if(stat=="2"){
         errorMessamge('OnGameInProgress');
-            return }
-    else if(!(tPop['popNow']<tPop['popMax'])){
-        errorMessamge('poorpop');
             return }
     else if(Players.GetGold(Players.GetLocalPlayer() )<100 ){
         errorMessamge('poorguy');

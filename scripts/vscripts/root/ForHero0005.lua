@@ -78,25 +78,28 @@ function GetNewHero:LetHeroTrue( data )
     local unitName = data.way 
     local findcost = tkHeroList[unitName] and tkHeroList[unitName]['TksPayedGold'] or 50
     local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id)) 
+    local team     = hero:GetTeamNumber()
     --print(unitName)
     if not PlayerResource:Pay( data.id, findcost ) then GetNewHero:UptoDJT(data.PlayerID,"errorMessage","poorguy") return end
 
-    local vPos = Entities:FindByName(nil,"creep_birth_"..(hero:GetTeamNumber()-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
-    --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber())
+    local vPos = Entities:FindByName(nil,"creep_birth_"..(team-5).."_2"):GetAbsOrigin()+ Vector (RandomFloat(-300, 300),RandomFloat(-100, 200),0)
+    --local vBir = CreateUnitByName(unitName,vPos,true,hero,hero,team)
     --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
-    local v = CreateUnitByName(unitName,vPos,true,hero,hero,hero:GetTeamNumber() )
+    local v = CreateUnitByName(unitName,vPos,true,hero,hero, team )
  
+    v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
+    table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
+    function(k,a) 
+        local abiT =  v:AddAbility('skill_player_'..a)
+        if  abiT then 
+            abiT:SetLevel(v:GetLevel()) 
+        end
+    end) 
 
     tPop.popNow = tPop.popNow + v.popuse
     if tPop.popNow <= tPop.popMax then 
         
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
-        v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
-        table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
-        function(k,a) 
-            local abiT =  v:AddAbility('skill_player_'..a)
-            if abiT then abiT:SetLevel(v:GetLevel()) end
-        end) 
 
         v:FindAbilityByName('skill_player_price'):CastAbility()
         v:SetUnitCanRespawn(true)
@@ -104,13 +107,34 @@ function GetNewHero:LetHeroTrue( data )
 
         CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
 
-    --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(),hero:GetTeamNumber(),hero:GetPlayerOwnerID())   
+    -- --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(), team, hero:GetPlayerOwnerID())   
+    -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_1"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
+    --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_1"):GetAbsOrigin()) 
+    -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_2"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
+    --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_2"):GetAbsOrigin()) 
+    -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_3"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
+    --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_3"):GetAbsOrigin()) 
+    -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_4"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
+    --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_4"):GetAbsOrigin()) 
+    -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_5"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
+    --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_5"):GetAbsOrigin()) 
     else
-        PlayerResource:Pay( data.id, -findcost )
-        v:Destroy()
-        GetNewHero:UptoDJT(data.id,"errorMessage",'poorpop')
+        local abib = v:FindAbilityByName('skill_player_toggle')
+        abib:CastAbility()
+        if  v.bench then
+            tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id))
+            tPop.popNow = tPop.popNow + v.popuse
+            CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id), tPop) 
+        else
+            PlayerResource:Pay( data.id, -findcost )
+            v:Destroy()
+            GetNewHero:UptoDJT(data.id,"errorMessage",'poorpop')
+        end
     end
-    if data.No then GetNewHero:UptoDJT(data.id,"shopUp", {event=data.No, bool=v:IsNull()}) end
+
+    if  data.No then 
+        GetNewHero:UptoDJT(data.id,"shopUp", {event=data.No, bool=v:IsNull()}) 
+    end
 end 
 
 function GetNewHero:UptoDJT(playID,key,parmas)
