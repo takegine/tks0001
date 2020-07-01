@@ -285,7 +285,7 @@ function GameForUnit:OnGameRoundChange()
             table.foreach(Entities:FindAllByName("npc_dota_fort"),function(_,v) v:Destroy() end)
         end
 
-        TimeForBatter = Timer(TIME_BETWEEN_ROUND+1,function()
+        TimeForBatter = Timer(function()
             if return_time<TIME_BATTER_MAX then
                 if not GameRules:IsGamePaused() then return_time=return_time+1 end
                 CustomNetTables:SetTableValue( "game_stat", "game_countdown",{countDown=true,timeMax=TIME_BATTER_MAX,timeNow=return_time} )
