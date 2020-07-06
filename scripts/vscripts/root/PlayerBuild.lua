@@ -10,7 +10,7 @@ require('root/ToolsFromX')
 ----------------------------------------------------------------------------
 skill_player_price = skill_player_price or {}
 
-LinkLuaModifier( "modifier_skill_player_price", "skill/PlayerBuild.lua", LUA_MODIFIER_MOTION_NONE )
+LinkLuaModifier( "modifier_skill_player_price", "root/PlayerBuild.lua", LUA_MODIFIER_MOTION_NONE )
 
 function skill_player_price:IsHidden() return true end
 function skill_player_price:OnSpellStart()
