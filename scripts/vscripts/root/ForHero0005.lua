@@ -101,11 +101,24 @@ function GetNewHero:LetHeroTrue( data )
         
         v:AddNewModifier(nil, nil, "modifier_phased", {duration=0.1})
 
+    else
+        v:FindAbilityByName('skill_player_toggle'):CastAbility()
+        if not v.bench then
+            PlayerResource:Pay( data.id, -findcost )
+            v:Destroy()
+            GetNewHero:UptoDJT(data.id,"errorMessage",'poorpop')
+        end
+    end
+
+    if not v:IsNull() then
         v:FindAbilityByName('skill_player_price'):CastAbility()
         v:SetUnitCanRespawn(true)
         v:CheckLevel(tonumber(data.lvl)+v:GetLevel()-1)
 
-        CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id),tPop) 
+        tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id))
+        tPop.popNow = tPop.popNow + v.popuse
+        CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id), tPop) 
+    end
 
     -- --print("LetHeroTrue",hero:GetPlayerOwnerID(),vBir:GetMainControllingPlayer(), team, hero:GetPlayerOwnerID())   
     -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_1"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
@@ -118,20 +131,6 @@ function GetNewHero:LetHeroTrue( data )
     --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_4"):GetAbsOrigin()) 
     -- elseif FindUnitsInRadius(team, Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_5"):GetAbsOrigin(), nil, 100, 0, 0, 0, 0, true) ~={} then
     --     v:SetAbsOrigin(Entities:FindByName( nil, "dianjiangtai_"..(team-5).."_5"):GetAbsOrigin()) 
-    else
-        local abib = v:FindAbilityByName('skill_player_toggle')
-        abib:CastAbility()
-        if  v.bench then
-            tPop = CustomNetTables:GetTableValue( "Hero_Population", tostring(data.id))
-            tPop.popNow = tPop.popNow + v.popuse
-            CustomNetTables:SetTableValue( "Hero_Population", tostring(data.id), tPop) 
-        else
-            PlayerResource:Pay( data.id, -findcost )
-            v:Destroy()
-            GetNewHero:UptoDJT(data.id,"errorMessage",'poorpop')
-        end
-    end
-
     if  data.No then 
         GetNewHero:UptoDJT(data.id,"shopUp", {event=data.No, bool=v:IsNull()}) 
     end
