@@ -267,16 +267,24 @@ function GameForUnit:OnGameRoundChange()
                     --         end)
                     --     end
                     -- end
-                    table.foreach(tTeamMate,function(_,v)
+                    table.foreach(tTeamMate,function(_,u)
                         for q=0,5 do
                             local oitem = Entities:GetPlayer(i +5 ):GetItemInSlot(q)
-                            local vitem = v:GetItemInSlot(q)
-                            if oitem and (not vitem or vitem:GetName()~=oitem:GetName() ) then
-                                v:RemoveItem(vitem)
-                                local additem = CreateItem(oitem:GetName(),v,v)
+                            local vitem = u:GetItemInSlot(q)
+                            if    oitem 
+                            and ( not vitem  or vitem:GetName() ~= oitem:GetName() ) 
+                            then local additem = CreateItem( oitem:GetName(), u, u )
                                 additem:SetCurrentCharges(oitem:GetCurrentCharges())
-                                v:AddItem( additem )
+                                u:RemoveItem(vitem )
+                                u:AddItem( additem )
+                            end
+                        end
 
+                        for i=0,10 do
+                            local abi = u:GetAbilityByIndex(i)
+                            if    abi 
+                            and   abi.needwaveup 
+                            then  abi:needwaveup()
                             end
                         end
                     end)
