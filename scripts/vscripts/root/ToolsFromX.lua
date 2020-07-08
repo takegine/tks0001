@@ -52,6 +52,7 @@ function Timer(delay,callback)
     end,delay)
     return timerName
 end
+
 function RemoveTimer(timerName)
         GameRules.__vTimerNamerTable__[timerName] = nil
 end
@@ -62,4 +63,19 @@ function msg_m(list)
 		Msg( string.format( "%s=>%s\n", k, v ) )
     end
     Msg( "}\n" )
+end
+
+--三个参数均为向量，返回 p 到 线段 v:w 的垂直距离
+function DistancePointSegment( p, v, w )
+    local l = w - v
+    
+	t = ( p - v ):Dot( l ) / l:Dot( l )
+	if t < 0.0 then
+		return ( v - p ):Length2D()
+	elseif t > 1.0 then
+		return ( w - p ):Length2D()
+	else
+		local proj = v + t * l
+		return ( proj - p ):Length2D()
+	end
 end
