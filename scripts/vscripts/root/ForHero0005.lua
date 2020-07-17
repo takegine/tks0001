@@ -87,6 +87,7 @@ function GetNewHero:LetHeroTrue( data )
     --      vBir:SetControllableByPlayer(hero:GetPlayerOwnerID(),true)
     local v = CreateUnitByName(unitName,vPos,true,hero,hero, team )
  
+    v:SetOwner(hero)
     v:SetControllableByPlayer(hero:GetPlayerOwnerID(),true) 
     table.foreach( { 'price', 'lvlup', 'lvlkeep', 'onsale', 'toggle'},
     function(k,a) 

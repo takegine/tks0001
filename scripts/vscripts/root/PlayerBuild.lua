@@ -148,11 +148,13 @@ function skill_player_onsale:OnSpellStart()
     local caster   = self:GetCaster()
     local plid     = caster:GetPlayerOwnerID()
     local tPop     = CustomNetTables:GetTableValue( "Hero_Population", tostring(plid)) 
+    local price    = caster:IsRealHero() and caster:FindModifierByName( 'modifier_skill_player_price'):OnTooltip() or caster.price or 0
 
-    if  PlayerResource:Pay( plid, -caster:FindModifierByName( 'modifier_skill_player_price'):OnTooltip() ) then
-
-        tPop.popNow = tPop.popNow - caster.popuse  
-        CustomNetTables:SetTableValue( "Hero_Population", tostring(plid),tPop) 
+    if  PlayerResource:Pay( plid, -price ) then
+        if not caster.bench then
+            tPop.popNow = tPop.popNow - caster.popuse  
+            CustomNetTables:SetTableValue( "Hero_Population", tostring(plid),tPop) 
+        end
         caster:Destroy()
     end
     
@@ -167,8 +169,9 @@ function skill_player_toggle:CastFilterResult( )
     if CustomNetTables:GetTableValue( "game_stat", "game_round_stat")["1"]~=0 then return UF_FAIL_CUSTOM end
 
     local caster   = self:GetCaster()
-    local hero     = caster:GetPlayerOwner()
-    local playerID = tostring(caster:GetPlayerOwnerID())
+    local owner    = caster:GetOwner()
+    local hero     = owner:GetPlayerOwner()
+    local playerID = tostring(owner:GetPlayerOwnerID())
     local tPop     = CustomNetTables:GetTableValue( "Hero_Population", playerID) 
     tPop.popNow = tPop.popNow + self:GetCaster().popuse
     if tPop.popNow > tPop.popMax then 
@@ -193,8 +196,9 @@ function skill_player_toggle:OnSpellStart()
         
     --local target   = self:GetCursorTarget()
     local caster   = self:GetCaster()
-    local hero     = caster:GetPlayerOwner()
-    local playerID = tostring(caster:GetPlayerOwnerID())
+    local owner    = caster:GetOwner()
+    local hero     = owner:GetPlayerOwner()
+    local playerID = tostring(owner:GetPlayerOwnerID())
    -- local onback   = false
     local iTeam    = caster:GetTeamNumber()-5
     local lock  = "skill_player_lock"
@@ -212,7 +216,7 @@ function skill_player_toggle:OnSpellStart()
     
         CustomNetTables:SetTableValue( "Hero_Population", playerID,tPop) 
     else
-        local x = hero.Ticket and 6 or 5
+        local x = owner.Ticket and 6 or 5
         for i = 1 , x do
             local posempty   = true
             local itemPos    = Entities:FindByName( nil, "dianjiangtai_"..iTeam.."_"..i):GetAbsOrigin()
